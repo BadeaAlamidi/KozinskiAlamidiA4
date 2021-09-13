@@ -1,0 +1,12 @@
+work distribution
+Full GUI will be present for all branches
+	-- this is to allow event handling to affect posts/users/comments by a single programmer without waiting for the other
+	Subreddits creator must update their subreddit class
+	Users class creator must update their user class
+	Whoever finishes first must relocate the file reader in RedditUtilities
+	-- file reading still done in main
+	GUI is designed by both parties
+	Password // // // // 
+	functionality between users and posts and comments and system output has yet to be distributed between the two parties
+
+	REMEMBER TO DELETE THIS BEFORE SUBMITTING.
