@@ -19,6 +19,7 @@ namespace KozinskiAlamidiAssignment2
             Application.Run(new Form1());
 
             // Nothing
+            // Something else
             // Something
         }
     }
