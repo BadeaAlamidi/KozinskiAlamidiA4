@@ -18,6 +18,9 @@ namespace KozinskiAlamidiAssignment2
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
+            // Nothing
+            // Something else
+            // Something
             // branch 2 edit
         }
     }
