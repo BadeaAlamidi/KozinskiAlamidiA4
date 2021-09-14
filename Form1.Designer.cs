@@ -107,10 +107,10 @@ namespace KozinskiAlamidiAssignment2
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(10, 472);
+            this.richTextBox1.Location = new System.Drawing.Point(14, 472);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(977, 66);
+            this.richTextBox1.Size = new System.Drawing.Size(973, 66);
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
@@ -173,7 +173,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(12, 449);
+            this.label7.Location = new System.Drawing.Point(6, 449);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(115, 20);
             this.label7.TabIndex = 13;
@@ -263,6 +263,7 @@ namespace KozinskiAlamidiAssignment2
             this.ForeColor = System.Drawing.Color.Black;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
