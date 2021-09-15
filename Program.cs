@@ -1385,11 +1385,11 @@ namespace KozinskiAlamidiAssignment2
             }*/
         }
 
-        /*
         /* Method name: PrintPrompt
          * 
          * Prints menu prompt with user options
          ******************************************************************************/
+        /*
         static void PrintPrompt()
         {
             Console.WriteLine("Reddit, The Command Line Version!\n");
@@ -1403,11 +1403,13 @@ namespace KozinskiAlamidiAssignment2
             Console.WriteLine("8. Delete Post");
             Console.WriteLine("9. Quit");
         }
+        */
 
         /* Method name: ListAllSubreddits
          * 
          * Prints list of all subreddits to console
          ******************************************************************************/
+        /*
         static void ListAllSubreddits()
         {
             Console.WriteLine("Name -- (Active Members / Total Members)\n");
@@ -1416,6 +1418,7 @@ namespace KozinskiAlamidiAssignment2
                 Console.WriteLine("<" + subredditTuple.Id + "> " + subredditTuple.Name + " -- (" + subredditTuple.Active + "/" + subredditTuple.Members + ")");
             Console.WriteLine(); // skip line
         }
+        */
 
         /*
          * Method Name: ListAllPosts
@@ -1429,6 +1432,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void ListAllPosts()
         {
             Console.WriteLine("<ID> [Subreddit] (Score) Title + PostContent - PosterName |TimeStamp|\n");
@@ -1444,6 +1448,7 @@ namespace KozinskiAlamidiAssignment2
                 Console.WriteLine();
             }
         }
+        */
 
         /*
          * Method Name: ListSubredditPosts
@@ -1456,6 +1461,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void ListSubredditPosts()
         {
             Console.WriteLine("Enter the name of the Subreddit to list from: ");
@@ -1481,6 +1487,7 @@ namespace KozinskiAlamidiAssignment2
             Console.WriteLine("I don't recognize the \'" + userInput + "\' subreddit.\n");
             Console.WriteLine();
         }
+        */
 
         /*
          * Method Name: ViewPostComments
@@ -1496,6 +1503,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void ViewPostComments()
         {
             // Defines indentation level for nested comments
@@ -1563,6 +1571,7 @@ namespace KozinskiAlamidiAssignment2
                 indentationLevel--;
             }
         }
+        */
 
         /*
          * Method Name: CreatePost
@@ -1576,6 +1585,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void CreatePost (uint userId)
         {
             Console.Write("Enter the name of the Subreddit that you'd like to post to: ");
@@ -1599,6 +1609,7 @@ namespace KozinskiAlamidiAssignment2
             Console.WriteLine("I don't recognize the \'" + inputSubredditName + "\' subreddit.\n");
             Console.WriteLine();
         }
+        */
 
        /*
         * Method Name: DeletePost
@@ -1613,6 +1624,7 @@ namespace KozinskiAlamidiAssignment2
         * Return: NONE 
         * 
         ******************************************************************************/
+        /*
         static void DeletePost(uint userId)
         {
             Console.WriteLine("Enter the ID of the post you'd like to delete: ");
@@ -1628,6 +1640,7 @@ namespace KozinskiAlamidiAssignment2
                 else Console.WriteLine("\nAh, sorry. You can't delete other users' Posts\n");
             } catch (Exception e) { Console.WriteLine(e.Message); }
         }
+        */
 
         /*
          * Method Name: AddComment
@@ -1642,6 +1655,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void AddComment(uint userId)
         {
             uint inputPostId;
@@ -1661,6 +1675,7 @@ namespace KozinskiAlamidiAssignment2
             }
             else Console.WriteLine("\nThere seems to be no Post under this Id\n");
         }
+        */
 
         /*
          * Method Name: AddReply
@@ -1673,6 +1688,7 @@ namespace KozinskiAlamidiAssignment2
          * Return: NONE 
          * 
          ******************************************************************************/
+        /*
         static void AddReply(uint userId)
         {
             Console.Write("enter the ID of the comment you'd like to add a reply to: ");
