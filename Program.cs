@@ -423,6 +423,7 @@ namespace KozinskiAlamidiAssignment2
         public static uint COMMENT_YEAR_INDEX = 6;
 
         // Attributes
+        private bool locked;
         private readonly uint id;
         private readonly uint authorID;
         private string content;
@@ -433,6 +434,11 @@ namespace KozinskiAlamidiAssignment2
         public SortedDictionary<uint, Comment> commentReplies;
 
         // Properties to control read/write access to private attributes
+        public bool Locked
+        {
+            get { return locked; }
+            set { locked = value; }
+        }
         public uint Id => id;
         public uint AuthorID => authorID;
         public string Content
@@ -466,12 +472,15 @@ namespace KozinskiAlamidiAssignment2
             timeStamp = new DateTime(0);
             commentReplies = new SortedDictionary<uint, Comment>();
         }
-
+        //      ID | AuthorID | Content | ParentID | UpVotes | DownVotes | Year | Month | Day | Hour | Min | Sec
+        // OLD: ID | authorID | content | post/comment ID being replied to | upVotes | downVotes | year | month | day | hour | min | sec
         // Alternate constructor (for reading from a file)
         public Comment(string[] commentData)
         {
             try
             {
+                // we assume that comments aren't locked
+                locked = false;
                 id = Convert.ToUInt32(commentData[0]);
                 authorID = Convert.ToUInt32(commentData[1]);
                 Content = commentData[2];
@@ -492,6 +501,7 @@ namespace KozinskiAlamidiAssignment2
         // Alternate constructor (for creating a new comment)
         public Comment(string newContent, uint newAuthorID, uint newParentID)
         {
+            locked = false;
             id = RedditUtilities.GenerateUniqueId();
             authorID = newAuthorID;
             Content = newContent;
@@ -661,6 +671,7 @@ namespace KozinskiAlamidiAssignment2
     public class Post : IComparable, IEnumerable
     {
         // private properties
+        private bool locked;
         private readonly uint id;
         private string title;
         private readonly uint authorID;
@@ -674,6 +685,10 @@ namespace KozinskiAlamidiAssignment2
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
+        public bool Locked {
+            get { return locked; }
+            set { locked = value; }
+        }
         public float PostRating
         {
             get
@@ -724,6 +739,7 @@ namespace KozinskiAlamidiAssignment2
 
         public Post()
         {
+            locked = false;
             id = 0;
             title = "";
             authorID = 0;
@@ -736,30 +752,32 @@ namespace KozinskiAlamidiAssignment2
             postComments = new SortedDictionary<uint, Comment>();
         }
 
-        // unique ID | authorID | title | content | subredditID | upVotes | downVotes | weight | year | month | day | hour | min | sec
+        // OLD: unique ID | authorID | title | content | subredditID | upVotes | downVotes | weight | year | month | day | hour | min | sec
+        // Locked | ID | AuthorID | Title | Content | SubredditID | UpVotes | DownVotes | Weight | Year | Month | Day | Hour | Min | Sec
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
-            id = Convert.ToUInt32(parameters[0]);
-            authorID = Convert.ToUInt32(parameters[1]);
+            locked = Convert.ToBoolean(parameters[0]);
+            id = Convert.ToUInt32(parameters[1]);
+            authorID = Convert.ToUInt32(parameters[2]);
 
             try
             {
-                Title = parameters[2];
-                PostContent = parameters[3];
+                Title = parameters[3];
+                PostContent = parameters[4];
             }
             catch (FoulLanguageException)
             {
-                title = parameters[2];
-                postContent = parameters[3];
+                title = parameters[5];
+                postContent = parameters[6];
 
                 // Creates post anyway due to sample output example
                 Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
             {
-                title = parameters[2];
-                postContent = parameters[3];
+                title = parameters[3];
+                postContent = parameters[4];
 
                 // Creates post anyway due to sample output example
                 Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
@@ -773,12 +791,12 @@ namespace KozinskiAlamidiAssignment2
 
             // safe guard in case the default constructor is used (it is unknown if the default constructor will ever get used)
             if (parameters.Length > 8)
-                timeStamp = new DateTime(Convert.ToInt32(parameters[8]),
-                                            Convert.ToInt32(parameters[9]),
+                timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
                                             Convert.ToInt32(parameters[10]),
                                             Convert.ToInt32(parameters[11]),
                                             Convert.ToInt32(parameters[12]),
-                                            Convert.ToInt32(parameters[13]));
+                                            Convert.ToInt32(parameters[13]),
+                                            Convert.ToInt32(parameters[14]));
             postComments = new SortedDictionary<uint, Comment>();
 
             // Attempts to add post to global collection
@@ -797,8 +815,9 @@ namespace KozinskiAlamidiAssignment2
 
         // constructor for user generated Post instances
         // new posts have the current time assigned to them
-        public Post(string UserTitle, uint AuthorId, string UserPostContent, uint subredditId)
+        public Post(bool LockedBool, string UserTitle, uint AuthorId, string UserPostContent, uint subredditId)
         {
+            locked = LockedBool;
             id = RedditUtilities.GenerateUniqueId();
             upVotes = 1;
             downVotes = 0;
@@ -1303,7 +1322,6 @@ namespace KozinskiAlamidiAssignment2
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
-            RedditUtilities.ReadFiles();
 
             /*
             // Command line interface
