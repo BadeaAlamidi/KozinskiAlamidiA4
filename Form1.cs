@@ -24,7 +24,7 @@ namespace KozinskiAlamidiAssignment2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RedditUtilities.ReadFiles();
+            try { RedditUtilities.ReadFiles(); } catch (ArgumentException exception){ systemOutput.AppendText($"the error message is: {exception.Message}"); }
         }
 
         private void button1_Click(object sender, EventArgs e)

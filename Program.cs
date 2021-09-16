@@ -1274,8 +1274,8 @@ namespace KozinskiAlamidiAssignment2
                             {
                                 case "users":
                                     try { User newUser = new User(fileLine.Split('\t')); }
-                                    catch (ArgumentException e) { Console.WriteLine(e.Message); }
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
+                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); }//Console.WriteLine(e.Message); }
+                                    catch (Exception e) { throw new Exception(e.Message); }//Console.WriteLine(e.Message); }
                                     break;
                                 case "subreddits":
                                     try { Subreddit newSubreddit = new Subreddit(fileLine.Split('\t')); }
