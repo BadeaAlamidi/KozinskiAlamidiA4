@@ -93,11 +93,11 @@ namespace KozinskiAlamidiAssignment2
 
             // Rejects input name if it begins or ends with space characters
             if (Char.IsWhiteSpace(newName, 0) || Char.IsWhiteSpace(newName, newName.Length - 1))
-                throw new ArgumentException("Error: Could not add user \"" + newName + "\"; usernames cannot begin or end with space characters");
+                throw new ArgumentException("Error: Could not add user \"" + newName + "\" from file; usernames cannot begin or end with space characters");
 
             // Rejects input name if it is < 5 or > 21 characters
             else if (newName.Length < 5 || newName.Length > 21)
-                throw new ArgumentException("Error: Could not add user \"" + newName + "\"; usernames must contain between 5 and 21 characters");
+                throw new ArgumentException("Error: Could not add user \"" + newName + "\" from file; usernames must contain between 5 and 21 characters");
 
             try
             {
