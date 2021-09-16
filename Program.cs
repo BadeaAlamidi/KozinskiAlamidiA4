@@ -48,6 +48,7 @@ namespace KozinskiAlamidiAssignment2
     {
         // Attributes
         private readonly uint id;
+        private readonly UserType userType;
         private readonly string name;
         private readonly string passwordHash;
         private int postScore;
@@ -56,6 +57,7 @@ namespace KozinskiAlamidiAssignment2
 
         // Properties to control read/write access to private attributes
         public uint Id => id;
+        public UserType Type => userType;
         public string Name => name;
         public string PasswordHash => passwordHash;
         public int PostScore
@@ -79,6 +81,7 @@ namespace KozinskiAlamidiAssignment2
         public User()
         {
             id = 0;
+            userType = UserType.User;
             name = "";
             passwordHash = "";
             PostScore = 0;
@@ -89,7 +92,7 @@ namespace KozinskiAlamidiAssignment2
         // Alternate constructor (for reading from a file)
         public User(string[] userData)
         {
-            string newName = userData[1];
+            string newName = userData[2];
 
             // Rejects input name if it begins or ends with space characters
             if (Char.IsWhiteSpace(newName, 0) || Char.IsWhiteSpace(newName, newName.Length - 1))
@@ -102,12 +105,13 @@ namespace KozinskiAlamidiAssignment2
             try
             {
                 id = Convert.ToUInt32(userData[0]);
+                userType = (UserType)Convert.ToUInt32(userData[1]);
                 name = newName;
-                passwordHash = userData[2];
-                PostScore = Convert.ToInt32(userData[3]);
-                CommentScore = Convert.ToInt32(userData[4]);
+                passwordHash = userData[3];
+                PostScore = Convert.ToInt32(userData[4]);
+                CommentScore = Convert.ToInt32(userData[5]);
                 ModeratingSubs = new string[0];
-                for (int i = 5; i < userData.Length; i++)
+                for (int i = 6; i < userData.Length; i++)
                     ModeratingSubs.Append(userData[i]);
             }
             catch { throw new ArgumentException("Error: File input does not match format expected by [User] constructor"); }
@@ -175,6 +179,11 @@ namespace KozinskiAlamidiAssignment2
         }
     }
 
+    public enum UserType {
+            User,
+            Mod,
+            Admin
+    };
     /****************************************************************************
     * This class contains information about the subreddits
     *
@@ -1252,7 +1261,7 @@ namespace KozinskiAlamidiAssignment2
         public static void ReadFiles()
         {
             // Initializes "existing" users, subreddits, posts, and comments with data from files
-            string filePrefix = "..\\..\\..\\..\\";
+            string filePrefix = "..\\..\\";
             string[] fileNames = new string[] { "users", "subreddits", "posts", "comments" };
             string fileLine;
 
