@@ -272,7 +272,8 @@ namespace KozinskiAlamidiAssignment2
         }
 
         // constructor made for user-created subreddits
-        public Subreddit(string NameParam)
+        // THE USER DOES NOT HAVE THE OPTION OF CREATIN THE SUBREDDITS AS OF ASSIGNMENTS 1 & 2
+/*        public Subreddit(string NameParam)
         {
             // this is assigning to the public property which already checks for valid names
             try { Name = NameParam; }
@@ -289,7 +290,7 @@ namespace KozinskiAlamidiAssignment2
             catch (ArgumentException) { throw new ArgumentException("Error: That subreddit already exists."); }
             catch (Exception e) { throw new Exception(e.Message); }
         }
-
+*/
         public int CompareTo(Object otherObject)
         {
             if (otherObject == null)
@@ -1288,8 +1289,8 @@ namespace KozinskiAlamidiAssignment2
                                     break;
                                 case "subreddits":
                                     try { Subreddit newSubreddit = new Subreddit(fileLine.Split('\t')); }
-                                    catch (ArgumentException e) { Console.WriteLine(e.Message); }
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
+                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); }
+                                    catch (Exception e) { throw new Exception(e.Message); }
                                     break;
                                 case "posts":
                                     try { Post newPost = new Post(fileLine.Split('\t')); }
