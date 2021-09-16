@@ -90,6 +90,7 @@ namespace KozinskiAlamidiAssignment2
             this.subredditSelection.Name = "subredditSelection";
             this.subredditSelection.Size = new System.Drawing.Size(128, 160);
             this.subredditSelection.TabIndex = 3;
+            this.subredditSelection.SelectedValueChanged += new System.EventHandler(this.subredditSelection_SelectedValueChanged);
             // 
             // label3
             // 

@@ -24,12 +24,21 @@ namespace KozinskiAlamidiAssignment2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RedditUtilities.ReadFiles();
+            try { RedditUtilities.ReadFiles(); } catch (ArgumentException exception){ systemOutput.AppendText(exception.Message);}
+            foreach (User user in Program.globalUsers.Values) { userSelection.Items.Add(user.Name); }
+            foreach (Subreddit subreddit in Program.globalSubreddits.Values) { subredditSelection.Items.Add(subreddit.Name); }
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+        // this triggers when the user chooses a subreddit
+        private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
+        {
+            postSelection.Items.Clear();
+            //foreach (uint id in subredditSelection.)
         }
     }
 }
