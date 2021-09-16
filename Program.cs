@@ -49,12 +49,15 @@ namespace KozinskiAlamidiAssignment2
         // Attributes
         private readonly uint id;
         private readonly string name;
+        private readonly string passwordHash;
         private int postScore;
         private int commentScore;
+        private string[] moderatingSubs;
 
         // Properties to control read/write access to private attributes
         public uint Id => id;
         public string Name => name;
+        public string PasswordHash => passwordHash;
         public int PostScore
         {
             get { return postScore; }
@@ -66,14 +69,21 @@ namespace KozinskiAlamidiAssignment2
             set { commentScore = value; }
         }
         public int TotalScore => PostScore + CommentScore;
+        public string[] ModeratingSubs
+        {
+            get { return moderatingSubs; }
+            set { moderatingSubs = value; } // Value should be an array of strings
+        }
 
         // Default constructor
         public User()
         {
             id = 0;
             name = "";
+            passwordHash = "";
             PostScore = 0;
             CommentScore = 0;
+            ModeratingSubs = new string[0];
         }
 
         // Alternate constructor (for reading from a file)
@@ -93,8 +103,12 @@ namespace KozinskiAlamidiAssignment2
             {
                 id = Convert.ToUInt32(userData[0]);
                 name = newName;
-                PostScore = Convert.ToInt32(userData[2]);
-                CommentScore = Convert.ToInt32(userData[3]);
+                passwordHash = userData[2];
+                PostScore = Convert.ToInt32(userData[3]);
+                CommentScore = Convert.ToInt32(userData[4]);
+                ModeratingSubs = new string[0];
+                for (int i = 5; i < userData.Length; i++)
+                    ModeratingSubs.Append(userData[i]);
             }
             catch { throw new ArgumentException("Error: File input does not match format expected by [User] constructor"); }
 
@@ -105,8 +119,10 @@ namespace KozinskiAlamidiAssignment2
             catch (Exception e) { throw new Exception(e.Message); }
         }
 
+        // Not needed for this iteration of the program (no sign up functionality included; only log in)
         // Alternate constructor (for creating a new user)
         // Enforces name format and uniqueness
+        /*
         public User(string newName)
         {
             // Rejects input name if it begins or ends with space characters
@@ -128,6 +144,7 @@ namespace KozinskiAlamidiAssignment2
             catch (ArgumentException) { throw new ArgumentException("Error: That username is taken. Please try another: "); }
             catch (Exception e) { throw new Exception(e.Message); }
         }
+        */
 
         // Defines User object comparison method
         // Required to implement IComparable interface
