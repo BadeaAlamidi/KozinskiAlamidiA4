@@ -712,9 +712,9 @@ namespace KozinskiAlamidiAssignment2
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
-        public bool Locked {
-            get { return locked; }
-            set { locked = value; }
+        public string Locked {
+            get { return locked.ToString(); }
+            set { try { locked = Convert.ToBoolean(value); } catch { throw new Exception($"{value} could not be converted to a boolean"); } }
         }
         public float PostRating
         {
@@ -758,7 +758,6 @@ namespace KozinskiAlamidiAssignment2
                     throw new ArgumentException("Bad Title length provided. Be sure that your Title is more than one character and less than a hundred.\n");
             }
         }
-
         public uint Id => id;
         public uint subHomeId { get { return subHome; } }
         public string DateString { get { return timeStamp.ToString("G"); } }
@@ -784,7 +783,7 @@ namespace KozinskiAlamidiAssignment2
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
-            locked = Convert.ToBoolean(parameters[0]);
+            Locked = parameters[0];
             id = Convert.ToUInt32(parameters[1]);
             authorID = Convert.ToUInt32(parameters[2]);
 
@@ -799,7 +798,7 @@ namespace KozinskiAlamidiAssignment2
                 postContent = parameters[6];
 
                 // Creates post anyway due to sample output example
-                Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new FoulLanguageException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
             {
@@ -807,7 +806,7 @@ namespace KozinskiAlamidiAssignment2
                 postContent = parameters[4];
 
                 // Creates post anyway due to sample output example
-                Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch { throw new Exception("Error: File input for post " + id + " does not match format expected by [Post] constructor"); }
 
@@ -1294,9 +1293,9 @@ namespace KozinskiAlamidiAssignment2
                                     break;
                                 case "posts":
                                     try { Post newPost = new Post(fileLine.Split('\t')); }
-                                    catch (KeyNotFoundException e) { Console.WriteLine(e.Message); }
-                                    catch (ArgumentException e) { Console.WriteLine(e.Message); } // Doesn't scold user for foul language
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
+                                    catch (KeyNotFoundException e) { throw new KeyNotFoundException(e.Message); }
+                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); } // Doesn't scold user for foul language
+                                    catch (Exception e) { throw new Exception(e.Message); }
                                     break;
                                 case "comments":
                                     try
