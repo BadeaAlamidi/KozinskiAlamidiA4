@@ -24,10 +24,11 @@ namespace KozinskiAlamidiAssignment2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try { RedditUtilities.ReadFiles(); } catch (ArgumentException exception){ systemOutput.AppendText(exception.Message);}
+            RedditUtilities.ReadFiles();
+            //try { RedditUtilities.ReadFiles(); } /*catch (ArgumentException exception)*/catch (Exception exception){ systemOutput.AppendText(exception.Message);}
             foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value.Name); }
             foreach (KeyValuePair<uint,Subreddit>subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value.Name); }
-
+            systemOutput.AppendText($"\nthe total count for posts is: {Program.globalPosts.Count}"); // only one post gets added
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,9 +42,9 @@ namespace KozinskiAlamidiAssignment2
             ListBox selectedSubreddit = sender as ListBox;
             foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits) {
                 if (subredditTuple.Value.Name == selectedSubreddit.SelectedItem.ToString()) {
-                    foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts)
-                    {//.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value.Score)) 
-                        postSelection.Items.Add(">");
+                    foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderByDescending(globalPostTuple => globalPostTuple.Value.Score))
+                    {// 
+                        postSelection.Items.Add($"{postTuple.Value.Title} Score: {postTuple.Value.Score}");
                     }
                     //foreach (uint postId in subredditTuple.Value.subPostIDs)
                       //  foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(postTuple => postTuple.Key == postId).OrderBy(postTuple => postTuple.Value.Score))

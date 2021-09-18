@@ -714,7 +714,12 @@ namespace KozinskiAlamidiAssignment2
         public int Score => (int)upVotes - (int)downVotes;
         public string Locked {
             get { return locked.ToString(); }
-            set { try { locked = Convert.ToBoolean(value); } catch { throw new Exception($"{value} could not be converted to a boolean"); } }
+            set {
+                switch (value) {
+                    case "0":locked = false; break;
+                    case "1":locked = true; break;
+                }
+            }
         }
         public float PostRating
         {
@@ -794,10 +799,11 @@ namespace KozinskiAlamidiAssignment2
             }
             catch (FoulLanguageException)
             {
-                title = parameters[5];
-                postContent = parameters[6];
+                title = parameters[3];
+                postContent = parameters[4];
 
                 // Creates post anyway due to sample output example
+                
                 throw new FoulLanguageException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
@@ -806,23 +812,21 @@ namespace KozinskiAlamidiAssignment2
                 postContent = parameters[4];
 
                 // Creates post anyway due to sample output example
-                throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                //throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch { throw new Exception("Error: File input for post " + id + " does not match format expected by [Post] constructor"); }
 
-            subHome = Convert.ToUInt32(parameters[4]);
-            upVotes = Convert.ToUInt32(parameters[5]);
-            downVotes = Convert.ToUInt32(parameters[6]);
-            weight = Convert.ToUInt32(parameters[7]);
+            subHome = Convert.ToUInt32(parameters[5]);
+            upVotes = Convert.ToUInt32(parameters[6]);
+            downVotes = Convert.ToUInt32(parameters[7]);
+            weight = Convert.ToUInt32(parameters[8]);
 
-            // safe guard in case the default constructor is used (it is unknown if the default constructor will ever get used)
-            if (parameters.Length > 8)
-                timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
-                                            Convert.ToInt32(parameters[10]),
-                                            Convert.ToInt32(parameters[11]),
-                                            Convert.ToInt32(parameters[12]),
-                                            Convert.ToInt32(parameters[13]),
-                                            Convert.ToInt32(parameters[14]));
+            timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
+                                     Convert.ToInt32(parameters[10]),
+                                     Convert.ToInt32(parameters[11]),
+                                     Convert.ToInt32(parameters[12]),
+                                     Convert.ToInt32(parameters[13]),
+                                     Convert.ToInt32(parameters[14]));
             postComments = new SortedDictionary<uint, Comment>();
 
             // Attempts to add post to global collection
@@ -1294,8 +1298,8 @@ namespace KozinskiAlamidiAssignment2
                                 case "posts":
                                     try { Post newPost = new Post(fileLine.Split('\t')); }
                                     catch (KeyNotFoundException e) { throw new KeyNotFoundException(e.Message); }
-                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); } // Doesn't scold user for foul language
-                                    catch (Exception e) { throw new Exception(e.Message); }
+                                    //catch (ArgumentException e) { throw new ArgumentException(e.Message); } // Doesn't scold user for foul language
+                                    //catch (Exception e) { throw new Exception(e.Message); }
                                     break;
                                 case "comments":
                                     try
