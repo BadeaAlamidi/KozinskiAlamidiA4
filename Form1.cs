@@ -24,10 +24,19 @@ namespace KozinskiAlamidiAssignment2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try { RedditUtilities.ReadFiles(); } catch (ArgumentException exception){ systemOutput.AppendText(exception.Message);}
+            // Runs file reader and stores error log
+            List<string> fileReadErrors = RedditUtilities.ReadFiles();
+
+            // Prints error log to system output
+            foreach (string line in fileReadErrors)
+                systemOutput.AppendText(line + "\n");
+
+            // Populates user, subreddit, and post boxes
             foreach (User user in Program.globalUsers.Values) { userSelection.Items.Add(user.Name); }
             foreach (Subreddit subreddit in Program.globalSubreddits.Values) { subredditSelection.Items.Add(subreddit.Name); }
-            
+
+            // Need to abbreviate post length
+            foreach (Post post in Program.globalPosts.Values) { postSelection.Items.Add(post.Title); }
         }
 
         private void button1_Click(object sender, EventArgs e)

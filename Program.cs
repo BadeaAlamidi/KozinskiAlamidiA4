@@ -712,9 +712,21 @@ namespace KozinskiAlamidiAssignment2
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
-        public bool Locked {
-            get { return locked; }
-            set { locked = value; }
+        public string Locked
+        {
+            get { return locked.ToString(); }
+            set
+            {
+                switch (value)
+                {
+                    case "0":
+                        locked = false;
+                        break;
+                    case "1":
+                        locked = true;
+                        break;
+                }
+            }
         }
         public float PostRating
         {
@@ -784,10 +796,6 @@ namespace KozinskiAlamidiAssignment2
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
-            locked = Convert.ToBoolean(parameters[0]);
-            id = Convert.ToUInt32(parameters[1]);
-            authorID = Convert.ToUInt32(parameters[2]);
-
             try
             {
                 Title = parameters[3];
@@ -795,50 +803,56 @@ namespace KozinskiAlamidiAssignment2
             }
             catch (FoulLanguageException)
             {
-                title = parameters[5];
-                postContent = parameters[6];
-
                 // Creates post anyway due to sample output example
-                Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new FoulLanguageException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
             {
-                title = parameters[3];
-                postContent = parameters[4];
-
                 // Creates post anyway due to sample output example
-                Console.WriteLine("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
-            catch { throw new Exception("Error: File input for post " + id + " does not match format expected by [Post] constructor"); }
+            finally
+            {
+                try
+                {
+                    Locked = parameters[0];
+                    id = Convert.ToUInt32(parameters[1]);
+                    authorID = Convert.ToUInt32(parameters[2]);
 
-            subHome = Convert.ToUInt32(parameters[4]);
-            upVotes = Convert.ToUInt32(parameters[5]);
-            downVotes = Convert.ToUInt32(parameters[6]);
-            weight = Convert.ToUInt32(parameters[7]);
+                    title = parameters[3];
+                    postContent = parameters[4];
 
-            // safe guard in case the default constructor is used (it is unknown if the default constructor will ever get used)
-            if (parameters.Length > 8)
-                timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
-                                            Convert.ToInt32(parameters[10]),
-                                            Convert.ToInt32(parameters[11]),
-                                            Convert.ToInt32(parameters[12]),
-                                            Convert.ToInt32(parameters[13]),
-                                            Convert.ToInt32(parameters[14]));
-            postComments = new SortedDictionary<uint, Comment>();
+                    subHome = Convert.ToUInt32(parameters[5]);
+                    upVotes = Convert.ToUInt32(parameters[6]);
+                    downVotes = Convert.ToUInt32(parameters[7]);
+                    weight = Convert.ToUInt32(parameters[8]);
 
-            // Attempts to add post to global collection
-            // Generates an ArgumentException if post is already in the collection
-            try { Program.globalPosts.Add(Id, this); }
-            catch (ArgumentException) { throw new ArgumentException("Error: Could not add post globally; the post ID was already taken"); }
-            catch (Exception e) { throw new Exception(e.Message); }
+                    // safe guard in case the default constructor is used (it is unknown if the default constructor will ever get used)
+                    if (parameters.Length > 8)
+                        timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
+                                                    Convert.ToInt32(parameters[10]),
+                                                    Convert.ToInt32(parameters[11]),
+                                                    Convert.ToInt32(parameters[12]),
+                                                    Convert.ToInt32(parameters[13]),
+                                                    Convert.ToInt32(parameters[14]));
+                    postComments = new SortedDictionary<uint, Comment>();
+                }
+                catch { throw new Exception("Error: Could not add post" + id + "; file input does not match format expected by [Post] constructor"); }
 
-            // Attempts to add post ID to subreddit collection
-            // Generates an ArgumentException if post ID is already in the collection
-            try { Program.globalSubreddits[subHomeId].subPostIDs.Add(Id); }
-            catch (KeyNotFoundException) { throw new KeyNotFoundException("Error: Could not add post " + Id + " to subreddit; the subreddit was not found"); }
-            catch (ArgumentException) { throw new ArgumentException("Error: Could not add post " + Id + " to subreddit; the post ID was already taken"); }
-            catch (Exception e) { throw new Exception(e.Message); }
-        }
+                // Attempts to add post to global collection
+                // Generates an ArgumentException if post is already in the collection
+                try { Program.globalPosts.Add(Id, this); }
+                catch (ArgumentException) { throw new ArgumentException("Error: Could not add post" + id + "; the post ID was already taken"); }
+                catch (Exception e) { throw new Exception(e.Message); }
+
+                // Attempts to add post ID to subreddit collection
+                // Generates an ArgumentException if post ID is already in the collection
+                try { Program.globalSubreddits[subHomeId].subPostIDs.Add(Id); }
+                catch (KeyNotFoundException) { throw new KeyNotFoundException("Error: Could not add post " + Id + "; the subreddit was not found"); }
+                catch (ArgumentException) { throw new ArgumentException("Error: Could not add post " + Id + "; the post ID was already taken"); }
+                catch (Exception e) { throw; }// new Exception(e.Message); }
+            }
+         }
 
         // constructor for user generated Post instances
         // new posts have the current time assigned to them
@@ -1259,12 +1273,13 @@ namespace KozinskiAlamidiAssignment2
             return false;
         }
 
-        public static void ReadFiles()
+        public static List<string> ReadFiles()
         {
             // Initializes "existing" users, subreddits, posts, and comments with data from files
             string filePrefix = "..\\..\\";
             string[] fileNames = new string[] { "users", "subreddits", "posts", "comments" };
             string fileLine;
+            List<string> fileErrors = new List<string>();
 
             // Processes each file
             foreach (string fileName in fileNames)
@@ -1284,19 +1299,20 @@ namespace KozinskiAlamidiAssignment2
                             {
                                 case "users":
                                     try { User newUser = new User(fileLine.Split('\t')); }
-                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); }//Console.WriteLine(e.Message); }
-                                    catch (Exception e) { throw new Exception(e.Message); }//Console.WriteLine(e.Message); }
+                                    catch (ArgumentException e) { fileErrors.Add(e.Message); }
+                                    catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 case "subreddits":
                                     try { Subreddit newSubreddit = new Subreddit(fileLine.Split('\t')); }
-                                    catch (ArgumentException e) { throw new ArgumentException(e.Message); }
-                                    catch (Exception e) { throw new Exception(e.Message); }
+                                    catch (ArgumentException e) { fileErrors.Add(e.Message); }
+                                    catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 case "posts":
                                     try { Post newPost = new Post(fileLine.Split('\t')); }
-                                    catch (KeyNotFoundException e) { Console.WriteLine(e.Message); }
-                                    catch (ArgumentException e) { Console.WriteLine(e.Message); } // Doesn't scold user for foul language
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
+                                    catch (KeyNotFoundException e) { fileErrors.Add(e.Message); }
+                                    catch (FoulLanguageException e) { fileErrors.Add(e.Message); } // Warns, but doesn't scold user, for foul language
+                                    catch (ArgumentException e) { fileErrors.Add(e.Message); }     // Warns, but doesn't scold user, for title / post length
+                                    catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 case "comments":
                                     try
@@ -1312,11 +1328,11 @@ namespace KozinskiAlamidiAssignment2
                                         else
                                             RedditUtilities.FindCommentParent(newComment.ParentID).commentReplies.Add(newComment.Id, newComment);
                                     }
-                                    catch (ArgumentException e) { Console.WriteLine(e.Message); }
-                                    catch (Exception e) { Console.WriteLine(e.Message); }
+                                    catch (ArgumentException e) { fileErrors.Add(e.Message); }
+                                    catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 default:
-                                    Console.WriteLine("Error: Could not process " + fileName + ".txt");
+                                    fileErrors.Add("Error: Could not process " + fileName + ".txt");
                                     break;
                             }
 
@@ -1326,8 +1342,9 @@ namespace KozinskiAlamidiAssignment2
                     }
                 }
                 else
-                    Console.WriteLine("Error: Could not open input file " + fileName + ".txt");
+                    fileErrors.Add("Error: Could not open input file " + fileName + ".txt");
             }
+            return fileErrors;
         }
     }
 
