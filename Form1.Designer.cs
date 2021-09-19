@@ -110,6 +110,7 @@ namespace KozinskiAlamidiAssignment2
             this.postSelection.Name = "postSelection";
             this.postSelection.Size = new System.Drawing.Size(609, 160);
             this.postSelection.TabIndex = 5;
+            this.postSelection.SelectedValueChanged += new System.EventHandler(this.postSelection_SelectedValueChanged);
             // 
             // systemOutput
             // 
@@ -168,6 +169,7 @@ namespace KozinskiAlamidiAssignment2
             this.loginButton.Text = "Log-In";
             this.loginButton.UseVisualStyleBackColor = true;
             this.loginButton.Click += new System.EventHandler(this.button1_Click);
+            this.loginButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loginButton_MouseClick);
             // 
             // deletePostButton
             // 
