@@ -459,6 +459,7 @@ namespace KozinskiAlamidiAssignment2
         private uint downVotes;
         private readonly DateTime timeStamp;
         public SortedDictionary<uint, Comment> commentReplies;
+        private uint indentation;
 
         // Properties to control read/write access to private attributes
         public bool Locked
@@ -486,7 +487,11 @@ namespace KozinskiAlamidiAssignment2
         }
         public DateTime TimeStamp => timeStamp;
         public uint Score => UpVotes - DownVotes;
-
+        public uint Indentation
+        {
+            get { return indentation; }
+            set { indentation = value; }
+        }
         // Default constructor
         public Comment()
         {
@@ -498,11 +503,12 @@ namespace KozinskiAlamidiAssignment2
             DownVotes = 0;
             timeStamp = new DateTime(0);
             commentReplies = new SortedDictionary<uint, Comment>();
+            Indentation = 0;
         }
         //      ID | AuthorID | Content | ParentID | UpVotes | DownVotes | Year | Month | Day | Hour | Min | Sec
         // OLD: ID | authorID | content | post/comment ID being replied to | upVotes | downVotes | year | month | day | hour | min | sec
         // Alternate constructor (for reading from a file)
-        public Comment(string[] commentData)
+        public Comment(string[] commentData, uint indentLevel)
         {
             try
             {
@@ -521,12 +527,13 @@ namespace KozinskiAlamidiAssignment2
                                          Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
                                          Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
                 commentReplies = new SortedDictionary<uint, Comment>();
+                Indentation = indentLevel;
             }
             catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
         }
 
         // Alternate constructor (for creating a new comment)
-        public Comment(string newContent, uint newAuthorID, uint newParentID)
+        public Comment(string newContent, uint newAuthorID, uint newParentID, uint indentLevel)
         {
             locked = false;
             id = RedditUtilities.GenerateUniqueId();
@@ -537,6 +544,7 @@ namespace KozinskiAlamidiAssignment2
             DownVotes = 1;
             timeStamp = DateTime.Now;
             commentReplies = new SortedDictionary<uint, Comment>();
+            Indentation = indentLevel;
         }
 
         // Defines Comment object comparison method
@@ -568,17 +576,10 @@ namespace KozinskiAlamidiAssignment2
         // Overrides ToString() method
         public override string ToString()
         {
-            string commentDescription = "Comment ID: " + Id.ToString() + "\n" +
-                                        "Comment Author ID: " + AuthorID.ToString() + "\n" +
-                                        "Comment Content: " + Content + "\n" +
-                                        "Comment Parent ID: " + ParentID.ToString() + "\n" +
-                                        "Comment Upvotes: " + UpVotes.ToString() + "\n" +
-                                        "Comment Downvotes: " + DownVotes.ToString() + "\n" +
-                                        "Comment Timestamp: " + TimeStamp.ToString("G") + "\n" +
-                                        "Comment Replies: " + "\n";
-
-            foreach (KeyValuePair<uint, Comment> commentReply in commentReplies)
-                commentDescription += "    " + Id + "\n";
+            string commentDescription = "";
+            for (int i = 0; i < Indentation; ++i)
+                commentDescription += "    ";
+            commentDescription += $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}| {parentID}";
 
             return commentDescription;
         }
@@ -712,6 +713,7 @@ namespace KozinskiAlamidiAssignment2
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
+
         public string Locked
         {
             get { return locked.ToString(); }
@@ -770,7 +772,6 @@ namespace KozinskiAlamidiAssignment2
                     throw new ArgumentException("Bad Title length provided. Be sure that your Title is more than one character and less than a hundred.\n");
             }
         }
-
         public uint Id => id;
         public uint subHomeId { get { return subHome; } }
         public string DateString { get { return timeStamp.ToString("G"); } }
@@ -796,6 +797,8 @@ namespace KozinskiAlamidiAssignment2
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
+
+
             try
             {
                 Title = parameters[3];
@@ -803,12 +806,15 @@ namespace KozinskiAlamidiAssignment2
             }
             catch (FoulLanguageException)
             {
+
                 // Creates post anyway due to sample output example
+
                 throw new FoulLanguageException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
             {
                 // Creates post anyway due to sample output example
+
                 throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
             }
             finally
@@ -1318,15 +1324,24 @@ namespace KozinskiAlamidiAssignment2
                                     try
                                     {
                                         // Constructs new comment
-                                        Comment newComment = new Comment(fileLine.Split('\t'));
-
+                                        //Comment newComment = new Comment(fileLine.Split('\t'));
+                                        string[] tokenArray = fileLine.Split('\t');
+                                        uint commentParentId= Convert.ToUInt32(tokenArray[3]);
                                         // Adds comment to parent post, if applicable
-                                        if (Program.globalPosts.ContainsKey(newComment.ParentID))
-                                            Program.globalPosts[newComment.ParentID].postComments.Add(newComment.Id, newComment);
+                                        if (Program.globalPosts.ContainsKey(commentParentId))
+                                        {
+                                            Comment newComment = new Comment(tokenArray,0);
+                                            Program.globalPosts[commentParentId].postComments.Add(newComment.Id, newComment);
+                                        }
 
                                         // Adds comment to parent comment, if applicable
                                         else
-                                            RedditUtilities.FindCommentParent(newComment.ParentID).commentReplies.Add(newComment.Id, newComment);
+                                        {
+
+                                            Comment parent = FindCommentParent(commentParentId);
+                                            Comment newComment = new Comment(tokenArray, parent.Indentation+1);
+                                            parent.commentReplies.Add(newComment.Id, newComment);
+                                        }
                                     }
                                     catch (ArgumentException e) { fileErrors.Add(e.Message); }
                                     catch (Exception e) { fileErrors.Add(e.Message); }
@@ -1354,7 +1369,7 @@ namespace KozinskiAlamidiAssignment2
         public static SortedDictionary<uint, User> globalUsers = new SortedDictionary<uint, User>();
         public static SortedDictionary<uint, Subreddit> globalSubreddits = new SortedDictionary<uint, Subreddit>();
         public static SortedDictionary<uint, Post> globalPosts = new SortedDictionary<uint, Post>();
-
+        public static User activeUser = null;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
