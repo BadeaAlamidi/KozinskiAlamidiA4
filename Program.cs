@@ -590,7 +590,7 @@ namespace KozinskiAlamidiAssignment2
         // Does not include indentation
         public override string ToString()
         {
-            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|";
+            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|\n";
         }
 
         // Overloads ToString() method (for showing abbreviated comment content)
@@ -950,7 +950,7 @@ namespace KozinskiAlamidiAssignment2
         // Overrides ToString() method (for showing full post content)
         public override string ToString()
         {
-            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({Score}) {Title} - {Program.globalUsers[AuthorId].Name} |{DateString}|";
+            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({Score}) {Title} {postContent} - {Program.globalUsers[AuthorId].Name} |{DateString}|\n";
         }
         
         // Overloads ToString() method (for showing abbreviated post content)
