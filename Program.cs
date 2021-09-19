@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -171,18 +172,36 @@ namespace KozinskiAlamidiAssignment2
         // Overrides ToString() method
         public override string ToString()
         {
-            string userDescription = "User ID: " + Id.ToString() + "\n" +
-                                     "Username: " + Name + "\n" +
-                                     "Post Score: " + PostScore.ToString() + "\n" +
-                                     "Comment Score: " + CommentScore.ToString() + "\n";
-            return userDescription;
+            StringBuilder userDescription = new StringBuilder(Name);
+            
+            switch (Type)
+            {
+                case UserType.User:
+                    for (int i = 0; i < 21 - Name.Length - 1; i++)
+                        userDescription.Append(' ');
+                    break;
+                case UserType.Mod:
+                    for (int i = 0; i < 16 - Name.Length - 1; i++)
+                        userDescription.Append(' ');
+                    userDescription.Append(" (M) ");
+                    break;
+                case UserType.Admin:
+                    for (int i = 0; i < 16 - Name.Length - 1; i++)
+                        userDescription.Append(' ');
+                    userDescription.Append(" (A) ");
+                    break;
+            }
+
+            userDescription.Append($"({PostScore} / {CommentScore}");
+
+            return Convert.ToString(userDescription);
         }
     }
 
     public enum UserType {
-            User,
-            Mod,
-            Admin
+        User,
+        Mod,
+        Admin
     };
     /****************************************************************************
     * This class contains information about the subreddits
@@ -309,15 +328,7 @@ namespace KozinskiAlamidiAssignment2
         // Overrides ToString() method
         public override string ToString()
         {
-            string subredditDescription = "Subreddit ID: " + Id.ToString() + "\n" +
-                                          "Subreddit Name: " + Name + "\n" +
-                                          "Members: " + Members.ToString() + "\n" +
-                                          "Active: " + Active.ToString() + "\n";
-
-            foreach (uint ID in subPostIDs)
-                subredditDescription += "    " + ID.ToString() + "\n";
-
-            return subredditDescription;
+            return Name;
         }
 
         // Implements GetEnumerator method
@@ -486,15 +497,17 @@ namespace KozinskiAlamidiAssignment2
             set { downVotes = value; }
         }
         public DateTime TimeStamp => timeStamp;
-        public uint Score => UpVotes - DownVotes;
+        public int Score => Convert.ToInt32(UpVotes) - Convert.ToInt32(DownVotes);
         public uint Indentation
         {
             get { return indentation; }
             set { indentation = value; }
         }
+        public string AbbreviateContent { get { return this.ToString("ListBox"); } }
         // Default constructor
         public Comment()
         {
+            locked = false;
             id = 0;
             authorID = 0;
             Content = "";
@@ -573,14 +586,32 @@ namespace KozinskiAlamidiAssignment2
                 throw new ArgumentException("[Comment]:CompareTo argument is not a comment.");
         }
 
-        // Overrides ToString() method
+        // Overrides ToString() method (for showing full comment content)
+        // Does not include indentation
         public override string ToString()
         {
+            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|";
+        }
+
+        // Overloads ToString() method (for showing abbreviated comment content)
+        // Includes indentation
+        public string ToString(string shortTitle)
+        {
             string commentDescription = "";
+
+            // Adds indentation
             for (int i = 0; i < Indentation; ++i)
                 commentDescription += "    ";
-            commentDescription += $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}| {parentID}";
 
+            // Shortens title if needed
+            StringBuilder newTitle = new StringBuilder(Content);
+            if (shortTitle == "ListBox" && Content.Length > 35)
+            {
+                newTitle.Remove(35, Content.Length - 35);
+                newTitle.Append("...");
+            }
+
+            commentDescription += $"<{Id}> ({Score}) {newTitle.ToString()} - { Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|";
             return commentDescription;
         }
 
@@ -776,6 +807,7 @@ namespace KozinskiAlamidiAssignment2
         public uint subHomeId { get { return subHome; } }
         public string DateString { get { return timeStamp.ToString("G"); } }
         public uint AuthorId { get { return authorID; } }
+        public string AbbreviateContent { get { return this.ToString("ListBox"); } }
 
         public Post()
         {
@@ -797,8 +829,6 @@ namespace KozinskiAlamidiAssignment2
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
-
-
             try
             {
                 Title = parameters[3];
@@ -806,16 +836,13 @@ namespace KozinskiAlamidiAssignment2
             }
             catch (FoulLanguageException)
             {
-
                 // Creates post anyway due to sample output example
-
-                throw new FoulLanguageException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new FoulLanguageException("Warning: Title or content for post " + parameters[1] + " does not meet parameters; adding anyway");
             }
             catch (ArgumentException)
             {
                 // Creates post anyway due to sample output example
-
-                throw new ArgumentException("Warning: Title or content for post " + id + " does not meet parameters; adding anyway");
+                throw new ArgumentException("Warning: Title or content for post " + parameters[1] + " does not meet parameters; adding anyway");
             }
             finally
             {
@@ -919,25 +946,25 @@ namespace KozinskiAlamidiAssignment2
             else
                 throw new ArgumentException("[Post]:CompareTo argument is not a post.");
         }
-
-        // Overrides ToString() method
+        
+        // Overrides ToString() method (for showing full post content)
         public override string ToString()
         {
-            string postDescription = "Post ID: " + Id.ToString() + "\n" +
-                                     "Post Author ID: " + authorID.ToString() + "\n" +
-                                     "Post Title: " + Title + "\n" +
-                                     "Post Content: " + postContent + "\n" +
-                                     "Post Subreddit Home ID: " + subHome.ToString() + "\n" +
-                                     "Post Upvotes: " + upVotes.ToString() + "\n" +
-                                     "Post Downvotes: " + downVotes.ToString() + "\n" +
-                                     "Post Weight: " + weight.ToString() + "\n" +
-                                     "Post Timestamp: " + timeStamp.ToString("G") + "\n" +
-                                     "Post Replies: " + "\n";
+            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({Score}) {Title} - {Program.globalUsers[AuthorId].Name} |{DateString}|";
+        }
+        
+        // Overloads ToString() method (for showing abbreviated post content)
+        public string ToString(string shortTitle)
+        {
+            StringBuilder newTitle = new StringBuilder(Title);
 
-            foreach (KeyValuePair<uint, Comment> comment in postComments)
-                postDescription += "    " + comment.Key.ToString() + "\n";
+            if (shortTitle == "ListBox" && Title.Length > 35)
+            {
+                newTitle.Remove(35, Title.Length - 35);
+                newTitle.Append("...");
+            }
 
-            return postDescription;
+            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({ Score}) {newTitle.ToString()} - { Program.globalUsers[AuthorId].Name} |{ DateString}|";
         }
 
         IEnumerator IEnumerable.GetEnumerator()

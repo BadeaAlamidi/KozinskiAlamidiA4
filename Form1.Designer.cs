@@ -66,10 +66,12 @@ namespace KozinskiAlamidiAssignment2
             // 
             // userSelection
             // 
+            this.userSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userSelection.FormattingEnabled = true;
+            this.userSelection.ItemHeight = 14;
             this.userSelection.Location = new System.Drawing.Point(10, 32);
             this.userSelection.Name = "userSelection";
-            this.userSelection.Size = new System.Drawing.Size(226, 160);
+            this.userSelection.Size = new System.Drawing.Size(226, 158);
             this.userSelection.TabIndex = 1;
             // 
             // label2
@@ -85,10 +87,12 @@ namespace KozinskiAlamidiAssignment2
             // 
             // subredditSelection
             // 
+            this.subredditSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subredditSelection.FormattingEnabled = true;
+            this.subredditSelection.ItemHeight = 14;
             this.subredditSelection.Location = new System.Drawing.Point(240, 32);
             this.subredditSelection.Name = "subredditSelection";
-            this.subredditSelection.Size = new System.Drawing.Size(128, 160);
+            this.subredditSelection.Size = new System.Drawing.Size(128, 158);
             this.subredditSelection.TabIndex = 3;
             this.subredditSelection.SelectedValueChanged += new System.EventHandler(this.subredditSelection_SelectedValueChanged);
             // 
@@ -105,10 +109,13 @@ namespace KozinskiAlamidiAssignment2
             // 
             // postSelection
             // 
+            this.postSelection.DisplayMember = "AbbreviateContent";
+            this.postSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.postSelection.FormattingEnabled = true;
+            this.postSelection.ItemHeight = 14;
             this.postSelection.Location = new System.Drawing.Point(374, 32);
             this.postSelection.Name = "postSelection";
-            this.postSelection.Size = new System.Drawing.Size(609, 160);
+            this.postSelection.Size = new System.Drawing.Size(609, 158);
             this.postSelection.TabIndex = 5;
             this.postSelection.SelectedValueChanged += new System.EventHandler(this.postSelection_SelectedValueChanged);
             // 
@@ -205,11 +212,15 @@ namespace KozinskiAlamidiAssignment2
             // 
             // commentSelection
             // 
+            this.commentSelection.DisplayMember = "AbbreviateContent";
+            this.commentSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.commentSelection.FormattingEnabled = true;
+            this.commentSelection.ItemHeight = 14;
             this.commentSelection.Location = new System.Drawing.Point(14, 286);
             this.commentSelection.Name = "commentSelection";
-            this.commentSelection.Size = new System.Drawing.Size(599, 147);
+            this.commentSelection.Size = new System.Drawing.Size(599, 144);
             this.commentSelection.TabIndex = 15;
+            this.commentSelection.SelectedValueChanged += new System.EventHandler(this.commentSelection_SelectedValueChanged);
             // 
             // deleteCommentButton
             // 
@@ -233,6 +244,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             // replyInput
             // 
+            this.replyInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.replyInput.Location = new System.Drawing.Point(619, 287);
             this.replyInput.Name = "replyInput";
             this.replyInput.Size = new System.Drawing.Size(364, 117);

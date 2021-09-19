@@ -50,7 +50,8 @@ namespace KozinskiAlamidiAssignment2
                 if (subredditTuple.Value.Name == subredditSelection.SelectedItem.ToString()) {
                     foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
                         postSelection.Items.Add(postTuple.Value);
-                    //there can only be one match for this check, which warrants ending this loop once a single match was found
+                    // there can only be one match for this check, which warrants ending this loop once a single match was found
+                    // displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
                     break;
                 }
             }
@@ -58,6 +59,9 @@ namespace KozinskiAlamidiAssignment2
 
         private void postSelection_SelectedValueChanged(object sender, EventArgs e)
         {
+            systemOutput.Clear();
+            systemOutput.AppendText(postSelection.SelectedItem.ToString());
+
             commentSelection.Items.Clear();
             Post chosenPost = postSelection.SelectedItem as Post;
             if (chosenPost == null) throw new Exception("casting from postSelection.SelectedItem to a Post was unsuccessful");
@@ -67,6 +71,7 @@ namespace KozinskiAlamidiAssignment2
             Array.Sort(sortedPostComments);
 
             // Starts at the post level
+            // Displays abbreviated title if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
             foreach (Comment postComment in sortedPostComments)
             {
                 commentSelection.Items.Add(postComment);
@@ -82,12 +87,18 @@ namespace KozinskiAlamidiAssignment2
 
                 foreach (Comment commentReply in sortedCommentReplies)
                 {
-
                     commentSelection.Items.Add(commentReply);
+
                     // Recursive call
                     PrintChildComment(commentReply);
                 }
             }
+        }
+
+        private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
+        {
+            systemOutput.Clear();
+            systemOutput.AppendText(commentSelection.SelectedItem.ToString());
         }
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
@@ -99,6 +110,5 @@ namespace KozinskiAlamidiAssignment2
             if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash) { systemOutput.AppendText("authentication successful"); Program.activeUser = chosenUser; }
             else systemOutput.AppendText("authentication failed");
         }
-        
     }
 }
