@@ -17,9 +17,20 @@ namespace KozinskiAlamidiAssignment2
             InitializeComponent();
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        // Iterates recursively through comments (function is called in loop above)
+        void PrintChildComments(Comment currentComment)
         {
+            // Sorts comment level by post rating
+            Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
+            Array.Sort(sortedCommentReplies);
 
+            foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment))
+            {
+                commentSelection.Items.Add(commentReply);
+
+                // Recursive call
+                PrintChildComments(commentReply);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -75,24 +86,9 @@ namespace KozinskiAlamidiAssignment2
             foreach (Comment postComment in sortedPostComments)
             {
                 commentSelection.Items.Add(postComment);
-                PrintChildComment(postComment);
+                PrintChildComments(postComment);
             }
 
-            // Iterates recursively through comments (function is called in loop above)
-            void PrintChildComment(Comment currentComment)
-            {
-                // Sorts comment level by post rating
-                Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
-                Array.Sort(sortedCommentReplies);
-
-                foreach (Comment commentReply in sortedCommentReplies)
-                {
-                    commentSelection.Items.Add(commentReply);
-
-                    // Recursive call
-                    PrintChildComment(commentReply);
-                }
-            }
         }
 
         private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
@@ -107,8 +103,36 @@ namespace KozinskiAlamidiAssignment2
             if (passwordInput.Text == "") { systemOutput.AppendText("\nplease enter a password. Be sure to choose the your intended username\n"); return; }
             //authentication happens here:
             User chosenUser = userSelection.SelectedItem as User;
-            if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash) { systemOutput.AppendText("authentication successful"); Program.activeUser = chosenUser; }
+            if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash) { systemOutput.AppendText("authentication successful\n"); Program.activeUser = chosenUser; }
             else systemOutput.AppendText("authentication failed");
+        }
+
+        private void addReplyButton_Click(object sender, EventArgs e)
+        {
+            if (replyInput.Text == "") { systemOutput.AppendText("You may not post an empty comment\n"); return; }
+            if (Program.activeUser == null) { systemOutput.AppendText("Log-in is required to add posts and comments\n"); return; }
+            // the following check is for when neither a post nor a comment is chosen
+            if (postSelection.SelectedIndex == -1) { systemOutput.AppendText("Choose a post to reply to a post or a comment to reply to a comment.\n"); return; }
+            Post chosenPost = postSelection.SelectedItem as Post;
+            // case for when posting a reply to a post
+            if (commentSelection.SelectedIndex == -1)
+            {
+                Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
+                chosenPost.postComments.Add(newComment.Id, newComment);
+            }
+            // this will trigger if the commentSelection.SelectedIndex is not -1.
+            else 
+            {
+                Comment chosenComment = commentSelection.SelectedItem as Comment;
+                Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
+                chosenComment.commentReplies.Add(newComment.Id, newComment);
+            }
+            commentSelection.Items.Clear();
+            foreach(Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment))
+            {
+                commentSelection.Items.Add(comment);
+                PrintChildComments(comment);
+            }
         }
     }
 }

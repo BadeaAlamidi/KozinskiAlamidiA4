@@ -241,6 +241,7 @@ namespace KozinskiAlamidiAssignment2
             this.addReplyButton.TabIndex = 17;
             this.addReplyButton.Text = "Add Reply";
             this.addReplyButton.UseVisualStyleBackColor = true;
+            this.addReplyButton.Click += new System.EventHandler(this.addReplyButton_Click);
             // 
             // replyInput
             // 
