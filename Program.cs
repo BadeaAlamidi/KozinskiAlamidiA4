@@ -584,7 +584,7 @@ namespace KozinskiAlamidiAssignment2
         // Does not include indentation
         public override string ToString()
         {
-            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|\n";
+            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}| {parentID}\n";
         }
 
         // Overloads ToString() method (for showing abbreviated comment content)
@@ -1346,10 +1346,9 @@ namespace KozinskiAlamidiAssignment2
                                 case "comments":
                                     try
                                     {
-                                        // Constructs new comment
-                                        //Comment newComment = new Comment(fileLine.Split('\t'));
                                         string[] tokenArray = fileLine.Split('\t');
                                         uint commentParentId= Convert.ToUInt32(tokenArray[3]);
+
                                         // Adds comment to parent post, if applicable
                                         if (Program.globalPosts.ContainsKey(commentParentId))
                                         {
@@ -1360,7 +1359,6 @@ namespace KozinskiAlamidiAssignment2
                                         // Adds comment to parent comment, if applicable
                                         else
                                         {
-
                                             Comment parent = FindCommentParent(commentParentId);
                                             Comment newComment = new Comment(tokenArray, parent.Indentation+1);
                                             parent.commentReplies.Add(newComment.Id, newComment);

@@ -33,6 +33,18 @@ namespace KozinskiAlamidiAssignment2
             }
         }
 
+        // Iterates recursively through comments
+        void UnprintChildComments(Comment currentComment)
+        {
+            foreach (Comment commentReply in currentComment.commentReplies.Values)
+            {
+                commentSelection.Items.Remove(commentReply);
+
+                // Recursive call
+                UnprintChildComments(commentReply);
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -56,7 +68,9 @@ namespace KozinskiAlamidiAssignment2
                 return;
 
             postSelection.Items.Clear();
+            commentSelection.Items.Clear();
             systemOutput.Clear();
+            replyInput.Clear();
 
             if ("all" == subredditSelection.SelectedItem.ToString())
             {
@@ -93,6 +107,7 @@ namespace KozinskiAlamidiAssignment2
             systemOutput.AppendText(postSelection.SelectedItem.ToString());
 
             commentSelection.Items.Clear();
+            replyInput.Clear();
 
             Post chosenPost = postSelection.SelectedItem as Post;
             if (chosenPost == null)
@@ -120,6 +135,8 @@ namespace KozinskiAlamidiAssignment2
 
             systemOutput.Clear();
             systemOutput.AppendText(commentSelection.SelectedItem.ToString());
+
+            replyInput.Clear();
         }
 
         private void userSelection_SelectedValueChanged(object sender, EventArgs e)
@@ -221,7 +238,7 @@ namespace KozinskiAlamidiAssignment2
             // the following check is for when neither a post nor a comment is chosen
             if (postSelection.SelectedIndex == -1)
             {
-                systemOutput.AppendText("Choose a post to reply to a post or a comment to reply to a comment.\n");
+                systemOutput.AppendText("Choose a post to reply to a post, or choose a post + comment to reply to a comment.\n");
                 return;
             }
             Post chosenPost = postSelection.SelectedItem as Post;
@@ -237,7 +254,7 @@ namespace KozinskiAlamidiAssignment2
                 chosenPost.postComments.Add(newComment.Id, newComment);
             }
             // this will trigger if the commentSelection.SelectedIndex is not -1.
-            else 
+            else
             {
                 Comment chosenComment = commentSelection.SelectedItem as Comment;
                 Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
@@ -249,12 +266,19 @@ namespace KozinskiAlamidiAssignment2
                 commentSelection.Items.Add(comment);
                 PrintChildComments(comment);
             }
+            replyInput.Clear();
         }
 
         private void deleteReplyButton_Click(object sender, EventArgs e)
         {
             try
             {
+                if (Program.activeUser == null)
+                    throw new ArgumentNullException("Log-in is required to delete posts and comments\n");
+
+                if (postSelection.SelectedItem == null || commentSelection.SelectedItem == null)
+                    throw new ArgumentNullException("You must select a post and one of its comments first\n");
+
                 Comment selectedComment = commentSelection.SelectedItem as Comment;
                 if (selectedComment == null)
                     throw new ArgumentNullException("Casting from commentSelection.SelectedItem to a Comment was unsuccessful\n");
@@ -263,33 +287,24 @@ namespace KozinskiAlamidiAssignment2
                 if (selectedPost == null)
                     throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
 
-                if (Program.activeUser == null)
-                    throw new ArgumentNullException("Log-in is required to delete posts and comments\n");
-
-                if (postSelection.SelectedItem == null || commentSelection.SelectedItem == null)
-                    throw new ArgumentNullException("You must select a post and one of its comments first\n");
-
-                // Removes or modifies comment (see notes below for reasoning)
+                // Removes comment
                 if (selectedComment.AuthorID == Program.activeUser.Id)
                 {
-                    // Removes comment from comment ListBox if comment has no children
-                    if (selectedComment.commentReplies.Count() == 0)
-                        postSelection.Items.Remove(commentSelection.SelectedItem);
-
-                    // Replaces comment content and author if comment has children;
-                    // deviates from the assignment specification a little bit, but
-                    // makes sense if we also want to preserve the requirement that
-                    // users cannot delete others' comments
+                    // Removes comment from parent's comment collection
+                    if (Program.globalPosts.ContainsKey(selectedComment.ParentID))
+                        Program.globalPosts.Remove(selectedComment.ParentID);
                     else
                     {
-                        selectedComment.Content = "<This comment has been removed>";
-                        selectedComment.AuthorID = 10000; // Outside normal range of user IDs to avoid conflicts
+                        Comment parentComment = RedditUtilities.CommentReplyAdderExtension(selectedComment.ParentID);
+                        parentComment.commentReplies.Remove(selectedComment.Id);
+
+                        UnprintChildComments(selectedComment);
                     }
                 }
                 else
                     throw new Exception("You cannot delete other users' comments\n");
 
-                // Removes object from post ListBox
+                // Removes object from comment ListBox
                 commentSelection.Items.Remove(commentSelection.SelectedItem);
 
                 // Prints success message
@@ -307,30 +322,29 @@ namespace KozinskiAlamidiAssignment2
         {
             try
             {
-                Post selectedPost = postSelection.SelectedItem as Post;
-                if (selectedPost == null)
-                    throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
-
                 if (Program.activeUser == null)
                     throw new ArgumentNullException("Log-in is required to delete posts and comments\n");
 
                 if (postSelection.SelectedItem == null)
                     throw new ArgumentNullException("You must select a post first\n");
 
+                Post selectedPost = postSelection.SelectedItem as Post;
+                if (selectedPost == null)
+                    throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
+
                 if (selectedPost.AuthorId == Program.activeUser.Id)
                 {
                     if (!Program.globalPosts.ContainsKey(selectedPost.Id))
                         throw new ArgumentException("Post with id " + selectedPost.Id + " was not found\n");
+
+                    // Clears comment ListBox
+                    commentSelection.Items.Clear();
 
                     // Removes post from home subreddit
                     Program.globalSubreddits[selectedPost.subHomeId].subPostIDs.Remove(selectedPost.Id);
 
                     // Removes post from global post collection
                     Program.globalPosts.Remove(selectedPost.Id);
-
-                    // Replaces post content/author
-                    selectedPost.PostContent = "<This post has been removed>";
-                    selectedPost.AuthorId = 10000; // Outside normal range of user IDs to avoid conflicts
                 }
                 else
                     throw new Exception("You cannot delete other users' posts\n");
@@ -339,7 +353,6 @@ namespace KozinskiAlamidiAssignment2
                 postSelection.Items.Remove(postSelection.SelectedItem);
 
                 // Prints success message
-                commentSelection.Items.Clear();
                 systemOutput.Clear();
                 systemOutput.AppendText("Post successfully deleted\n");
             }
