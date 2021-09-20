@@ -17,12 +17,12 @@ namespace KozinskiAlamidiAssignment2
             InitializeComponent();
         }
 
-        // Iterates recursively through comments (function is called in loop above)
+        // Iterates recursively through comments
         void PrintChildComments(Comment currentComment)
         {
             // Sorts comment level by post rating
-            Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
-            Array.Sort(sortedCommentReplies);
+            // Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
+            // Array.Sort(sortedCommentReplies);
 
             foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment))
             {
@@ -52,6 +52,9 @@ namespace KozinskiAlamidiAssignment2
         // this triggers when the user chooses a subreddit
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
+            if (subredditSelection.SelectedItem == null)
+                return;
+
             postSelection.Items.Clear();
             systemOutput.Clear();
 
@@ -114,7 +117,7 @@ namespace KozinskiAlamidiAssignment2
         private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             // Prevents exception from being thrown when comment is deleted
-            if (postSelection.SelectedItem == null)
+            if (commentSelection.SelectedItem == null)
                 return;
 
             systemOutput.Clear();
@@ -123,12 +126,67 @@ namespace KozinskiAlamidiAssignment2
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
         {
-            if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!"); return; }
-            if (passwordInput.Text == "") { systemOutput.AppendText("\nplease enter a password. Be sure to choose the your intended username\n"); return; }
-            //authentication happens here:
+            if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!\n"); return; }
+            if (passwordInput.Text == "") { systemOutput.AppendText("please enter a password. Be sure to choose the your intended username\n"); return; }
+            
+            // authentication happens here:
             User chosenUser = userSelection.SelectedItem as User;
-            if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash) { systemOutput.AppendText("authentication successful\n"); Program.activeUser = chosenUser; }
-            else systemOutput.AppendText("authentication failed");
+            if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText("authentication successful\n");
+                Program.activeUser = chosenUser;
+
+                subredditSelection.SelectedItem = null;
+                postSelection.Items.Clear();
+                commentSelection.Items.Clear();
+
+                // Adds user's own posts and comments to respective ListBoxes
+                // Sorts posts by subreddit name, then by post rating
+                foreach (Post userPost in Program.globalPosts.Values.OrderBy(userPost => Program.globalSubreddits[userPost.subHomeId]).ThenBy(userPost => userPost))
+                {
+                    // Adds posts
+                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                    if (userPost.AuthorId == Program.activeUser.Id)
+                        postSelection.Items.Add(userPost);
+
+                    // Adds comments
+                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                    // Starts recursion at the post level
+                    foreach (Comment userComment in userPost.postComments.Values)
+                    {
+                        if (userComment.AuthorID == Program.activeUser.Id)
+                        {
+                            uint originalLevel = userComment.Indentation;
+                            userComment.Indentation = 0;
+                            commentSelection.Items.Add(userComment);
+                            userComment.Indentation = originalLevel;
+                        }
+
+                        // Recursive call
+                        noIndentChildComments(userComment);
+                    }
+                }
+
+                // Iterates recursively through comments
+                void noIndentChildComments(Comment currentComment)
+                {
+                    foreach (Comment userComment in currentComment.commentReplies.Values)
+                    {
+                        if (userComment.AuthorID == Program.activeUser.Id)
+                        {
+                            uint originalLevel = userComment.Indentation;
+                            userComment.Indentation = 0;
+                            commentSelection.Items.Add(userComment);
+                            userComment.Indentation = originalLevel;
+                        }
+
+                        // Recursive call
+                        noIndentChildComments(userComment);
+                    }
+                }
+            }
+            else systemOutput.AppendText("authentication failed\n");
         }
 
         private void addReplyButton_Click(object sender, EventArgs e)
