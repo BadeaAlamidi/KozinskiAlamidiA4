@@ -175,7 +175,6 @@ namespace KozinskiAlamidiAssignment2
             this.loginButton.TabIndex = 11;
             this.loginButton.Text = "Log-In";
             this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.button1_Click);
             this.loginButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loginButton_MouseClick);
             // 
             // deletePostButton
@@ -187,6 +186,7 @@ namespace KozinskiAlamidiAssignment2
             this.deletePostButton.TabIndex = 12;
             this.deletePostButton.Text = "Delete Post";
             this.deletePostButton.UseVisualStyleBackColor = true;
+            this.deletePostButton.Click += new System.EventHandler(this.deletePostButton_Click);
             // 
             // label7
             // 
@@ -212,7 +212,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             // commentSelection
             // 
-            this.commentSelection.DisplayMember = "AbbreviateContent";
+            this.commentSelection.DisplayMember = "AbbreviatedContent";
             this.commentSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.commentSelection.FormattingEnabled = true;
             this.commentSelection.ItemHeight = 14;
@@ -231,6 +231,7 @@ namespace KozinskiAlamidiAssignment2
             this.deleteCommentButton.TabIndex = 16;
             this.deleteCommentButton.Text = "Delete Comment";
             this.deleteCommentButton.UseVisualStyleBackColor = true;
+            this.deleteCommentButton.Click += new System.EventHandler(this.deleteReplyButton_Click);
             // 
             // addReplyButton
             // 

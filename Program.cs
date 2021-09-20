@@ -463,7 +463,7 @@ namespace KozinskiAlamidiAssignment2
         // Attributes
         private bool locked;
         private readonly uint id;
-        private readonly uint authorID;
+        private uint authorID;
         private string content;
         private readonly uint parentID;
         private uint upVotes;
@@ -479,7 +479,11 @@ namespace KozinskiAlamidiAssignment2
             set { locked = value; }
         }
         public uint Id => id;
-        public uint AuthorID => authorID;
+        public uint AuthorID
+        {
+            get { return authorID; }
+            set { authorID = value; }
+        }
         public string Content
         {
             get { return content; }
@@ -503,7 +507,7 @@ namespace KozinskiAlamidiAssignment2
             get { return indentation; }
             set { indentation = value; }
         }
-        public string AbbreviateContent { get { return this.ToString("ListBox"); } }
+        public string AbbreviatedContent { get { return this.ToString("ListBox"); } }
         // Default constructor
         public Comment()
         {
@@ -733,7 +737,7 @@ namespace KozinskiAlamidiAssignment2
         private bool locked;
         private readonly uint id;
         private string title;
-        private readonly uint authorID;
+        private uint authorID;
         private string postContent;
         private readonly uint subHome; // also called subreddit Id
         private uint upVotes;
@@ -806,7 +810,11 @@ namespace KozinskiAlamidiAssignment2
         public uint Id => id;
         public uint subHomeId { get { return subHome; } }
         public string DateString { get { return timeStamp.ToString("G"); } }
-        public uint AuthorId { get { return authorID; } }
+        public uint AuthorId
+        {
+            get { return authorID; }
+            set { authorID = value; }
+        }
         public string AbbreviateContent { get { return this.ToString("ListBox"); } }
 
         public Post()
@@ -883,7 +891,7 @@ namespace KozinskiAlamidiAssignment2
                 try { Program.globalSubreddits[subHomeId].subPostIDs.Add(Id); }
                 catch (KeyNotFoundException) { throw new KeyNotFoundException("Error: Could not add post " + Id + "; the subreddit was not found"); }
                 catch (ArgumentException) { throw new ArgumentException("Error: Could not add post " + Id + "; the post ID was already taken"); }
-                catch (Exception e) { throw; }// new Exception(e.Message); }
+                catch (Exception e) { throw new Exception(e.Message); }
             }
          }
 
