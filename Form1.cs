@@ -86,7 +86,6 @@ namespace KozinskiAlamidiAssignment2
 
         private void postSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            // Prevents exception from being thrown when post is deleted
             if (postSelection.SelectedItem == null)
                 return;
 
@@ -116,12 +115,30 @@ namespace KozinskiAlamidiAssignment2
 
         private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            // Prevents exception from being thrown when comment is deleted
             if (commentSelection.SelectedItem == null)
                 return;
 
             systemOutput.Clear();
             systemOutput.AppendText(commentSelection.SelectedItem.ToString());
+        }
+
+        private void userSelection_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // Safety check
+            if (userSelection.SelectedItem == null)
+                return;
+
+            // Clears all form fields
+
+            subredditSelection.SelectedItem = null;
+            postSelection.SelectedItem = null;
+            commentSelection.SelectedItem = null;
+
+            postSelection.Items.Clear();
+            commentSelection.Items.Clear();
+
+            systemOutput.Clear();
+            replyInput.Clear();
         }
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)

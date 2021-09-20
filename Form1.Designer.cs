@@ -73,6 +73,7 @@ namespace KozinskiAlamidiAssignment2
             this.userSelection.Name = "userSelection";
             this.userSelection.Size = new System.Drawing.Size(226, 158);
             this.userSelection.TabIndex = 1;
+            this.userSelection.SelectedValueChanged += new System.EventHandler(this.userSelection_SelectedValueChanged);
             // 
             // label2
             // 
