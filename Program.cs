@@ -461,7 +461,6 @@ namespace KozinskiAlamidiAssignment2
         public static uint COMMENT_YEAR_INDEX = 6;
 
         // Attributes
-        private bool locked;
         private readonly uint id;
         private uint authorID;
         private string content;
@@ -473,11 +472,6 @@ namespace KozinskiAlamidiAssignment2
         private uint indentation;
 
         // Properties to control read/write access to private attributes
-        public bool Locked
-        {
-            get { return locked; }
-            set { locked = value; }
-        }
         public uint Id => id;
         public uint AuthorID
         {
@@ -511,7 +505,6 @@ namespace KozinskiAlamidiAssignment2
         // Default constructor
         public Comment()
         {
-            locked = false;
             id = 0;
             authorID = 0;
             Content = "";
@@ -529,8 +522,6 @@ namespace KozinskiAlamidiAssignment2
         {
             try
             {
-                // we assume that comments aren't locked
-                locked = false;
                 id = Convert.ToUInt32(commentData[0]);
                 authorID = Convert.ToUInt32(commentData[1]);
                 Content = commentData[2];
@@ -552,7 +543,6 @@ namespace KozinskiAlamidiAssignment2
         // Alternate constructor (for creating a new comment)
         public Comment(string newContent, uint newAuthorID, uint newParentID, uint indentLevel)
         {
-            locked = false;
             id = RedditUtilities.GenerateUniqueId();
             authorID = newAuthorID;
             Content = newContent;
@@ -749,21 +739,10 @@ namespace KozinskiAlamidiAssignment2
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
 
-        public string Locked
+        public bool Locked
         {
-            get { return locked.ToString(); }
-            set
-            {
-                switch (value)
-                {
-                    case "0":
-                        locked = false;
-                        break;
-                    case "1":
-                        locked = true;
-                        break;
-                }
-            }
+            get { return locked; }
+            set { locked = value; }
         }
         public float PostRating
         {
@@ -819,7 +798,7 @@ namespace KozinskiAlamidiAssignment2
 
         public Post()
         {
-            locked = false;
+            Locked = false;
             id = 0;
             title = "";
             authorID = 0;
@@ -856,7 +835,15 @@ namespace KozinskiAlamidiAssignment2
             {
                 try
                 {
-                    Locked = parameters[0];
+                    switch(parameters[0])
+                    {
+                        case "0":
+                            Locked = false;
+                            break;
+                        case "1":
+                            Locked = true;
+                            break;
+                    }
                     id = Convert.ToUInt32(parameters[1]);
                     authorID = Convert.ToUInt32(parameters[2]);
 
@@ -899,7 +886,7 @@ namespace KozinskiAlamidiAssignment2
         // new posts have the current time assigned to them
         public Post(bool LockedBool, string UserTitle, uint AuthorId, string UserPostContent, uint subredditId)
         {
-            locked = LockedBool;
+            Locked = LockedBool;
             id = RedditUtilities.GenerateUniqueId();
             upVotes = 1;
             downVotes = 0;
@@ -972,7 +959,8 @@ namespace KozinskiAlamidiAssignment2
                 newTitle.Append("...");
             }
 
-            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({ Score}) {newTitle.ToString()} - { Program.globalUsers[AuthorId].Name} |{ DateString}|";
+            string lockStatus = Locked == true ? " **LOCKED** " : " ";
+            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({ Score}) {newTitle.ToString()}{lockStatus}- { Program.globalUsers[AuthorId].Name} |{ DateString}|";
         }
 
         IEnumerator IEnumerable.GetEnumerator()

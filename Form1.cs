@@ -54,13 +54,29 @@ namespace KozinskiAlamidiAssignment2
         {
             postSelection.Items.Clear();
             systemOutput.Clear();
-            foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits) {
-                if (subredditTuple.Value.Name == subredditSelection.SelectedItem.ToString()) {
+
+            if ("all" == subredditSelection.SelectedItem.ToString())
+            {
+                foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits.OrderBy(subredditTuple => subredditTuple.Value))
+                {
+                    // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
                     foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
                         postSelection.Items.Add(postTuple.Value);
-                    // there can only be one match for this check, which warrants ending this loop once a single match was found
-                    // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                    break;
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits)
+                {
+                    if (subredditTuple.Value.Name == subredditSelection.SelectedItem.ToString())
+                    {
+                        // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
+                        foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
+                            postSelection.Items.Add(postTuple.Value);
+
+                        // there can only be one match for this check, which warrants ending this loop once a single match was found
+                        break;
+                    }
                 }
             }
         }
@@ -134,7 +150,7 @@ namespace KozinskiAlamidiAssignment2
                 return;
             }
             Post chosenPost = postSelection.SelectedItem as Post;
-            if (chosenPost.Locked == "true")
+            if (chosenPost.Locked == true)
             {
                 systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
                 return;
@@ -248,6 +264,7 @@ namespace KozinskiAlamidiAssignment2
                 postSelection.Items.Remove(postSelection.SelectedItem);
 
                 // Prints success message
+                commentSelection.Items.Clear();
                 systemOutput.Clear();
                 systemOutput.AppendText("Post successfully deleted\n");
             }
