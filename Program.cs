@@ -584,7 +584,7 @@ namespace KozinskiAlamidiAssignment2
         // Does not include indentation
         public override string ToString()
         {
-            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}| {parentID}\n";
+            return $"<{Id}> ({Score}) {Content} - {Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|\n";
         }
 
         // Overloads ToString() method (for showing abbreviated comment content)

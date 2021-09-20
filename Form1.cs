@@ -20,11 +20,7 @@ namespace KozinskiAlamidiAssignment2
         // Iterates recursively through comments
         void PrintChildComments(Comment currentComment)
         {
-            // Sorts comment level by post rating
-            // Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
-            // Array.Sort(sortedCommentReplies);
-
-            foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment))
+            foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment).ThenBy(postComment => postComment.TimeStamp))
             {
                 commentSelection.Items.Add(commentReply);
 
@@ -253,20 +249,23 @@ namespace KozinskiAlamidiAssignment2
                 Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
                 chosenPost.postComments.Add(newComment.Id, newComment);
             }
-            // this will trigger if the commentSelection.SelectedIndex is not -1.
+            // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
             else
             {
                 Comment chosenComment = commentSelection.SelectedItem as Comment;
                 Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
                 chosenComment.commentReplies.Add(newComment.Id, newComment);
             }
+            // refreshes comments printed to comment ListBox
             commentSelection.Items.Clear();
-            foreach(Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment))
+            foreach(Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
             {
                 commentSelection.Items.Add(comment);
                 PrintChildComments(comment);
             }
             replyInput.Clear();
+            systemOutput.Clear();
+            systemOutput.AppendText("Comment successfully added\n");
         }
 
         private void deleteReplyButton_Click(object sender, EventArgs e)
@@ -292,7 +291,7 @@ namespace KozinskiAlamidiAssignment2
                 {
                     // Removes comment from parent's comment collection
                     if (Program.globalPosts.ContainsKey(selectedComment.ParentID))
-                        Program.globalPosts.Remove(selectedComment.ParentID);
+                        Program.globalPosts[selectedComment.ParentID].postComments.Remove(selectedComment.Id);
                     else
                     {
                         Comment parentComment = RedditUtilities.CommentReplyAdderExtension(selectedComment.ParentID);
