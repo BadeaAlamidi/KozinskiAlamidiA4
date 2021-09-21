@@ -50,16 +50,17 @@ namespace KozinskiAlamidiAssignment2
             // Prints error log to system output
             foreach (string line in fileReadErrors)
                 systemOutput.AppendText(line + "\n");
-
+            systemOutput.AppendText("Welcome! Select a user and enter a password to log-in.");
             // Populates user, subreddit, and post boxes
             foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
-            foreach (KeyValuePair<uint,Subreddit>subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value.Name); }
-            
+            foreach (KeyValuePair<uint,Subreddit>subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
         }
 
         // this triggers when the user chooses a subreddit
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
+            memberCount.Text = "";
+            activeCount.Text = "";
             if (subredditSelection.SelectedItem == null)
                 return;
 
@@ -79,18 +80,15 @@ namespace KozinskiAlamidiAssignment2
             }
             else
             {
-                foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits)
-                {
-                    if (subredditTuple.Value.Name == subredditSelection.SelectedItem.ToString())
-                    {
-                        // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                        foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
-                            postSelection.Items.Add(postTuple.Value);
 
-                        // there can only be one match for this check, which warrants ending this loop once a single match was found
-                        break;
-                    }
-                }
+                if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit)) return;
+                // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
+                foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => chosenSubreddit.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
+                    postSelection.Items.Add(postTuple.Value);
+                memberCount.Text = chosenSubreddit.Members.ToString();
+                activeCount.Text = chosenSubreddit.Active.ToString();
+                // there can only be one match for this check, which warrants ending this loop once a single match was found
+
             }
         }
 
@@ -137,8 +135,11 @@ namespace KozinskiAlamidiAssignment2
 
         private void userSelection_SelectedValueChanged(object sender, EventArgs e)
         {
+            // reset the text of the log-in button in case there was a previous faild attempt at entering the password
+            loginButton.Text = "Log-in";
             // Safety check
-            if (userSelection.SelectedItem == null)
+            //if (userSelection.SelectedItem == null)
+            if (!(userSelection.SelectedItem is User chosenUser))
                 return;
 
             // Clears all form fields
@@ -151,6 +152,7 @@ namespace KozinskiAlamidiAssignment2
             commentSelection.Items.Clear();
 
             systemOutput.Clear();
+            systemOutput.AppendText($"Enter a password for the username: {chosenUser.Name}");
             replyInput.Clear();
         }
 
@@ -164,7 +166,9 @@ namespace KozinskiAlamidiAssignment2
             if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
             {
                 systemOutput.Clear();
-                systemOutput.AppendText("authentication successful\n");
+                // reset the text of the log-in button in case there was a previous faild attempt at entering the password
+                loginButton.Text = "Log-in";
+                systemOutput.AppendText($"authentication successful! Welcome {chosenUser.Name}\n");
                 Program.activeUser = chosenUser;
 
                 subredditSelection.SelectedItem = null;
@@ -216,7 +220,11 @@ namespace KozinskiAlamidiAssignment2
                     }
                 }
             }
-            else systemOutput.AppendText("authentication failed\n");
+            else 
+            {
+               systemOutput.AppendText("authentication failed\n");
+                loginButton.Text = "Retry Password";
+            }
         }
 
         private void addReplyButton_Click(object sender, EventArgs e)
