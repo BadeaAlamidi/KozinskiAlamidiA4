@@ -192,17 +192,17 @@ namespace KozinskiAlamidiAssignment2
                     break;
             }
 
-            userDescription.Append($"({PostScore} / {CommentScore}");
+            userDescription.Append($"({PostScore} / {CommentScore})");
 
             return Convert.ToString(userDescription);
         }
+        public enum UserType {
+            User,
+            Mod,
+            Admin
+        };
     }
 
-    public enum UserType {
-        User,
-        Mod,
-        Admin
-    };
     /****************************************************************************
     * This class contains information about the subreddits
     *

@@ -268,7 +268,7 @@ namespace KozinskiAlamidiAssignment2
             // memberCount
             // 
             this.memberCount.AutoSize = true;
-            this.memberCount.ForeColor = System.Drawing.Color.OrangeRed;
+            this.memberCount.ForeColor = System.Drawing.Color.Black;
             this.memberCount.Location = new System.Drawing.Point(293, 195);
             this.memberCount.Name = "memberCount";
             this.memberCount.Size = new System.Drawing.Size(0, 13);
@@ -277,7 +277,7 @@ namespace KozinskiAlamidiAssignment2
             // activeCount
             // 
             this.activeCount.AutoSize = true;
-            this.activeCount.ForeColor = System.Drawing.Color.OrangeRed;
+            this.activeCount.ForeColor = System.Drawing.Color.Black;
             this.activeCount.Location = new System.Drawing.Point(391, 195);
             this.activeCount.Name = "activeCount";
             this.activeCount.Size = new System.Drawing.Size(0, 13);
