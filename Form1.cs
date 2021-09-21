@@ -50,7 +50,9 @@ namespace KozinskiAlamidiAssignment2
             // Prints error log to system output
             foreach (string line in fileReadErrors)
                 systemOutput.AppendText(line + "\n");
-            systemOutput.AppendText("Welcome! Select a user and enter a password to log-in.");
+            
+            systemOutput.AppendText("Welcome! Select a user and enter a password to log in.");
+
             // Populates user, subreddit, and post boxes
             foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
             foreach (KeyValuePair<uint,Subreddit>subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
@@ -80,15 +82,15 @@ namespace KozinskiAlamidiAssignment2
             }
             else
             {
+                if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit))
+                    return;
 
-                if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit)) return;
                 // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
                 foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => chosenSubreddit.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
                     postSelection.Items.Add(postTuple.Value);
+
                 memberCount.Text = chosenSubreddit.Members.ToString();
                 activeCount.Text = chosenSubreddit.Active.ToString();
-                // there can only be one match for this check, which warrants ending this loop once a single match was found
-
             }
         }
 
@@ -152,50 +154,50 @@ namespace KozinskiAlamidiAssignment2
             commentSelection.Items.Clear();
 
             systemOutput.Clear();
-            systemOutput.AppendText($"Enter a password for the username: {chosenUser.Name}");
             replyInput.Clear();
+
+            if (Program.activeUser == null || Program.activeUser != chosenUser)
+                systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}");
         }
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!\n"); return; }
-            if (passwordInput.Text == "") { systemOutput.AppendText("please enter a password. Be sure to choose the your intended username\n"); return; }
+            if (passwordInput.Text == "") { systemOutput.AppendText("Please enter a password. Be sure to choose your intended username\n"); return; }
             
             // authentication happens here:
             User chosenUser = userSelection.SelectedItem as User;
             if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
             {
-                systemOutput.Clear();
-                // reset the text of the log-in button in case there was a previous faild attempt at entering the password
+                // reset the text of the log-in button in case there was a previous failed attempt at entering the password
                 loginButton.Text = "Log-in";
-                systemOutput.AppendText($"authentication successful! Welcome {chosenUser.Name}\n");
+
+                systemOutput.Clear();
+                systemOutput.AppendText($"Authentication successful! Welcome, {chosenUser.Name}\n");
                 Program.activeUser = chosenUser;
 
                 subredditSelection.SelectedItem = null;
                 postSelection.Items.Clear();
                 commentSelection.Items.Clear();
 
+                List<Comment> comments = new List<Comment>();
+
                 // Adds user's own posts and comments to respective ListBoxes
                 // Sorts posts by subreddit name, then by post rating
-                foreach (Post userPost in Program.globalPosts.Values.OrderBy(userPost => Program.globalSubreddits[userPost.subHomeId]).ThenBy(userPost => userPost))
+                foreach (Post post in Program.globalPosts.Values.OrderBy(post => Program.globalSubreddits[post.subHomeId]).ThenBy(post => post))
                 {
-                    // Adds posts
+                    // Adds posts to ListBox
                     // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                    if (userPost.AuthorId == Program.activeUser.Id)
-                        postSelection.Items.Add(userPost);
+                    if (post.AuthorId == Program.activeUser.Id)
+                        postSelection.Items.Add(post);
 
-                    // Adds comments
+                    // Adds comments to list (to be sorted and printed later)
                     // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
                     // Starts recursion at the post level
-                    foreach (Comment userComment in userPost.postComments.Values)
+                    foreach (Comment userComment in post.postComments.Values)
                     {
                         if (userComment.AuthorID == Program.activeUser.Id)
-                        {
-                            uint originalLevel = userComment.Indentation;
-                            userComment.Indentation = 0;
-                            commentSelection.Items.Add(userComment);
-                            userComment.Indentation = originalLevel;
-                        }
+                            comments.Add(userComment);
 
                         // Recursive call
                         noIndentChildComments(userComment);
@@ -208,16 +210,21 @@ namespace KozinskiAlamidiAssignment2
                     foreach (Comment userComment in currentComment.commentReplies.Values)
                     {
                         if (userComment.AuthorID == Program.activeUser.Id)
-                        {
-                            uint originalLevel = userComment.Indentation;
-                            userComment.Indentation = 0;
-                            commentSelection.Items.Add(userComment);
-                            userComment.Indentation = originalLevel;
-                        }
+                            comments.Add(userComment);
 
                         // Recursive call
                         noIndentChildComments(userComment);
                     }
+                }
+
+                // Sorts and prints comments to ListBox
+                comments.Sort();
+                foreach (Comment c in comments)
+                {
+                    uint originalLevel = c.Indentation;
+                    c.Indentation = 0;
+                    commentSelection.Items.Add(c);
+                    c.Indentation = originalLevel;
                 }
             }
             else 

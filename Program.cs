@@ -1,4 +1,19 @@
-﻿using System;
+﻿/* Assignment 2
+ * CSCI 473 / 504
+ * 
+ * September 23, 2021
+ * 
+ * Badea Alamidi, Z1882808
+ * Katelyn Kozinski, Z167824
+ * 
+ * This program emulates some of the functionality of Reddit, using a graphical interface.
+ * 
+ * Users can log in, view posts and comments from the various subreddits, and
+ * add posts and comments. Users can also delete their own posts and comments
+ * (and administrators can delete others' posts and comments).
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -1148,6 +1163,7 @@ namespace KozinskiAlamidiAssignment2
 
             return boolResult;
         }
+
         /* Method name: CommentReplyAdder
         * 
         * returns a comment object that holds the given id. this function is 
@@ -1193,6 +1209,7 @@ namespace KozinskiAlamidiAssignment2
             }
             return foundParent;
         }
+
         /* Method name: GenerateUniqueId
          * 
          * Generates unique random number
@@ -1215,7 +1232,7 @@ namespace KozinskiAlamidiAssignment2
          * 
          * Traverses comment tree looking for the parent of a particular comment
          * 
-         * Parameters
+         * Parameters:
          * Comment               Given comment object
          * uint                  ID of the parent
          *  
@@ -1241,19 +1258,18 @@ namespace KozinskiAlamidiAssignment2
 
         /* Method name: FindCommentParent
          * 
-         * Serves as the initial call to the recursive funciton of commentTreeTraverseFunction
-         * this method needed to be isolated as each Comment under a post represents an entire 
+         * Serves as the initial call to the recursive function CommentTreeTraverseFunction
+         * 
+         * This method needed to be isolated as each Comment under a post represents an entire 
          * tree, and those trees must be operated on one by one
          * 
-         * Parameters
+         * Parameters:
          * uint potentialParentID          ID of the parent
          *  
          * Returns:
          * Comment               If found: parent comment
          * 
-         * Note:                 when this function fails, 
-         *                        a new exception is thrown with the appropriate method
-         * 
+         * Note:                 If not found: exception thrown
          */
         public static Comment FindCommentParent(uint potentialParentID)
         {
@@ -1278,36 +1294,24 @@ namespace KozinskiAlamidiAssignment2
                 return returnedComment;
         }
 
-        /* Method name: FindToken
+        /* Method name: ReadFiles
          * 
-         * Determines whether a string token is in a predefined array
+         * Initializes "existing" users, subreddits, posts, and comments with data from files
          * 
-         * Parameters
-         * string                Input token
-         * string[]              Input array
+         * Parameters:
+         * N/A
          *  
          * Returns:
-         * bool                  Found / not found
+         * string[]              Log of exceptions caught in this method
          */
-
-        public static bool FindToken(string input, string[] stringArray)
-        {
-            foreach (string item in stringArray)
-            {
-                if (input == item)
-                    return true;
-            }
-
-            // Else
-            return false;
-        }
-
         public static List<string> ReadFiles()
         {
             // Initializes "existing" users, subreddits, posts, and comments with data from files
             string filePrefix = "..\\..\\";
             string[] fileNames = new string[] { "users", "subreddits", "posts", "comments" };
             string fileLine;
+
+            // Declares log for exceptions caught in this method (to be passed back to the form)
             List<string> fileErrors = new List<string>();
 
             // Processes each file
@@ -1390,7 +1394,10 @@ namespace KozinskiAlamidiAssignment2
         public static SortedDictionary<uint, User> globalUsers = new SortedDictionary<uint, User>();
         public static SortedDictionary<uint, Subreddit> globalSubreddits = new SortedDictionary<uint, Subreddit>();
         public static SortedDictionary<uint, Post> globalPosts = new SortedDictionary<uint, Post>();
+
+        // Declares active (logged-in) user variable
         public static User activeUser = null;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -1401,405 +1408,6 @@ namespace KozinskiAlamidiAssignment2
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-
-
-            /*
-            // Command line interface
-
-            string userInput;
-            // this needs to be assigned a value or else the program will not compile
-            uint userId = 0;
-
-            // Creates new user
-            Console.WriteLine("Welcome to Reddit, The Command Line Version!");
-            Console.WriteLine();
-            Console.Write("Please choose a username: ");
-
-            // Makes sure username is unique before adding new user to global collection
-            bool userCreationSuccess = false;
-            while (userCreationSuccess == false)
-            {
-                userInput = Console.ReadLine();
-                Console.WriteLine();
-
-                try { User newUser = new User(userInput); userId = newUser.Id; }
-                catch (ArgumentException e)
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine();
-                    continue;
-                }
-
-                userCreationSuccess = true;
-            }
-
-            // Menu
-            bool quit = false;
-            while (quit == false)
-            {
-                PrintPrompt();
-                Console.WriteLine();
-
-                userInput = Console.ReadLine().Trim();
-                Console.WriteLine();
-
-                switch (userInput)
-                {
-                    case "1":
-                         ListAllSubreddits();
-                        break;
-                    case "2":
-                         ListAllPosts();
-                        break;
-                    case "3":
-                        ListSubredditPosts();
-                        break;
-                    case "4":
-                        try { ViewPostComments(); }
-                        catch (Exception e) { Console.WriteLine(e.Message + "\n"); }
-                        break;
-                    case "5":
-                        AddComment(userId);
-                        break;
-                    case "6":
-                        AddReply(userId);
-                        break;
-                    case "7":
-                         CreatePost(userId);
-                        break;
-                    case "8":
-                        DeletePost(userId);
-                        break;
-                    default:
-                        if (userInput.ToLower() == "9" || RedditUtilities.FindToken(userInput.ToLower(), RedditUtilities.quitArray))
-                            quit = true;
-                        else
-                        {
-                            Console.WriteLine("Error: Input not recognized. Please try again.");
-                            Console.WriteLine();
-                        }
-                        break;
-                }
-            }*/
         }
-
-        /* Method name: PrintPrompt
-         * 
-         * Prints menu prompt with user options
-         ******************************************************************************/
-        /*
-        static void PrintPrompt()
-        {
-            Console.WriteLine("Reddit, The Command Line Version!\n");
-            Console.WriteLine("1. List All Subreddits");
-            Console.WriteLine("2. List All Posts from All Subreddits");
-            Console.WriteLine("3. List All Posts from A Single Subreddit");
-            Console.WriteLine("4. View Comments From A Single Post");
-            Console.WriteLine("5. Add Comment to Post");
-            Console.WriteLine("6. Add Reply to Comment");
-            Console.WriteLine("7. Create New Post");
-            Console.WriteLine("8. Delete Post");
-            Console.WriteLine("9. Quit");
-        }
-        */
-
-        /* Method name: ListAllSubreddits
-         * 
-         * Prints list of all subreddits to console
-         ******************************************************************************/
-        /*
-        static void ListAllSubreddits()
-        {
-            Console.WriteLine("Name -- (Active Members / Total Members)\n");
-            SortedSet<Subreddit> tempSubredditSortedSet = new SortedSet<Subreddit>(globalSubreddits.Values);
-            foreach (Subreddit subredditTuple in tempSubredditSortedSet)
-                Console.WriteLine("<" + subredditTuple.Id + "> " + subredditTuple.Name + " -- (" + subredditTuple.Active + "/" + subredditTuple.Members + ")");
-            Console.WriteLine(); // skip line
-        }
-        */
-
-        /*
-         * Method Name: ListAllPosts
-         * 
-         * lists all the posts in the global collection. not much needs to be done
-         * here as posts add themselves to the global collection globalPosts upon construction
-         * via both the user-defined constructor and the input file constructor
-         * 
-         * Parameters: NONE
-         *  
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void ListAllPosts()
-        {
-            Console.WriteLine("<ID> [Subreddit] (Score) Title + PostContent - PosterName |TimeStamp|\n");
-
-            // Sorts by post rating
-            Post[] sortedPosts = globalPosts.Values.ToArray();
-            Array.Sort(sortedPosts);
-
-            foreach (Post postTuple in sortedPosts)
-            {
-                Console.WriteLine(RedditUtilities.INDENTATION + "<" + postTuple.Id + "> [" + globalSubreddits[postTuple.subHomeId].Name + "] (" + postTuple.Score + ") "
-                                  + postTuple.Title + " " + postTuple.PostContent + " - " + globalUsers[postTuple.AuthorId].Name + " |" + postTuple.DateString + "|");
-                Console.WriteLine();
-            }
-        }
-        */
-
-        /*
-         * Method Name: ListSubredditPosts
-         * 
-         * Prompts the user to enter a name for the wanted subreddit. then prints, in an organized
-         * fashion, each list contained in the subreddit. this is done by using the System.Linq helper
-         * functions as subreddits contain Id's of their posts, and not the posts themselves
-         * 
-         * 
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void ListSubredditPosts()
-        {
-            Console.WriteLine("Enter the name of the Subreddit to list from: ");
-            string userInput = Console.ReadLine().Trim();
-            foreach (KeyValuePair<uint, Subreddit> subredditTuple in globalSubreddits) {
-                if (userInput == subredditTuple.Value.Name) {
-                    Console.WriteLine("<ID> [Subreddit] (Score) Title + PostContent - PosterName |TimeStamp|\n");
-                    // the following creates a sortedSet based off postId's in the specified subbreddit by the user that match (or intersect) with keys in the globalPosts collection.
-                    // this is done to print the posts by their score rating as opposed to the sorting done in globalposts collection, which is by post id's
-                    
-                    // Sorts by post rating
-                    var intersectSet = new SortedSet<Post>(globalPosts.Where(x => subredditTuple.Value.subPostIDs.Contains(x.Key)).ToDictionary(x=> x.Key,x=> x.Value).Values);
-                    
-                    foreach (Post post in intersectSet)
-                    {
-                        Console.WriteLine("        <" + post.Id + "> [" + userInput + "] (" + post.Score + ") "
-                                          + post.Title + " " + post.PostContent + " - " + post.AuthorId + " |" + post.DateString + "|");
-                        Console.WriteLine();
-                    }
-                    return;
-                }
-            }
-            Console.WriteLine("I don't recognize the \'" + userInput + "\' subreddit.\n");
-            Console.WriteLine();
-        }
-        */
-
-        /*
-         * Method Name: ViewPostComments
-         * 
-         * Displays all of the comments that are directly and undirectly related to a post
-         * (or the replies to the comments in a post). This is done with an increasing / decreasing
-         * indentation level that is dependent on how nested the comment is. the comments are still
-         * displayed in a sorted order by Comment score. this sorting is done per the comment level
-         * as the user would expect
-         * 
-         * Parameters: NONE
-         * 
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void ViewPostComments()
-        {
-            // Defines indentation level for nested comments
-            uint indentationLevel = 1;
-
-            Console.Write("Enter the ID of the Post you'd like to see the comments for: ");
-
-            uint userInput;
-            try { userInput = Convert.ToUInt32(Console.ReadLine().Trim()); } catch (Exception e) { Console.WriteLine(e.Message); return; };
-            Console.WriteLine();
-
-            // Tests for imroper user input
-            try
-            {
-                Post parentPost = globalPosts[userInput];
-                Console.WriteLine("<" + parentPost.Id + "> [" + globalSubreddits[parentPost.subHomeId].Name + "] (" + parentPost.Score + ") "
-                                  + parentPost.Title + " " + parentPost.PostContent + " - " + globalUsers[parentPost.AuthorId].Name + " |" + parentPost.DateString + "|");
-                Console.WriteLine();
-            }
-            catch (KeyNotFoundException) { throw new KeyNotFoundException("Error: Not a valid post ID. Please try again."); }
-            catch { throw; }
-
-            // Sorts comment level by post rating
-            Comment[] sortedPostComments = globalPosts[userInput].postComments.Values.ToArray();
-            Array.Sort(sortedPostComments);
-
-            // Starts at the post level
-            foreach (Comment postComment in sortedPostComments)
-            {
-                // Indents line
-                Console.Write(RedditUtilities.INDENTATION);
-
-                Console.Write("<" + postComment.Id + "> [" + globalSubreddits[globalPosts[userInput].subHomeId].Name + "] (" + postComment.Score + ") "
-                              + postComment.Content + " - " + globalUsers[postComment.AuthorID].Name + " |" + postComment.TimeStamp.ToString("G") + "|");
-                Console.Write("\n"); // Finishes line
-                Console.WriteLine(); // Blank line;
-
-                PrintChildComment(postComment, indentationLevel);
-            }
-
-            // Iterates recursively through comments (function is called in loop above)
-            void PrintChildComment(Comment currentComment, uint newIndentationLevel)
-            {
-                // Sorts comment level by post rating
-                Comment[] sortedCommentReplies = currentComment.commentReplies.Values.ToArray();
-                Array.Sort(sortedCommentReplies);
-
-                indentationLevel++;
-
-                foreach (Comment commentReply in sortedCommentReplies)
-                {
-                    // Indents line
-                    for (int i = 0; i < indentationLevel; i++)
-                        Console.Write(RedditUtilities.INDENTATION);
-
-                    Console.Write("<" + commentReply.Id + "> [" + globalSubreddits[globalPosts[userInput].subHomeId].Name + "] (" + commentReply.Score + ") "
-                                  + commentReply.Content + " - " + globalUsers[commentReply.AuthorID].Name + " |" + commentReply.TimeStamp.ToString("G") + "|");
-                    Console.Write("\n"); // Finishes line
-                    Console.WriteLine(); // Blank line
-
-                    // Recursive call
-                    PrintChildComment(commentReply, newIndentationLevel);
-                }
-
-                indentationLevel--;
-            }
-        }
-        */
-
-        /*
-         * Method Name: CreatePost
-         * 
-         * Creates a new instance of the post object. this function performing 
-         * checks on whether the specified post exists 
-         * 
-         * Parameters: 
-         * userId               the id of the current user generated in Main
-         * 
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void CreatePost (uint userId)
-        {
-            Console.Write("Enter the name of the Subreddit that you'd like to post to: ");
-            var inputSubredditName = Console.ReadLine().Trim();
-            Console.WriteLine();
-            foreach (KeyValuePair<uint, Subreddit> subredditTuple in globalSubreddits) {
-                if (inputSubredditName == subredditTuple.Value.Name) {
-                    Console.Write("Enter the title of the new post: ");
-                    var newPostTitle = Console.ReadLine().Trim();
-                    Console.WriteLine();
-                    Console.WriteLine("Enter any content you'd like to add: ");
-                    var newPostContent = Console.ReadLine().Trim();
-                    try { var post = new Post(newPostTitle, userId, newPostContent,subredditTuple.Value.Id);
-                        Console.WriteLine("\nPost added successfully!\n");
-                    }
-                    catch (Exception e) { Console.WriteLine(e.Message); return; }
-                    return;
-                }
-            }
-
-            Console.WriteLine("I don't recognize the \'" + inputSubredditName + "\' subreddit.\n");
-            Console.WriteLine();
-        }
-        */
-
-       /*
-        * Method Name: DeletePost
-        * 
-        * Deletes a post from the global subreddit collection declared in this Program class.
-        * this function is also responsible for removing the id of the deleted post from the subreddit 
-        * Post ID Collection
-        * 
-        * Parameters: 
-        * userId               the id of the current user generated in Main
-        * 
-        * Return: NONE 
-        * 
-        ******************************************************************************/
-        /*
-        static void DeletePost(uint userId)
-        {
-            Console.WriteLine("Enter the ID of the post you'd like to delete: ");
-            try { var inputPostId = Convert.ToUInt32(Console.ReadLine().Trim()); 
-                if (!globalPosts.ContainsKey(inputPostId)) { Console.WriteLine("\nPost with id " + inputPostId + " was not found\n"); return; }
-                if (globalPosts[inputPostId].AuthorId == userId)
-                {
-                    globalSubreddits[globalPosts[inputPostId].subHomeId].subPostIDs.Remove(inputPostId);
-                    // remove the post from the global collection
-                    globalPosts.Remove(inputPostId);
-                    Console.WriteLine("\nPost successfully deleted\n");
-                }
-                else Console.WriteLine("\nAh, sorry. You can't delete other users' Posts\n");
-            } catch (Exception e) { Console.WriteLine(e.Message); }
-        }
-        */
-
-        /*
-         * Method Name: AddComment
-         * 
-         * Adds a Comment to a pre-existing Post object. Utilizes the user-defined 
-         * constructor for the Comment class and adds the new comment to the post's
-         * comment collection
-         * 
-         * Parameters: 
-         * userId               the id of the current user generated in Main
-         * 
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void AddComment(uint userId)
-        {
-            uint inputPostId;
-            Console.Write("Enter the ID of the post you'd like to add a comment to: ");
-            try { inputPostId = Convert.ToUInt32(Console.ReadLine().Trim()); } catch (Exception e) { Console.WriteLine(e.Message); return; };
-            if (globalPosts.ContainsKey(inputPostId))
-            {
-                Console.WriteLine("\nEnter your comment: \n");
-                var inputUserComment = Console.ReadLine().Trim();
-                try { var newComment = new Comment(inputUserComment, userId, inputPostId);
-                    globalPosts[inputPostId].postComments.Add(newComment.Id, newComment);
-                    Console.WriteLine("Comment added successfully!\n"); }
-                catch (Exception e) {
-                    Console.WriteLine(e.Message);
-                }
-                return;
-            }
-            else Console.WriteLine("\nThere seems to be no Post under this Id\n");
-        }
-        */
-
-        /*
-         * Method Name: AddReply
-         * 
-         * Adds a reply in the abstracted Comment tree 
-         * 
-         * Parameters: 
-         * userId               the id of the current user generated in Main
-         * 
-         * Return: NONE 
-         * 
-         ******************************************************************************/
-        /*
-        static void AddReply(uint userId)
-        {
-            Console.Write("enter the ID of the comment you'd like to add a reply to: ");
-            try {
-                var inputCommentId = Convert.ToUInt32(Console.ReadLine().Trim());
-                Console.WriteLine("\nEnter your reply: \n");
-                var inputCommentContent = Console.ReadLine().Trim();
-                var parentComment = RedditUtilities.CommentReplyAdderExtension(inputCommentId);
-                var childComment = new Comment(inputCommentContent, userId, parentComment.Id);
-                parentComment.commentReplies.Add(childComment.Id, childComment);
-                Console.WriteLine("\nReply added successfully!\n");
-            } catch (Exception e) { Console.WriteLine(e.Message); }
-        }
-        */
     }
 }
