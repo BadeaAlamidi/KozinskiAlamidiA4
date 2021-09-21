@@ -302,7 +302,7 @@ namespace KozinskiAlamidiAssignment2
                     throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
 
                 // Removes comment
-                if (selectedComment.AuthorID == Program.activeUser.Id)
+                if (selectedComment.AuthorID == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
                 {
                     // Removes comment from parent's comment collection
                     if (Program.globalPosts.ContainsKey(selectedComment.ParentID))
@@ -346,7 +346,7 @@ namespace KozinskiAlamidiAssignment2
                 if (selectedPost == null)
                     throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
 
-                if (selectedPost.AuthorId == Program.activeUser.Id)
+                if (selectedPost.AuthorId == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
                 {
                     if (!Program.globalPosts.ContainsKey(selectedPost.Id))
                         throw new ArgumentException("Post with id " + selectedPost.Id + " was not found\n");
