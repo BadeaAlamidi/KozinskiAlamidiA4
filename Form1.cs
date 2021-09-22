@@ -18,26 +18,21 @@ namespace KozinskiAlamidiAssignment2
         }
 
         // Iterates recursively through comments
+        // Only shows the first 5 levels of comments
+        // Not to be used to print comments upon log-in
         void PrintChildComments(Comment currentComment)
         {
             foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment).ThenBy(postComment => postComment.TimeStamp))
             {
-                commentSelection.Items.Add(commentReply);
+                if (commentReply.Indentation < 5)
+                    commentSelection.Items.Add(commentReply);
+                else
+                {
+                    commentSelection.Items.Add(RedditUtilities.FinalIndentation(5) + "...\n");
+                }
 
                 // Recursive call
                 PrintChildComments(commentReply);
-            }
-        }
-
-        // Iterates recursively through comments
-        void UnprintChildComments(Comment currentComment)
-        {
-            foreach (Comment commentReply in currentComment.commentReplies.Values)
-            {
-                commentSelection.Items.Remove(commentReply);
-
-                // Recursive call
-                UnprintChildComments(commentReply);
             }
         }
 
@@ -110,14 +105,9 @@ namespace KozinskiAlamidiAssignment2
                 throw new Exception("Casting from postSelection.SelectedItem to a Post was unsuccessful");
 
             // Populates comment box
-
-            // Sorts comment level by post rating
-            Comment[] sortedPostComments = chosenPost.postComments.Values.ToArray();
-            Array.Sort(sortedPostComments);
-
             // Starts recursion at the post level
             // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-            foreach (Comment postComment in sortedPostComments)
+            foreach (Comment postComment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
             {
                 commentSelection.Items.Add(postComment);
                 PrintChildComments(postComment);
@@ -157,7 +147,7 @@ namespace KozinskiAlamidiAssignment2
             replyInput.Clear();
 
             if (Program.activeUser == null || Program.activeUser != chosenUser)
-                systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}");
+                systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}\n");
         }
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
@@ -200,12 +190,12 @@ namespace KozinskiAlamidiAssignment2
                             comments.Add(userComment);
 
                         // Recursive call
-                        noIndentChildComments(userComment);
+                        StoreChildComments(userComment);
                     }
                 }
 
                 // Iterates recursively through comments
-                void noIndentChildComments(Comment currentComment)
+                void StoreChildComments(Comment currentComment)
                 {
                     foreach (Comment userComment in currentComment.commentReplies.Values)
                     {
@@ -213,11 +203,11 @@ namespace KozinskiAlamidiAssignment2
                             comments.Add(userComment);
 
                         // Recursive call
-                        noIndentChildComments(userComment);
+                        StoreChildComments(userComment);
                     }
                 }
 
-                // Sorts and prints comments to ListBox
+                // Sorts and prints comments (without indentation) to ListBox
                 comments.Sort();
                 foreach (Comment c in comments)
                 {
@@ -229,7 +219,7 @@ namespace KozinskiAlamidiAssignment2
             }
             else 
             {
-               systemOutput.AppendText("authentication failed\n");
+                systemOutput.AppendText("Authentication failed\n");
                 loginButton.Text = "Retry Password";
             }
         }
@@ -268,6 +258,11 @@ namespace KozinskiAlamidiAssignment2
             else
             {
                 Comment chosenComment = commentSelection.SelectedItem as Comment;
+                if (chosenComment == null)
+                {
+                    systemOutput.AppendText("Your selection is not a comment\n");
+                    return;
+                }
                 Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
                 chosenComment.commentReplies.Add(newComment.Id, newComment);
             }
@@ -295,11 +290,11 @@ namespace KozinskiAlamidiAssignment2
 
                 Comment selectedComment = commentSelection.SelectedItem as Comment;
                 if (selectedComment == null)
-                    throw new ArgumentNullException("Casting from commentSelection.SelectedItem to a Comment was unsuccessful\n");
+                    throw new ArgumentNullException("You have not selected a valid comment to reply to\n");
 
                 Post selectedPost = postSelection.SelectedItem as Post;
                 if (selectedPost == null)
-                    throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
+                    throw new ArgumentNullException("You have not selected a valid post to reply to\n");
 
                 // Removes comment
                 if (selectedComment.AuthorID == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
@@ -312,7 +307,13 @@ namespace KozinskiAlamidiAssignment2
                         Comment parentComment = RedditUtilities.CommentReplyAdderExtension(selectedComment.ParentID);
                         parentComment.commentReplies.Remove(selectedComment.Id);
 
-                        UnprintChildComments(selectedComment);
+                        // Refreshes post comments
+                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                        foreach (Comment postComment in selectedPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+                        {
+                            commentSelection.Items.Add(postComment);
+                            PrintChildComments(postComment);
+                        }
                     }
                 }
                 else

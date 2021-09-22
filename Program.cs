@@ -610,7 +610,7 @@ namespace KozinskiAlamidiAssignment2
 
             // Adds indentation
             for (int i = 0; i < Indentation; ++i)
-                commentDescription += "    ";
+                commentDescription += RedditUtilities.INDENTATION;
 
             // Shortens title if needed
             StringBuilder newTitle = new StringBuilder(Content);
@@ -1077,6 +1077,9 @@ namespace KozinskiAlamidiAssignment2
      * Random ID generator
      *      Ensures IDs are unique
      *      ID initializers in other classes call GenerateUniqueId(), which calls testUnique()
+     * 
+     * Indentation generator
+     *      Code in form calls FinalIndentation(uint level)
      *      
      * Comment parent finder
      *      Code in other classes call FindCommentParent, which calls CommentTreeTraverseFunction()
@@ -1093,7 +1096,9 @@ namespace KozinskiAlamidiAssignment2
         // Indentation constant
         // Defines constant to be used together with comment indentation level
 
-        public static string INDENTATION = "  ";
+        public static string INDENTATION = "      ";
+
+
 
         // Quit array
         // Values accepted from user to quit program
@@ -1162,6 +1167,24 @@ namespace KozinskiAlamidiAssignment2
             }
 
             return boolResult;
+        }
+
+        /* Method name: FinalIndentation
+         * 
+         * Returns last visible level of comments; determined in form PrintChildComments method
+         * 
+         * Parameters:
+         * uint indentationLevel    last visible level of comments (with count starting from 1)
+         * 
+         * Returns:
+         * string                   indentation needed for last visible level of comments
+         */
+        public static string FinalIndentation(uint indentationLevel)
+        {
+            string indent = "";
+            for (uint i = 0; i < indentationLevel; i++)
+                indent += RedditUtilities.INDENTATION;
+            return indent;
         }
 
         /* Method name: CommentReplyAdder
