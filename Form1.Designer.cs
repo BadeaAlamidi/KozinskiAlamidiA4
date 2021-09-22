@@ -71,7 +71,7 @@ namespace KozinskiAlamidiAssignment2
             this.userSelection.ItemHeight = 14;
             this.userSelection.Location = new System.Drawing.Point(10, 32);
             this.userSelection.Name = "userSelection";
-            this.userSelection.Size = new System.Drawing.Size(226, 158);
+            this.userSelection.Size = new System.Drawing.Size(327, 158);
             this.userSelection.TabIndex = 1;
             this.userSelection.SelectedValueChanged += new System.EventHandler(this.userSelection_SelectedValueChanged);
             // 
@@ -80,7 +80,7 @@ namespace KozinskiAlamidiAssignment2
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(229, 9);
+            this.label2.Location = new System.Drawing.Point(330, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 20);
             this.label2.TabIndex = 2;
@@ -91,7 +91,7 @@ namespace KozinskiAlamidiAssignment2
             this.subredditSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subredditSelection.FormattingEnabled = true;
             this.subredditSelection.ItemHeight = 14;
-            this.subredditSelection.Location = new System.Drawing.Point(240, 32);
+            this.subredditSelection.Location = new System.Drawing.Point(343, 32);
             this.subredditSelection.Name = "subredditSelection";
             this.subredditSelection.Size = new System.Drawing.Size(128, 158);
             this.subredditSelection.TabIndex = 3;
@@ -102,7 +102,7 @@ namespace KozinskiAlamidiAssignment2
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label3.Location = new System.Drawing.Point(365, 9);
+            this.label3.Location = new System.Drawing.Point(473, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 20);
             this.label3.TabIndex = 4;
@@ -114,7 +114,7 @@ namespace KozinskiAlamidiAssignment2
             this.postSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.postSelection.FormattingEnabled = true;
             this.postSelection.ItemHeight = 14;
-            this.postSelection.Location = new System.Drawing.Point(374, 32);
+            this.postSelection.Location = new System.Drawing.Point(477, 32);
             this.postSelection.Name = "postSelection";
             this.postSelection.Size = new System.Drawing.Size(609, 158);
             this.postSelection.TabIndex = 5;
@@ -125,7 +125,7 @@ namespace KozinskiAlamidiAssignment2
             this.systemOutput.Location = new System.Drawing.Point(14, 472);
             this.systemOutput.Name = "systemOutput";
             this.systemOutput.ReadOnly = true;
-            this.systemOutput.Size = new System.Drawing.Size(973, 66);
+            this.systemOutput.Size = new System.Drawing.Size(1072, 66);
             this.systemOutput.TabIndex = 6;
             this.systemOutput.Text = "";
             // 
@@ -133,7 +133,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label4.Location = new System.Drawing.Point(237, 195);
+            this.label4.Location = new System.Drawing.Point(340, 193);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(50, 13);
             this.label4.TabIndex = 7;
@@ -143,7 +143,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label5.Location = new System.Drawing.Point(354, 195);
+            this.label5.Location = new System.Drawing.Point(434, 193);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(37, 13);
             this.label5.TabIndex = 8;
@@ -181,7 +181,7 @@ namespace KozinskiAlamidiAssignment2
             // deletePostButton
             // 
             this.deletePostButton.ForeColor = System.Drawing.Color.Red;
-            this.deletePostButton.Location = new System.Drawing.Point(881, 198);
+            this.deletePostButton.Location = new System.Drawing.Point(984, 198);
             this.deletePostButton.Name = "deletePostButton";
             this.deletePostButton.Size = new System.Drawing.Size(102, 23);
             this.deletePostButton.TabIndex = 12;
@@ -237,7 +237,7 @@ namespace KozinskiAlamidiAssignment2
             // addReplyButton
             // 
             this.addReplyButton.ForeColor = System.Drawing.Color.Lime;
-            this.addReplyButton.Location = new System.Drawing.Point(881, 410);
+            this.addReplyButton.Location = new System.Drawing.Point(984, 410);
             this.addReplyButton.Name = "addReplyButton";
             this.addReplyButton.Size = new System.Drawing.Size(102, 23);
             this.addReplyButton.TabIndex = 17;
@@ -250,7 +250,7 @@ namespace KozinskiAlamidiAssignment2
             this.replyInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.replyInput.Location = new System.Drawing.Point(619, 287);
             this.replyInput.Name = "replyInput";
-            this.replyInput.Size = new System.Drawing.Size(364, 117);
+            this.replyInput.Size = new System.Drawing.Size(467, 117);
             this.replyInput.TabIndex = 18;
             this.replyInput.Text = "";
             // 
@@ -269,7 +269,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.memberCount.AutoSize = true;
             this.memberCount.ForeColor = System.Drawing.Color.Black;
-            this.memberCount.Location = new System.Drawing.Point(293, 195);
+            this.memberCount.Location = new System.Drawing.Point(396, 193);
             this.memberCount.Name = "memberCount";
             this.memberCount.Size = new System.Drawing.Size(0, 13);
             this.memberCount.TabIndex = 20;
@@ -278,7 +278,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.activeCount.AutoSize = true;
             this.activeCount.ForeColor = System.Drawing.Color.Black;
-            this.activeCount.Location = new System.Drawing.Point(391, 195);
+            this.activeCount.Location = new System.Drawing.Point(471, 193);
             this.activeCount.Name = "activeCount";
             this.activeCount.Size = new System.Drawing.Size(0, 13);
             this.activeCount.TabIndex = 21;
@@ -287,7 +287,7 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(999, 550);
+            this.ClientSize = new System.Drawing.Size(1098, 550);
             this.Controls.Add(this.activeCount);
             this.Controls.Add(this.memberCount);
             this.Controls.Add(this.label9);

@@ -120,6 +120,16 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.Clear();
                 systemOutput.AppendText(postSelection.SelectedItem.ToString());
 
+
+                if (chosenPost.postComments.Count == 0)
+                {
+                    commentSelection.Items.Add("\n---no comments associated with this post---\n");
+                    return; 
+                }
+            // Sorts comment level by post rating
+            //Comment[] sortedPostComments = chosenPost.postComments.Values.ToArray();
+            //Array.Sort(sortedPostComments);
+
                 commentSelection.Items.Clear();
                 replyInput.Clear();
 
@@ -130,6 +140,7 @@ namespace KozinskiAlamidiAssignment2
                     systemOutput.AppendText("You did not select a valid post");
                     return;
                 }
+
 
                 // Populates comment box
                 // Starts recursion at the post level
@@ -285,6 +296,7 @@ namespace KozinskiAlamidiAssignment2
 
         private void addReplyButton_Click(object sender, EventArgs e)
         {
+
             try
             {
                 if (replyInput.Text == "")
@@ -312,6 +324,12 @@ namespace KozinskiAlamidiAssignment2
                     systemOutput.Clear();
                     systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
                     return;
+                }
+                // check for foul language
+                if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
+                {
+                     MessageBox.Show("Please refrain from using foul language and try again");
+                     return;
                 }
                 // case for when posting a reply to a post
                 if (commentSelection.SelectedIndex == -1)
