@@ -108,7 +108,11 @@ namespace KozinskiAlamidiAssignment2
                 throw new Exception("Casting from postSelection.SelectedItem to a Post was unsuccessful");
 
             // Populates comment box
-
+            if (chosenPost.postComments.Count == 0)
+            {
+                commentSelection.Items.Add("\n---no comments associated with this post---\n");
+                return; 
+            }
             // Sorts comment level by post rating
             Comment[] sortedPostComments = chosenPost.postComments.Values.ToArray();
             Array.Sort(sortedPostComments);
@@ -251,6 +255,12 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
                 return;
             }
+            // check for foul language
+            if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
+            {
+                MessageBox.Show("Please refrain from using foul language and try again");
+                return;
+            }
             // case for when posting a reply to a post
             if (commentSelection.SelectedIndex == -1)
             {
@@ -260,9 +270,13 @@ namespace KozinskiAlamidiAssignment2
             // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
             else
             {
-                Comment chosenComment = commentSelection.SelectedItem as Comment;
-                Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
-                chosenComment.commentReplies.Add(newComment.Id, newComment);
+                //check to see if what's chosen is NOT the "no comment" message:
+                if (commentSelection.SelectedItem is Comment chosenComment)
+                {
+                    Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
+                    chosenComment.commentReplies.Add(newComment.Id, newComment);
+                }
+                else return;
             }
             // refreshes comments printed to comment ListBox
             commentSelection.Items.Clear();
