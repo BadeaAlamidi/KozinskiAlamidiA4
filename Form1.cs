@@ -22,260 +22,332 @@ namespace KozinskiAlamidiAssignment2
         // Not to be used to print comments upon log-in
         void PrintChildComments(Comment currentComment)
         {
-            foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment).ThenBy(postComment => postComment.TimeStamp))
+            try
             {
-                if (commentReply.Indentation < 5)
-                    commentSelection.Items.Add(commentReply);
-                else
+                foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment).ThenBy(postComment => postComment.TimeStamp))
                 {
-                    commentSelection.Items.Add(RedditUtilities.FinalIndentation(5) + "...\n");
-                }
+                    if (commentReply.Indentation < 5)
+                        commentSelection.Items.Add(commentReply);
+                    else
+                        commentSelection.Items.Add(RedditUtilities.FinalIndentation(5) + "...\n");
 
-                // Recursive call
-                PrintChildComments(commentReply);
+                    // Recursive call
+                    PrintChildComments(commentReply);
+                }
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                // Runs file reader and stores error log
+                List<string> fileReadErrors = RedditUtilities.ReadFiles();
 
-            // Runs file reader and stores error log
-            List<string> fileReadErrors = RedditUtilities.ReadFiles();
+                // Prints error log to system output
+                foreach (string line in fileReadErrors)
+                    systemOutput.AppendText(line + "\n");
 
-            // Prints error log to system output
-            foreach (string line in fileReadErrors)
-                systemOutput.AppendText(line + "\n");
-            
-            systemOutput.AppendText("Welcome! Select a user and enter a password to log in.");
+                systemOutput.AppendText("Welcome! Select a user and enter a password to log in.");
 
-            // Populates user, subreddit, and post boxes
-            foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
-            foreach (KeyValuePair<uint,Subreddit>subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
+                // Populates user, subreddit, and post boxes
+                foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
+                foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
+            }
         }
 
         // this triggers when the user chooses a subreddit
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            memberCount.Text = "";
-            activeCount.Text = "";
-            if (subredditSelection.SelectedItem == null)
-                return;
-
-            postSelection.Items.Clear();
-            commentSelection.Items.Clear();
-            systemOutput.Clear();
-            replyInput.Clear();
-
-            if ("all" == subredditSelection.SelectedItem.ToString())
+            try
             {
-                foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits.OrderBy(subredditTuple => subredditTuple.Value))
-                {
-                    // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                    foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
-                        postSelection.Items.Add(postTuple.Value);
-                }
-            }
-            else
-            {
-                if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit))
+                memberCount.Text = "";
+                activeCount.Text = "";
+                if (subredditSelection.SelectedItem == null)
                     return;
 
-                // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => chosenSubreddit.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
-                    postSelection.Items.Add(postTuple.Value);
+                postSelection.Items.Clear();
+                commentSelection.Items.Clear();
+                systemOutput.Clear();
+                replyInput.Clear();
 
-                memberCount.Text = chosenSubreddit.Members.ToString();
-                activeCount.Text = chosenSubreddit.Active.ToString();
+                if ("all" == subredditSelection.SelectedItem.ToString())
+                {
+                    foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits.OrderBy(subredditTuple => subredditTuple.Value))
+                    {
+                        // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
+                        foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
+                            postSelection.Items.Add(postTuple.Value);
+                    }
+                }
+                else
+                {
+                    if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit))
+                        return;
+
+                    // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
+                    foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => chosenSubreddit.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
+                        postSelection.Items.Add(postTuple.Value);
+
+                    memberCount.Text = chosenSubreddit.Members.ToString();
+                    activeCount.Text = chosenSubreddit.Active.ToString();
+                }
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
             }
         }
 
         private void postSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (postSelection.SelectedItem == null)
-                return;
-
-            systemOutput.Clear();
-            systemOutput.AppendText(postSelection.SelectedItem.ToString());
-
-            commentSelection.Items.Clear();
-            replyInput.Clear();
-
-            Post chosenPost = postSelection.SelectedItem as Post;
-            if (chosenPost == null)
-                throw new Exception("Casting from postSelection.SelectedItem to a Post was unsuccessful");
-
-            // Populates comment box
-            // Starts recursion at the post level
-            // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-            foreach (Comment postComment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+            try
             {
-                commentSelection.Items.Add(postComment);
-                PrintChildComments(postComment);
+                if (postSelection.SelectedItem == null)
+                    return;
+
+                systemOutput.Clear();
+                systemOutput.AppendText(postSelection.SelectedItem.ToString());
+
+                commentSelection.Items.Clear();
+                replyInput.Clear();
+
+                Post chosenPost = postSelection.SelectedItem as Post;
+                if (chosenPost == null)
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You did not select a valid post");
+                    return;
+                }
+
+                // Populates comment box
+                // Starts recursion at the post level
+                // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                foreach (Comment postComment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+                {
+                    commentSelection.Items.Add(postComment);
+                    PrintChildComments(postComment);
+                }
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
             }
         }
 
         private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (commentSelection.SelectedItem == null)
-                return;
+            try
+            {
+                if (commentSelection.SelectedItem == null)
+                    return;
 
-            systemOutput.Clear();
-            systemOutput.AppendText(commentSelection.SelectedItem.ToString());
+                systemOutput.Clear();
+                systemOutput.AppendText(commentSelection.SelectedItem.ToString());
 
-            replyInput.Clear();
+                replyInput.Clear();
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
+            }
         }
 
         private void userSelection_SelectedValueChanged(object sender, EventArgs e)
         {
-            // reset the text of the log-in button in case there was a previous faild attempt at entering the password
-            loginButton.Text = "Log-in";
-            // Safety check
-            //if (userSelection.SelectedItem == null)
-            if (!(userSelection.SelectedItem is User chosenUser))
-                return;
+            try
+            {
+                // reset the text of the log-in button in case there was a previous failed attempt at entering the password
+                loginButton.Text = "Log-in";
+                // Safety check
+                //if (userSelection.SelectedItem == null)
+                if (!(userSelection.SelectedItem is User chosenUser))
+                    return;
 
-            // Clears all form fields
+                // Clears all form fields
 
-            subredditSelection.SelectedItem = null;
-            postSelection.SelectedItem = null;
-            commentSelection.SelectedItem = null;
+                subredditSelection.SelectedItem = null;
+                postSelection.SelectedItem = null;
+                commentSelection.SelectedItem = null;
 
-            postSelection.Items.Clear();
-            commentSelection.Items.Clear();
+                postSelection.Items.Clear();
+                commentSelection.Items.Clear();
 
-            systemOutput.Clear();
-            replyInput.Clear();
+                systemOutput.Clear();
+                replyInput.Clear();
 
-            if (Program.activeUser == null || Program.activeUser != chosenUser)
-                systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}\n");
+                if (Program.activeUser == null || Program.activeUser != chosenUser)
+                    systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}\n");
+            }
+            catch (Exception exception)
+            {
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
+            }
         }
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
         {
-            if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!\n"); return; }
-            if (passwordInput.Text == "") { systemOutput.AppendText("Please enter a password. Be sure to choose your intended username\n"); return; }
-            
-            // authentication happens here:
-            User chosenUser = userSelection.SelectedItem as User;
-            if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
+            try
             {
-                // reset the text of the log-in button in case there was a previous failed attempt at entering the password
-                loginButton.Text = "Log-in";
+                if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!\n"); return; }
+                if (passwordInput.Text == "") { systemOutput.AppendText("Please enter a password. Be sure to choose your intended username\n"); return; }
 
-                systemOutput.Clear();
-                systemOutput.AppendText($"Authentication successful! Welcome, {chosenUser.Name}\n");
-                Program.activeUser = chosenUser;
-
-                subredditSelection.SelectedItem = null;
-                postSelection.Items.Clear();
-                commentSelection.Items.Clear();
-
-                List<Comment> comments = new List<Comment>();
-
-                // Adds user's own posts and comments to respective ListBoxes
-                // Sorts posts by subreddit name, then by post rating
-                foreach (Post post in Program.globalPosts.Values.OrderBy(post => Program.globalSubreddits[post.subHomeId]).ThenBy(post => post))
+                // authentication happens here:
+                User chosenUser = userSelection.SelectedItem as User;
+                if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
                 {
-                    // Adds posts to ListBox
-                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                    if (post.AuthorId == Program.activeUser.Id)
-                        postSelection.Items.Add(post);
+                    // reset the text of the log-in button in case there was a previous failed attempt at entering the password
+                    loginButton.Text = "Log-in";
 
-                    // Adds comments to list (to be sorted and printed later)
-                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                    // Starts recursion at the post level
-                    foreach (Comment userComment in post.postComments.Values)
+                    systemOutput.Clear();
+                    systemOutput.AppendText($"Authentication successful! Welcome, {chosenUser.Name}\n");
+                    Program.activeUser = chosenUser;
+
+                    subredditSelection.SelectedItem = null;
+                    postSelection.Items.Clear();
+                    commentSelection.Items.Clear();
+
+                    List<Comment> comments = new List<Comment>();
+
+                    // Adds user's own posts and comments to respective ListBoxes
+                    // Sorts posts by subreddit name, then by post rating
+                    foreach (Post post in Program.globalPosts.Values.OrderBy(post => Program.globalSubreddits[post.subHomeId]).ThenBy(post => post))
                     {
-                        if (userComment.AuthorID == Program.activeUser.Id)
-                            comments.Add(userComment);
+                        // Adds posts to ListBox
+                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                        if (post.AuthorId == Program.activeUser.Id)
+                            postSelection.Items.Add(post);
 
-                        // Recursive call
-                        StoreChildComments(userComment);
+                        // Adds comments to list (to be sorted and printed later)
+                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                        // Starts recursion at the post level
+                        foreach (Comment userComment in post.postComments.Values)
+                        {
+                            if (userComment.AuthorID == Program.activeUser.Id)
+                                comments.Add(userComment);
+
+                            // Recursive call
+                            StoreChildComments(userComment);
+                        }
                     }
-                }
 
-                // Iterates recursively through comments
-                void StoreChildComments(Comment currentComment)
-                {
-                    foreach (Comment userComment in currentComment.commentReplies.Values)
+                    // Iterates recursively through comments
+                    void StoreChildComments(Comment currentComment)
                     {
-                        if (userComment.AuthorID == Program.activeUser.Id)
-                            comments.Add(userComment);
+                        foreach (Comment userComment in currentComment.commentReplies.Values)
+                        {
+                            if (userComment.AuthorID == Program.activeUser.Id)
+                                comments.Add(userComment);
 
-                        // Recursive call
-                        StoreChildComments(userComment);
+                            // Recursive call
+                            StoreChildComments(userComment);
+                        }
                     }
-                }
 
-                // Sorts and prints comments (without indentation) to ListBox
-                comments.Sort();
-                foreach (Comment c in comments)
+                    // Sorts and prints comments (without indentation) to ListBox
+                    comments.Sort();
+                    foreach (Comment c in comments)
+                    {
+                        uint originalLevel = c.Indentation;
+                        c.Indentation = 0;
+                        commentSelection.Items.Add(c);
+                        c.Indentation = originalLevel;
+                    }
+
+                    systemOutput.AppendText($"Displaying all posts and comments made by user \'{chosenUser.Name}\'\n");
+                }
+                else
                 {
-                    uint originalLevel = c.Indentation;
-                    c.Indentation = 0;
-                    commentSelection.Items.Add(c);
-                    c.Indentation = originalLevel;
+                    systemOutput.AppendText("Authentication failed\n");
+                    loginButton.Text = "Retry Password";
                 }
             }
-            else 
+            catch (Exception exception)
             {
-                systemOutput.AppendText("Authentication failed\n");
-                loginButton.Text = "Retry Password";
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
             }
         }
 
         private void addReplyButton_Click(object sender, EventArgs e)
         {
-            if (replyInput.Text == "")
+            try
             {
-                systemOutput.AppendText("You may not post an empty comment\n");
-                return;
-            }
-            if (Program.activeUser == null)
-            {
-                systemOutput.AppendText("Log-in is required to add posts and comments\n");
-                return;
-            }
-            // the following check is for when neither a post nor a comment is chosen
-            if (postSelection.SelectedIndex == -1)
-            {
-                systemOutput.AppendText("Choose a post to reply to a post, or choose a post + comment to reply to a comment.\n");
-                return;
-            }
-            Post chosenPost = postSelection.SelectedItem as Post;
-            if (chosenPost.Locked == true)
-            {
-                systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
-                return;
-            }
-            // case for when posting a reply to a post
-            if (commentSelection.SelectedIndex == -1)
-            {
-                Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
-                chosenPost.postComments.Add(newComment.Id, newComment);
-            }
-            // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
-            else
-            {
-                Comment chosenComment = commentSelection.SelectedItem as Comment;
-                if (chosenComment == null)
+                if (replyInput.Text == "")
                 {
-                    systemOutput.AppendText("Your selection is not a comment\n");
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You may not post an empty comment\n");
                     return;
                 }
-                Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
-                chosenComment.commentReplies.Add(newComment.Id, newComment);
+                if (Program.activeUser == null)
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("Log-in is required to add posts and comments\n");
+                    return;
+                }
+                // the following check is for when neither a post nor a comment is chosen
+                if (postSelection.SelectedIndex == -1)
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("Choose a post to reply to a post, or choose a post + comment to reply to a comment.\n");
+                    return;
+                }
+                Post chosenPost = postSelection.SelectedItem as Post;
+                if (chosenPost.Locked == true)
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
+                    return;
+                }
+                // case for when posting a reply to a post
+                if (commentSelection.SelectedIndex == -1)
+                {
+                    Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
+                    chosenPost.postComments.Add(newComment.Id, newComment);
+                }
+                // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
+                else
+                {
+                    Comment chosenComment = commentSelection.SelectedItem as Comment;
+                    if (chosenComment == null)
+                    {
+                        systemOutput.Clear();
+                        systemOutput.AppendText("Your selection is not a comment\n");
+                        return;
+                    }
+                    Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
+                    chosenComment.commentReplies.Add(newComment.Id, newComment);
+                }
+                // refreshes comments printed to comment ListBox
+                commentSelection.Items.Clear();
+                foreach (Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+                {
+                    commentSelection.Items.Add(comment);
+                    PrintChildComments(comment);
+                }
+                replyInput.Clear();
+                systemOutput.Clear();
+                systemOutput.AppendText("Comment successfully added\n");
             }
-            // refreshes comments printed to comment ListBox
-            commentSelection.Items.Clear();
-            foreach(Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+            catch (Exception exception)
             {
-                commentSelection.Items.Add(comment);
-                PrintChildComments(comment);
+                systemOutput.Clear();
+                systemOutput.AppendText(exception.Message);
             }
-            replyInput.Clear();
-            systemOutput.Clear();
-            systemOutput.AppendText("Comment successfully added\n");
         }
 
         private void deleteReplyButton_Click(object sender, EventArgs e)
@@ -283,18 +355,34 @@ namespace KozinskiAlamidiAssignment2
             try
             {
                 if (Program.activeUser == null)
-                    throw new ArgumentNullException("Log-in is required to delete posts and comments\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("Log-in is required to delete posts and comments\n");
+                    return;
+                }
 
                 if (postSelection.SelectedItem == null || commentSelection.SelectedItem == null)
-                    throw new ArgumentNullException("You must select a post and one of its comments first\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You must select a post and one of its comments first\n");
+                    return;
+                }
 
                 Comment selectedComment = commentSelection.SelectedItem as Comment;
                 if (selectedComment == null)
-                    throw new ArgumentNullException("You have not selected a valid comment to reply to\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You have not selected a valid comment to reply to\n");
+                    return;
+                }
 
                 Post selectedPost = postSelection.SelectedItem as Post;
                 if (selectedPost == null)
-                    throw new ArgumentNullException("You have not selected a valid post to reply to\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You have not selected a valid post to reply to\n");
+                    return;
+                }
 
                 // Removes comment
                 if (selectedComment.AuthorID == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
@@ -309,6 +397,7 @@ namespace KozinskiAlamidiAssignment2
 
                         // Refreshes post comments
                         // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                        commentSelection.Items.Clear();
                         foreach (Comment postComment in selectedPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
                         {
                             commentSelection.Items.Add(postComment);
@@ -317,7 +406,11 @@ namespace KozinskiAlamidiAssignment2
                     }
                 }
                 else
-                    throw new Exception("You cannot delete other users' comments\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You cannot delete other users' comments\n");
+                    return;
+                }
 
                 // Removes object from comment ListBox
                 commentSelection.Items.Remove(commentSelection.SelectedItem);
@@ -338,19 +431,35 @@ namespace KozinskiAlamidiAssignment2
             try
             {
                 if (Program.activeUser == null)
-                    throw new ArgumentNullException("Log-in is required to delete posts and comments\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("Log-in is required to delete posts and comments\n");
+                    return;
+                }
 
                 if (postSelection.SelectedItem == null)
-                    throw new ArgumentNullException("You must select a post first\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You must select a post first\n");
+                    return;
+                }
 
                 Post selectedPost = postSelection.SelectedItem as Post;
                 if (selectedPost == null)
-                    throw new ArgumentNullException("Casting from postSelection.SelectedItem to a Post was unsuccessful\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You did not select a valid post\n");
+                    return;
+                }
 
                 if (selectedPost.AuthorId == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
                 {
                     if (!Program.globalPosts.ContainsKey(selectedPost.Id))
-                        throw new ArgumentException("Post with id " + selectedPost.Id + " was not found\n");
+                    {
+                        systemOutput.Clear();
+                        systemOutput.AppendText("Post with id " + selectedPost.Id + " was not found\n");
+                        return;
+                    }
 
                     // Clears comment ListBox
                     commentSelection.Items.Clear();
@@ -362,7 +471,11 @@ namespace KozinskiAlamidiAssignment2
                     Program.globalPosts.Remove(selectedPost.Id);
                 }
                 else
-                    throw new Exception("You cannot delete other users' posts\n");
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You cannot delete other users' posts\n");
+                    return;
+                }
 
                 // Removes object from post ListBox
                 postSelection.Items.Remove(postSelection.SelectedItem);
