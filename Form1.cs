@@ -120,16 +120,6 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.Clear();
                 systemOutput.AppendText(postSelection.SelectedItem.ToString());
 
-
-                if (chosenPost.postComments.Count == 0)
-                {
-                    commentSelection.Items.Add("\n---no comments associated with this post---\n");
-                    return; 
-                }
-            // Sorts comment level by post rating
-            //Comment[] sortedPostComments = chosenPost.postComments.Values.ToArray();
-            //Array.Sort(sortedPostComments);
-
                 commentSelection.Items.Clear();
                 replyInput.Clear();
 
@@ -141,8 +131,14 @@ namespace KozinskiAlamidiAssignment2
                     return;
                 }
 
+                // Shows default message if post has no comments
+                if (chosenPost.postComments.Count == 0)
+                {
+                    commentSelection.Items.Add("\n---no comments associated with this post---\n");
+                    return;
+                }
 
-                // Populates comment box
+                // Populates comment box (comments are sorted by score, then by date/time posted)
                 // Starts recursion at the post level
                 // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
                 foreach (Comment postComment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
@@ -319,6 +315,12 @@ namespace KozinskiAlamidiAssignment2
                     return;
                 }
                 Post chosenPost = postSelection.SelectedItem as Post;
+                if (chosenPost == null)
+                {
+                    systemOutput.Clear();
+                    systemOutput.AppendText("You have not selected a valid post\n");
+                    return;
+                }
                 if (chosenPost.Locked == true)
                 {
                     systemOutput.Clear();
@@ -328,8 +330,9 @@ namespace KozinskiAlamidiAssignment2
                 // check for foul language
                 if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
                 {
-                     MessageBox.Show("Please refrain from using foul language and try again");
-                     return;
+                    MessageBox.Show("Please refrain from using foul language and try again");
+                    systemOutput.AppendText("Please refrain from using foul language and try again");
+                    return;
                 }
                 // case for when posting a reply to a post
                 if (commentSelection.SelectedIndex == -1)
@@ -344,7 +347,7 @@ namespace KozinskiAlamidiAssignment2
                     if (chosenComment == null)
                     {
                         systemOutput.Clear();
-                        systemOutput.AppendText("Your selection is not a comment\n");
+                        systemOutput.AppendText("You have not selected a valid comment\n");
                         return;
                     }
                     Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
@@ -390,7 +393,7 @@ namespace KozinskiAlamidiAssignment2
                 if (selectedComment == null)
                 {
                     systemOutput.Clear();
-                    systemOutput.AppendText("You have not selected a valid comment to reply to\n");
+                    systemOutput.AppendText("You have not selected a valid comment to delete\n");
                     return;
                 }
 
@@ -398,7 +401,7 @@ namespace KozinskiAlamidiAssignment2
                 if (selectedPost == null)
                 {
                     systemOutput.Clear();
-                    systemOutput.AppendText("You have not selected a valid post to reply to\n");
+                    systemOutput.AppendText("You have not selected a valid post\n");
                     return;
                 }
 
@@ -412,15 +415,15 @@ namespace KozinskiAlamidiAssignment2
                     {
                         Comment parentComment = RedditUtilities.CommentReplyAdderExtension(selectedComment.ParentID);
                         parentComment.commentReplies.Remove(selectedComment.Id);
+                    }
 
-                        // Refreshes post comments
-                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                        commentSelection.Items.Clear();
-                        foreach (Comment postComment in selectedPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
-                        {
-                            commentSelection.Items.Add(postComment);
-                            PrintChildComments(postComment);
-                        }
+                    // Refreshes post comments
+                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
+                    commentSelection.Items.Clear();
+                    foreach (Comment postComment in selectedPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
+                    {
+                        commentSelection.Items.Add(postComment);
+                        PrintChildComments(postComment);
                     }
                 }
                 else
