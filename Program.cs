@@ -31,17 +31,23 @@ namespace KozinskiAlamidiAssignment2
     * Attributes:
     * 
     * readonly uint id             User ID
-    * readonly string name         User Name
+    * private readonly UserType    enum type to denote user Type
+    * readonly string name         User name
+    *  readonly string passwordHash      string with hexidecimal representation used to authenticate log-in's
     * int postScore                Popularity of posts
     * int commentScore             Popularity of comments
+    * string[] moderatingSubs      string array with subreddits a user has extra locking authorities on
     * 
     * Properties:
     * 
     * Id                           Getter
+    * Type                         Getter
     * Name                         Getter
+    * passwordHash                 Getter
     * PostScore                    Getter & setter
     * CommentScore                 Getter & setter
     * TotalScore                   Getter for PostScore + CommentScore
+    * moderatingSubs               Getter & setter
     * 
     * Constructors:
     * 
@@ -59,6 +65,8 @@ namespace KozinskiAlamidiAssignment2
     * 
     * Sortable by Name using the IComparable interface
     * Overrides ToString()
+    * this class contains its own enum type used to dictate whether
+    * a user is a normal user, a moderator, or an administrator
     */
     public class User : IComparable
     {
@@ -439,6 +447,7 @@ namespace KozinskiAlamidiAssignment2
     * readonly uint parentID        Parent ID (could be Post or Comment object)
     * uint upVotes                  Number of comment upvotes
     * uint downVotes                Number of comment downvotes
+    * uint indentation              represents the level of the comment
     * 
     * readonly DateTime timeStamp                          Time comment was posted
     * SortedDictionary<uint, Comment> commentReplies       Collection of nested Comment objects
@@ -453,6 +462,7 @@ namespace KozinskiAlamidiAssignment2
     * DownVotes                     Getter & setter
     * TimeStamp                     Getter
     * Score                         Getter for UpVotes - DownVotes
+    * Indentation                   Getter & setter
     * 
     * Constructors:
     * 
@@ -705,6 +715,7 @@ namespace KozinskiAlamidiAssignment2
     * This class contains information about the Posts objects
     *
     * Atrributes:
+    * private bool locked                                         boolean to make instance uncomment-able
     * private readonly uint id;                                   unique identifier
       private string title;                                       title of the post
       private readonly uint authorID;                             author of the post(equals the id of a user object)
@@ -718,6 +729,7 @@ namespace KozinskiAlamidiAssignment2
     *
     * Properties:
     * Score         returns a calculation based off upvotes and downvotes
+    * Locked        locked boolean modifier
     * PostRating    Score modifier that's based off the weight of the score
     * Id            returns the corresponding id property of the post
     * SubHomeId     same as above
@@ -1084,12 +1096,17 @@ namespace KozinskiAlamidiAssignment2
      * Comment parent finder
      *      Code in other classes call FindCommentParent, which calls CommentTreeTraverseFunction()
      *      
+     * CommentTreeTraverseFunction
+     *      visits a comment tree to return a parent comment nested in another comment. this is an extension
+     *      to the comment parent finder described above
+     *      
      * String token finder
      *      Code in other classes call FindToken()
      *      
-     * CommentReplyAdder
-     *      returns a comment object; used by AddReply as extension to allow addition of child comments
-     *          - created by AddReply()
+     * ReadFiles
+     *      called upon first thing in the windows form associated with this C# file
+     *      reads the contents of post, users, comments, and subreddit files
+     * 
      */
     public static class RedditUtilities
     {
@@ -1410,7 +1427,22 @@ namespace KozinskiAlamidiAssignment2
             return fileErrors;
         }
     }
-
+    /***************************************************************************************************************
+     * Class name: Program
+     * this class contains Main, representing the entrypoint of the program
+     * 
+     * Attributes:
+     * SortedDictionary<uint, User> globalUsers             global collection of all the users in the program
+     * SortedDictionary<uint, Subreddit> globalSubreddits   global collection of all the subreddits in the program
+     * SortedDictionary<uint, Post> globalPosts             global collection of all the posts in the program
+     * 
+     * User activeUser                                      retains the initial value of 'null'. This variable is 
+     *                                                       - assigned to during runtime when the program user 
+     *                                                       - successfully signs into the program.
+     * Other notes:
+     *  the Main program contains generic statements for running a windows forms application.
+     * 
+     ***************************************************************************************************************/
     static class Program
     {
         // Defines "global" collections
