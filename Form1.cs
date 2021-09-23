@@ -498,13 +498,6 @@ namespace KozinskiAlamidiAssignment2
                     systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.\n");
                     return;
                 }
-                // check for foul language
-                //if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
-                //{
-                //    MessageBox.Show("Please refrain from using foul language and try again");
-                //    systemOutput.AppendText("Please refrain from using foul language and try again\n");
-                //    return;
-                //}
                 // case for when posting a reply to a post
                 if (commentSelection.SelectedIndex == -1)
                 {   
@@ -514,8 +507,9 @@ namespace KozinskiAlamidiAssignment2
                         chosenPost.postComments.Add(newComment.Id, newComment);
                     }
                     catch (FoulLanguageException) {
-                        MessageBox.Show("Please refrain from using foul language and try again\n");
+                        systemOutput.Clear();
                         systemOutput.AppendText("Please refrain from using foul language and try again\n");
+                        MessageBox.Show("Please refrain from using foul language and try again\n");
                         return;
                     }
                 }

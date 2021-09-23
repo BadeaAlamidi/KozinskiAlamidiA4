@@ -549,14 +549,14 @@ namespace KozinskiAlamidiAssignment2
         // Alternate constructor (for reading from a file)
         public Comment(string[] commentData, uint indentLevel)
         {
-            try
+            try { Content = commentData[2]; }
+            catch (FoulLanguageException)
             {
-                try { Content = commentData[2]; }
-                catch (FoulLanguageException)
-                {
-                    throw new FoulLanguageException("Warning: Content for comment " + commentData[0] + " does not meet parameters; adding anyway");
-                }
-                finally
+                throw new FoulLanguageException("Warning: Content for comment " + commentData[0] + " does not meet parameters; adding anyway");
+            }
+            finally
+            {
+                try
                 {
                     id = Convert.ToUInt32(commentData[0]);
                     authorID = Convert.ToUInt32(commentData[1]);
@@ -565,16 +565,16 @@ namespace KozinskiAlamidiAssignment2
                     UpVotes = Convert.ToUInt32(commentData[4]);
                     DownVotes = Convert.ToUInt32(commentData[5]);
                     timeStamp = new DateTime(Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 0]),
-                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
-                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
-                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
-                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
-                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
+                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
+                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
+                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
+                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
+                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
                     commentReplies = new SortedDictionary<uint, Comment>();
                     Indentation = indentLevel;
                 }
+                catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
             }
-            catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
         }
 
         // Alternate constructor (for creating a new comment)
