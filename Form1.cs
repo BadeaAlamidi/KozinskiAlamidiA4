@@ -499,17 +499,25 @@ namespace KozinskiAlamidiAssignment2
                     return;
                 }
                 // check for foul language
-                if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
-                {
-                    MessageBox.Show("Please refrain from using foul language and try again");
-                    systemOutput.AppendText("Please refrain from using foul language and try again\n");
-                    return;
-                }
+                //if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
+                //{
+                //    MessageBox.Show("Please refrain from using foul language and try again");
+                //    systemOutput.AppendText("Please refrain from using foul language and try again\n");
+                //    return;
+                //}
                 // case for when posting a reply to a post
                 if (commentSelection.SelectedIndex == -1)
-                {
-                    Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
-                    chosenPost.postComments.Add(newComment.Id, newComment);
+                {   
+                    try
+                    {
+                        Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
+                        chosenPost.postComments.Add(newComment.Id, newComment);
+                    }
+                    catch (FoulLanguageException) {
+                        MessageBox.Show("Please refrain from using foul language and try again\n");
+                        systemOutput.AppendText("Please refrain from using foul language and try again\n");
+                        return;
+                    }
                 }
                 // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
                 else
@@ -521,8 +529,17 @@ namespace KozinskiAlamidiAssignment2
                         systemOutput.AppendText("You have not selected a valid comment\n");
                         return;
                     }
-                    Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
-                    chosenComment.commentReplies.Add(newComment.Id, newComment);
+                    try
+                    {
+                        Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
+                        chosenPost.postComments.Add(newComment.Id, newComment);
+                    }
+                    catch (FoulLanguageException)
+                    {
+                        MessageBox.Show("Please refrain from using foul language and try again\n");
+                        systemOutput.AppendText("Please refrain from using foul language and try again\n");
+                        return;
+                    }
                 }
                 // refreshes comments printed to comment ListBox
                 commentSelection.Items.Clear();
