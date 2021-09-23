@@ -510,7 +510,6 @@ namespace KozinskiAlamidiAssignment2
                 if (value.Split().Intersect(RedditUtilities.badWords).Any())
                     throw new FoulLanguageException("Foul word was detected. Try posting again without foul language.\n");
                 content = value; 
-            
             }
         }
         public uint ParentID => parentID;
@@ -552,20 +551,28 @@ namespace KozinskiAlamidiAssignment2
         {
             try
             {
-                id = Convert.ToUInt32(commentData[0]);
-                authorID = Convert.ToUInt32(commentData[1]);
-                Content = commentData[2];
-                parentID = Convert.ToUInt32(commentData[3]);
-                UpVotes = Convert.ToUInt32(commentData[4]);
-                DownVotes = Convert.ToUInt32(commentData[5]);
-                timeStamp = new DateTime(Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 0]),
-                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
-                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
-                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
-                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
-                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
-                commentReplies = new SortedDictionary<uint, Comment>();
-                Indentation = indentLevel;
+                try { Content = commentData[2]; }
+                catch (FoulLanguageException)
+                {
+                    throw new FoulLanguageException("Warning: Content for comment " + commentData[0] + " does not meet parameters; adding anyway");
+                }
+                finally
+                {
+                    id = Convert.ToUInt32(commentData[0]);
+                    authorID = Convert.ToUInt32(commentData[1]);
+                    content = commentData[2];
+                    parentID = Convert.ToUInt32(commentData[3]);
+                    UpVotes = Convert.ToUInt32(commentData[4]);
+                    DownVotes = Convert.ToUInt32(commentData[5]);
+                    timeStamp = new DateTime(Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 0]),
+                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
+                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
+                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
+                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
+                                             Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
+                    commentReplies = new SortedDictionary<uint, Comment>();
+                    Indentation = indentLevel;
+                }
             }
             catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
         }
@@ -573,9 +580,11 @@ namespace KozinskiAlamidiAssignment2
         // Alternate constructor (for creating a new comment)
         public Comment(string newContent, uint newAuthorID, uint newParentID, uint indentLevel)
         {
+            try { Content = newContent; }
+            catch (FoulLanguageException) { throw new FoulLanguageException(); }
+
             id = RedditUtilities.GenerateUniqueId();
             authorID = newAuthorID;
-            Content = newContent;
             parentID = newParentID;
             UpVotes = 1;
             DownVotes = 1;
@@ -1414,6 +1423,7 @@ namespace KozinskiAlamidiAssignment2
                                         }
                                     }
                                     catch (ArgumentException e) { fileErrors.Add(e.Message); }
+                                    catch (FoulLanguageException e) { fileErrors.Add(e.Message); } // Warns, but doesn't scold user, for foul language
                                     catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 default:
