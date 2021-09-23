@@ -10,6 +10,38 @@ using System.Windows.Forms;
 
 namespace KozinskiAlamidiAssignment2
 {
+    /** Class name: Form1
+     * this partial class contains the different events that can be invoked while the user
+     * interacts with the different components in the windows Form
+     * 
+     * Attributes: NONE
+     * Properties: NONE
+     * 
+     * Constructors: 
+     * Form1()                      Generic default constructor
+     * 
+     * Methods:
+     * PrintChildComments           used to populate the comment listbox with nested comments
+     * Event Methods:
+     * Form1_Load                   triggers upon the windows form startup. performs necessary
+     *                               - initializtion steps such as populating Program.global*
+     *                               - dictionaries with data
+     *                               
+     * subredditSelection_SelectedValueChanged  triggers when the user chooses/changes a selectable item
+     *                                           - in the list subreddit listbox
+     * postSelection_SelectedValueChanged       same as above
+     * commentSelection_SelectedValueChanged    same as above
+     * userSelection_SelectedValueChanged       same as above
+     * 
+     * loginButton_MouseClick                   triggers when the user clicks on this component
+     * addReplyButton_Click                     same as above
+     * deleteReplyButton_Click                  same as above
+     * deletePostButton_Click                   same as above
+     * 
+     * Notes: NONE
+     * 
+     * 
+     * */
     public partial class Form1 : Form
     {
         public Form1()
@@ -17,9 +49,19 @@ namespace KozinskiAlamidiAssignment2
             InitializeComponent();
         }
 
-        // Iterates recursively through comments
-        // Only shows the first 5 levels of comments
-        // Not to be used to print comments upon log-in
+        /**
+         * 
+         * Method Name: PrintChildComments
+         * 
+         * Iterates recursively through comments
+         * Only shows the first 5 levels of comments
+         * 
+         * Returns: void
+         * 
+         * Notes:
+         * Not to be used to print comments upon log-in
+         * 
+         */
         void PrintChildComments(Comment currentComment)
         {
             try
@@ -41,7 +83,24 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: Form1_Load
+         * 
+         * Triggers when the application starts. This event is responsble for
+         * invoking the ReadFiles function in Program.cs and populating
+         * the global subreddits with the corresponding data retained from
+         * ReadFiles. After this, the corresponding listboxes for posts,
+         * subreddits, and users are populated with the global dictionaries'
+         * data in the right order
+         * 
+         * Returns: void
+         * 
+         * Notes: Errors encounterd during the ReadFiles function
+         * are stored in an array and displayed at the end of the 
+         * function in systemOutput component.
+         * 
+         */
         private void Form1_Load(object sender, EventArgs e)
         {
             try
@@ -53,7 +112,7 @@ namespace KozinskiAlamidiAssignment2
                 foreach (string line in fileReadErrors)
                     systemOutput.AppendText(line + "\n");
 
-                systemOutput.AppendText("Welcome! Select a user and enter a password to log in.");
+                systemOutput.AppendText("Welcome! Select a user and enter a password to log in.\n");
 
                 // Populates user, subreddit, and post boxes
                 foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
@@ -65,7 +124,23 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: subredditSelection_SelectedValueChanged
+         * 
+         * the following triggers when 1. the highlighted item in the subreddit
+         * selection changes. and 2. when the currently selected item gets unselected
+         * the responsibilities of this event include:
+         *  - setting the member count and active member count labels
+         *    to the appropriate number depending on the chosen post
+         *  - listing the posts of the currently selected subreddit item
+         *    in the post listbox (abbreviated version)
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         // this triggers when the user chooses a subreddit
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -109,7 +184,23 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: postSelection_SelectedValueChanged
+         * 
+         * the following triggers when 1. the highlighted item in the post
+         * selection changes. and 2. when the currently selected item gets unselected
+         * the responsibilities of this event include:
+         *  
+         *  - displaying the full contents of the chosen item in systemOutput
+         *  - showing the comments (abbreviated) of the selected item in the comment listbox
+         *    with appropriate indentation (up to 5 levels deep lest the comments won't be visible).
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         private void postSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
@@ -127,7 +218,7 @@ namespace KozinskiAlamidiAssignment2
                 if (chosenPost == null)
                 {
                     systemOutput.Clear();
-                    systemOutput.AppendText("You did not select a valid post");
+                    systemOutput.AppendText("You did not select a valid post\n");
                     return;
                 }
 
@@ -153,7 +244,21 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: commentSelection_SelectedValueChanged
+         * 
+         * the following triggers when 1. the highlighted item in the comment
+         * selection changes. and 2. when the currently selected item gets unselected
+         * the responsibilities of this event include:
+         *  
+         *  - displaying the full contents of the chosen comment in systemOutput
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
@@ -172,7 +277,26 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: userSelection_SelectedValueChanged
+         * 
+         * the following triggers when 1. the highlighted item in the comment
+         * selection changes. and 2. when the currently selected item gets unselected
+         * the responsibilities of this event include:
+         *  
+         *  - switching the text of the log-in button back to Log-in should the user
+         *    decide to log into another account after failing to log-in to their original choice
+         *  - clearing all of the listboxes except for itself as a subtle message to the user to
+         *    indicate that a new log-in under a differnt account could have different privilages
+         *  - prompt the user to enter a password for the chosen username in systemOutput
+         *  
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         private void userSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
@@ -205,6 +329,23 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
+        /**
+         * 
+         * Method Name: loginButton_MouseClick
+         * 
+         * The following triggers when the user clicks on this component( represented by a button: Log-in/Retry Password)
+         * 
+         * This event includes the following responsibilities
+         *  - inform the user about whether their log-in attempt was done correctly/successful/unsuccessful
+         *  - authenticate the user by turning their string input into a hashcode that gets further translated into hex,
+         *    which is compared against the highlighted user's hex'd hashcode string to test if the two values are the same
+         *  - upon successful log-in, displaying the authenticated user's posts and comments (without indentation)
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
 
         private void loginButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -251,7 +392,16 @@ namespace KozinskiAlamidiAssignment2
                             StoreChildComments(userComment);
                         }
                     }
-
+                    /**
+                     * Method name: StoreChildComments
+                     * 
+                     * this method recursively searches comment trees, with posts serving as the root, in order to
+                     * find the comments that belong to the currently authenticated user
+                     * 
+                     * returns void
+                     * 
+                     *
+                     */
                     // Iterates recursively through comments
                     void StoreChildComments(Comment currentComment)
                     {
@@ -289,7 +439,25 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: addReplyButton_Click
+         * 
+         * The following triggers when the user clicks on this component( represented by a button: Add Reply)
+         * 
+         * This event includes the following responsibilities
+         *  - inform the user about whether their reply attempt was appropriate: disallow empty replies, disallow replying without
+         *    logging in, disallow replies with no chosen post, disallow average users to comment on locked posts, disallow users from
+         *    using foul language
+         *  - replying to posts when only a post is chosen
+         *  - replying to a comment when both a post and a comment are chosen
+         *  - displaying the newly added comment by refreshing the comment listbox
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         private void addReplyButton_Click(object sender, EventArgs e)
         {
 
@@ -324,14 +492,14 @@ namespace KozinskiAlamidiAssignment2
                 if (chosenPost.Locked == true)
                 {
                     systemOutput.Clear();
-                    systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.");
+                    systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.\n");
                     return;
                 }
                 // check for foul language
                 if (replyInput.Text.Split().Intersect(RedditUtilities.badWords).Any())
                 {
                     MessageBox.Show("Please refrain from using foul language and try again");
-                    systemOutput.AppendText("Please refrain from using foul language and try again");
+                    systemOutput.AppendText("Please refrain from using foul language and try again\n");
                     return;
                 }
                 // case for when posting a reply to a post
@@ -370,7 +538,23 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: deleteReplyButton_Click
+         * 
+         * The following triggers when the user clicks on this component( represented by a button: Delete Comment)
+         * 
+         * This event includes the following responsibilities
+         *  - inform the user about whether their delete  attempt was appropriate: disallow deletion without authentication,
+         *    disallow deletions when the user is not an administrator or if said comment does not belong to the user
+         *  - removing the selected comment if the conditions above permit so
+         *  - displaying the removal by refreshing the comment listbox
+         * Returns: void
+         * 
+         * Notes: the assignemnt spec does not indicate whether the deleted content is to be deleted completely
+         *        or "cleared out". this assignment assumes the former approach
+         * 
+         */
         private void deleteReplyButton_Click(object sender, EventArgs e)
         {
             try
@@ -446,7 +630,23 @@ namespace KozinskiAlamidiAssignment2
                 systemOutput.AppendText(exception.Message);
             }
         }
-
+        /**
+         * 
+         * Method Name: deletePostButton_Click
+         * 
+         * The following triggers when the user clicks on this component( represented by a button: Delete Post)
+         * 
+         * This event includes the following responsibilities
+         *  - inform the user about whether their delete attempt was appropriate: disallow deletion without authentication,
+         *    disallow deletions when the user is not an administrator or if said post does not belong to the user
+         *  - removing the selected post if the conditions above permit so
+         *  - displaying the removal by clearing the comment box
+         *  - printing feedback to the user on system output
+         * Returns: void
+         * 
+         * Notes: like comment deletion, the functionality of this button completely deletes the chosen post
+         * 
+         */
         private void deletePostButton_Click(object sender, EventArgs e)
         {
             try
