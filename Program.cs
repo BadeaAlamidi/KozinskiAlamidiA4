@@ -506,7 +506,12 @@ namespace KozinskiAlamidiAssignment2
         public string Content
         {
             get { return content; }
-            set { content = value; }
+            set {
+                if (value.Split().Intersect(RedditUtilities.badWords).Any())
+                    throw new FoulLanguageException("Foul word was detected. Try posting again without foul language.\n");
+                content = value; 
+            
+            }
         }
         public uint ParentID => parentID;
         public uint UpVotes
