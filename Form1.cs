@@ -303,8 +303,8 @@ namespace KozinskiAlamidiAssignment2
             {
                 // reset the text of the log-in button in case there was a previous failed attempt at entering the password
                 loginButton.Text = "Log-in";
+
                 // Safety check
-                //if (userSelection.SelectedItem == null)
                 if (!(userSelection.SelectedItem is User chosenUser))
                     return;
 
@@ -322,6 +322,9 @@ namespace KozinskiAlamidiAssignment2
 
                 if (Program.activeUser == null || Program.activeUser != chosenUser)
                     systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}\n");
+
+                if (Program.activeUser == chosenUser)
+                    systemOutput.AppendText($"You are logged in as: {chosenUser.Name}\n");
             }
             catch (Exception exception)
             {
