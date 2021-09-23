@@ -60,6 +60,7 @@ namespace KozinskiAlamidiAssignment2
          * 
          * Notes:
          * Not to be used to print comments upon log-in
+         * Caps the number of comment levels printed
          * 
          */
         void PrintChildComments(Comment currentComment)
