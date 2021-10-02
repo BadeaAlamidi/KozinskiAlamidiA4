@@ -30,27 +30,43 @@ namespace KozinskiAlamidiAssignment2
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.userSelection = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.subredditSelection = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.postSelection = new System.Windows.Forms.ListBox();
             this.systemOutput = new System.Windows.Forms.RichTextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.passwordInput = new System.Windows.Forms.TextBox();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.deletePostButton = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.commentSelection = new System.Windows.Forms.ListBox();
-            this.deleteCommentButton = new System.Windows.Forms.Button();
-            this.addReplyButton = new System.Windows.Forms.Button();
-            this.replyInput = new System.Windows.Forms.RichTextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
-            this.memberCount = new System.Windows.Forms.Label();
-            this.activeCount = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -58,262 +74,386 @@ namespace KozinskiAlamidiAssignment2
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label1.Location = new System.Drawing.Point(6, 9);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 20);
+            this.label1.Size = new System.Drawing.Size(202, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Users";
-            // 
-            // userSelection
-            // 
-            this.userSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.userSelection.FormattingEnabled = true;
-            this.userSelection.ItemHeight = 14;
-            this.userSelection.Location = new System.Drawing.Point(10, 32);
-            this.userSelection.Name = "userSelection";
-            this.userSelection.Size = new System.Drawing.Size(327, 158);
-            this.userSelection.TabIndex = 1;
-            this.userSelection.SelectedValueChanged += new System.EventHandler(this.userSelection_SelectedValueChanged);
+            this.label1.Text = "Posts From a Specific Date";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(330, 9);
+            this.label2.Location = new System.Drawing.Point(12, 74);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(86, 20);
+            this.label2.Size = new System.Drawing.Size(184, 20);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Subreddits";
-            // 
-            // subredditSelection
-            // 
-            this.subredditSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subredditSelection.FormattingEnabled = true;
-            this.subredditSelection.ItemHeight = 14;
-            this.subredditSelection.Location = new System.Drawing.Point(343, 32);
-            this.subredditSelection.Name = "subredditSelection";
-            this.subredditSelection.Size = new System.Drawing.Size(128, 158);
-            this.subredditSelection.TabIndex = 3;
-            this.subredditSelection.SelectedValueChanged += new System.EventHandler(this.subredditSelection_SelectedValueChanged);
+            this.label2.Text = "PostScore Per Subreddit";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label3.Location = new System.Drawing.Point(473, 9);
+            this.label3.Location = new System.Drawing.Point(346, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 20);
+            this.label3.Size = new System.Drawing.Size(58, 20);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Posts";
-            // 
-            // postSelection
-            // 
-            this.postSelection.DisplayMember = "AbbreviateContent";
-            this.postSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.postSelection.FormattingEnabled = true;
-            this.postSelection.ItemHeight = 14;
-            this.postSelection.Location = new System.Drawing.Point(477, 32);
-            this.postSelection.Name = "postSelection";
-            this.postSelection.Size = new System.Drawing.Size(609, 158);
-            this.postSelection.TabIndex = 5;
-            this.postSelection.SelectedValueChanged += new System.EventHandler(this.postSelection_SelectedValueChanged);
+            this.label3.Text = "Output";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // systemOutput
             // 
-            this.systemOutput.Location = new System.Drawing.Point(14, 472);
+            this.systemOutput.Location = new System.Drawing.Point(350, 32);
             this.systemOutput.Name = "systemOutput";
             this.systemOutput.ReadOnly = true;
-            this.systemOutput.Size = new System.Drawing.Size(1072, 66);
+            this.systemOutput.Size = new System.Drawing.Size(736, 467);
             this.systemOutput.TabIndex = 6;
             this.systemOutput.Text = "";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label4.Location = new System.Drawing.Point(340, 193);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(50, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Members";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label5.Location = new System.Drawing.Point(434, 193);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Active";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label6.Location = new System.Drawing.Point(6, 201);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(78, 20);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Password";
-            // 
-            // passwordInput
-            // 
-            this.passwordInput.Location = new System.Drawing.Point(10, 224);
-            this.passwordInput.Name = "passwordInput";
-            this.passwordInput.PasswordChar = '*';
-            this.passwordInput.Size = new System.Drawing.Size(140, 20);
-            this.passwordInput.TabIndex = 10;
-            // 
-            // loginButton
-            // 
-            this.loginButton.Location = new System.Drawing.Point(161, 224);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(75, 23);
-            this.loginButton.TabIndex = 11;
-            this.loginButton.Text = "Log-In";
-            this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loginButton_MouseClick);
-            // 
-            // deletePostButton
-            // 
-            this.deletePostButton.ForeColor = System.Drawing.Color.Red;
-            this.deletePostButton.Location = new System.Drawing.Point(984, 198);
-            this.deletePostButton.Name = "deletePostButton";
-            this.deletePostButton.Size = new System.Drawing.Size(102, 23);
-            this.deletePostButton.TabIndex = 12;
-            this.deletePostButton.Text = "Delete Post";
-            this.deletePostButton.UseVisualStyleBackColor = true;
-            this.deletePostButton.Click += new System.EventHandler(this.deletePostButton_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label7.Location = new System.Drawing.Point(6, 449);
+            this.label7.Location = new System.Drawing.Point(4, 326);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(115, 20);
+            this.label7.Size = new System.Drawing.Size(278, 20);
             this.label7.TabIndex = 13;
-            this.label7.Text = "System Output";
+            this.label7.Text = "List of Subreddits Posted to By a User";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(8, 42);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 14;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.radioButton3);
+            this.panel1.Controls.Add(this.radioButton2);
+            this.panel1.Controls.Add(this.radioButton1);
+            this.panel1.Location = new System.Drawing.Point(8, 97);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(206, 33);
+            this.panel1.TabIndex = 15;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(8, 8);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(59, 17);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Lowest";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(73, 8);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(61, 17);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.Text = "Highest";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(140, 8);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(65, 17);
+            this.radioButton3.TabIndex = 2;
+            this.radioButton3.Text = "Average";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.radioButton4);
+            this.panel2.Controls.Add(this.radioButton5);
+            this.panel2.Controls.Add(this.radioButton6);
+            this.panel2.Location = new System.Drawing.Point(8, 170);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(206, 33);
+            this.panel2.TabIndex = 17;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(140, 8);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(65, 17);
+            this.radioButton4.TabIndex = 2;
+            this.radioButton4.Text = "Average";
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.Location = new System.Drawing.Point(73, 8);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(61, 17);
+            this.radioButton5.TabIndex = 1;
+            this.radioButton5.Text = "Highest";
+            this.radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // radioButton6
+            // 
+            this.radioButton6.AutoSize = true;
+            this.radioButton6.Location = new System.Drawing.Point(8, 8);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.Size = new System.Drawing.Size(59, 17);
+            this.radioButton6.TabIndex = 0;
+            this.radioButton6.Text = "Lowest";
+            this.radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label4.Location = new System.Drawing.Point(12, 147);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(149, 20);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "PostScore Per User";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label5.Location = new System.Drawing.Point(12, 228);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(222, 20);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Total Awards Within Subreddit";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(16, 251);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(52, 17);
+            this.checkBox1.TabIndex = 19;
+            this.checkBox1.Text = "Silver";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(16, 274);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(48, 17);
+            this.checkBox2.TabIndex = 20;
+            this.checkBox2.Text = "Gold";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(16, 297);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(66, 17);
+            this.checkBox3.TabIndex = 21;
+            this.checkBox3.Text = "Platinum";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label6.Location = new System.Drawing.Point(90, 252);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Subreddit";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(93, 274);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(141, 21);
+            this.comboBox1.TabIndex = 23;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(8, 374);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(141, 21);
+            this.comboBox2.TabIndex = 25;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label8.Location = new System.Drawing.Point(6, 257);
+            this.label8.Location = new System.Drawing.Point(5, 358);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(86, 20);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "Comments";
+            this.label8.Size = new System.Drawing.Size(29, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "User";
             // 
-            // commentSelection
+            // panel3
             // 
-            this.commentSelection.DisplayMember = "AbbreviatedContent";
-            this.commentSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.commentSelection.FormattingEnabled = true;
-            this.commentSelection.ItemHeight = 14;
-            this.commentSelection.Location = new System.Drawing.Point(14, 286);
-            this.commentSelection.Name = "commentSelection";
-            this.commentSelection.Size = new System.Drawing.Size(599, 144);
-            this.commentSelection.TabIndex = 15;
-            this.commentSelection.SelectedValueChanged += new System.EventHandler(this.commentSelection_SelectedValueChanged);
+            this.panel3.Controls.Add(this.radioButton8);
+            this.panel3.Controls.Add(this.radioButton9);
+            this.panel3.Location = new System.Drawing.Point(8, 431);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(158, 61);
+            this.panel3.TabIndex = 18;
             // 
-            // deleteCommentButton
+            // radioButton8
             // 
-            this.deleteCommentButton.ForeColor = System.Drawing.Color.Red;
-            this.deleteCommentButton.Location = new System.Drawing.Point(619, 410);
-            this.deleteCommentButton.Name = "deleteCommentButton";
-            this.deleteCommentButton.Size = new System.Drawing.Size(102, 23);
-            this.deleteCommentButton.TabIndex = 16;
-            this.deleteCommentButton.Text = "Delete Comment";
-            this.deleteCommentButton.UseVisualStyleBackColor = true;
-            this.deleteCommentButton.Click += new System.EventHandler(this.deleteReplyButton_Click);
+            this.radioButton8.AutoSize = true;
+            this.radioButton8.Location = new System.Drawing.Point(8, 31);
+            this.radioButton8.Name = "radioButton8";
+            this.radioButton8.Size = new System.Drawing.Size(146, 17);
+            this.radioButton8.TabIndex = 1;
+            this.radioButton8.Text = "Greater Than or Equal To";
+            this.radioButton8.UseVisualStyleBackColor = true;
             // 
-            // addReplyButton
+            // radioButton9
             // 
-            this.addReplyButton.ForeColor = System.Drawing.Color.Lime;
-            this.addReplyButton.Location = new System.Drawing.Point(984, 410);
-            this.addReplyButton.Name = "addReplyButton";
-            this.addReplyButton.Size = new System.Drawing.Size(102, 23);
-            this.addReplyButton.TabIndex = 17;
-            this.addReplyButton.Text = "Add Reply";
-            this.addReplyButton.UseVisualStyleBackColor = true;
-            this.addReplyButton.Click += new System.EventHandler(this.addReplyButton_Click);
+            this.radioButton9.AutoSize = true;
+            this.radioButton9.Location = new System.Drawing.Point(8, 8);
+            this.radioButton9.Name = "radioButton9";
+            this.radioButton9.Size = new System.Drawing.Size(133, 17);
+            this.radioButton9.TabIndex = 0;
+            this.radioButton9.Text = "Less Than or Equal To";
+            this.radioButton9.UseVisualStyleBackColor = true;
             // 
-            // replyInput
+            // numericUpDown1
             // 
-            this.replyInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.replyInput.Location = new System.Drawing.Point(619, 287);
-            this.replyInput.Name = "replyInput";
-            this.replyInput.Size = new System.Drawing.Size(467, 117);
-            this.replyInput.TabIndex = 18;
-            this.replyInput.Text = "";
+            this.numericUpDown1.Location = new System.Drawing.Point(168, 439);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(91, 20);
+            this.numericUpDown1.TabIndex = 26;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label9.Location = new System.Drawing.Point(615, 257);
+            this.label9.Location = new System.Drawing.Point(4, 408);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(82, 20);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "Add Reply";
+            this.label9.Size = new System.Drawing.Size(275, 20);
+            this.label9.TabIndex = 27;
+            this.label9.Text = "Points Threshold for Posts/Comments";
             // 
-            // memberCount
+            // button1
             // 
-            this.memberCount.AutoSize = true;
-            this.memberCount.ForeColor = System.Drawing.Color.Black;
-            this.memberCount.Location = new System.Drawing.Point(396, 193);
-            this.memberCount.Name = "memberCount";
-            this.memberCount.Size = new System.Drawing.Size(0, 13);
-            this.memberCount.TabIndex = 20;
+            this.button1.ForeColor = System.Drawing.Color.Red;
+            this.button1.Location = new System.Drawing.Point(269, 43);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 28;
+            this.button1.Text = "Query";
+            this.button1.UseVisualStyleBackColor = true;
             // 
-            // activeCount
+            // button2
             // 
-            this.activeCount.AutoSize = true;
-            this.activeCount.ForeColor = System.Drawing.Color.Black;
-            this.activeCount.Location = new System.Drawing.Point(471, 193);
-            this.activeCount.Name = "activeCount";
-            this.activeCount.Size = new System.Drawing.Size(0, 13);
-            this.activeCount.TabIndex = 21;
+            this.button2.ForeColor = System.Drawing.Color.Red;
+            this.button2.Location = new System.Drawing.Point(269, 107);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 29;
+            this.button2.Text = "Query";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.ForeColor = System.Drawing.Color.Red;
+            this.button3.Location = new System.Drawing.Point(269, 175);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 30;
+            this.button3.Text = "Query";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.ForeColor = System.Drawing.Color.Red;
+            this.button4.Location = new System.Drawing.Point(269, 274);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 31;
+            this.button4.Text = "Query";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.ForeColor = System.Drawing.Color.Red;
+            this.button5.Location = new System.Drawing.Point(269, 374);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 32;
+            this.button5.Text = "Query";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.ForeColor = System.Drawing.Color.Red;
+            this.button6.Location = new System.Drawing.Point(269, 456);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 33;
+            this.button6.Text = "Query";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1098, 550);
-            this.Controls.Add(this.activeCount);
-            this.Controls.Add(this.memberCount);
+            this.ClientSize = new System.Drawing.Size(1098, 513);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.replyInput);
-            this.Controls.Add(this.addReplyButton);
-            this.Controls.Add(this.deleteCommentButton);
-            this.Controls.Add(this.commentSelection);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.deletePostButton);
-            this.Controls.Add(this.loginButton);
-            this.Controls.Add(this.passwordInput);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label6);
+            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label5);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.systemOutput);
-            this.Controls.Add(this.postSelection);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.subredditSelection);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.userSelection);
             this.Controls.Add(this.label1);
             this.ForeColor = System.Drawing.Color.Black;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -322,27 +462,39 @@ namespace KozinskiAlamidiAssignment2
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox userSelection;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListBox subredditSelection;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListBox postSelection;
         private System.Windows.Forms.RichTextBox systemOutput;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton6;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox passwordInput;
-        private System.Windows.Forms.Button loginButton;
-        private System.Windows.Forms.Button deletePostButton;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ListBox commentSelection;
-        private System.Windows.Forms.Button deleteCommentButton;
-        private System.Windows.Forms.Button addReplyButton;
-        private System.Windows.Forms.RichTextBox replyInput;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.RadioButton radioButton8;
+        private System.Windows.Forms.RadioButton radioButton9;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label memberCount;
-        private System.Windows.Forms.Label activeCount;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 
