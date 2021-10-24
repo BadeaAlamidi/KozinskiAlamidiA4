@@ -63,7 +63,7 @@ namespace KozinskiAlamidiAssignment4
          * Caps the number of comment levels printed
          * 
          */
-        void PrintChildComments(Comment currentComment)
+     /*   void PrintChildComments(Comment currentComment)
         {
             try
             {
@@ -82,8 +82,8 @@ namespace KozinskiAlamidiAssignment4
             {
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
-            }
-        }
+            } 
+        }*/
         /**
          * 
          * Method Name: Form1_Load
@@ -104,11 +104,7 @@ namespace KozinskiAlamidiAssignment4
          */
         private void Form1_Load(object sender, EventArgs e)
         {
-            var formToShow = Application.OpenForms.Cast<Form>().FirstOrDefault(c => c is Form1);
-            if (formToShow != null)
-            {
-                formToShow.Show();
-            }
+            
             try
             {
                 // Runs file reader and stores error log
@@ -121,7 +117,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.AppendText("Welcome! Select a user and enter a password to log in.\n");
 
                 // Populates user, subreddit, and post boxes
-                foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
+                //foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
                 foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
             }
             catch (Exception exception)
@@ -148,7 +144,7 @@ namespace KozinskiAlamidiAssignment4
          * 
          */
         // this triggers when the user chooses a subreddit
-        private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
+       /* private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
             {
@@ -189,7 +185,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        } */
         /**
          * 
          * Method Name: postSelection_SelectedValueChanged
@@ -207,7 +203,7 @@ namespace KozinskiAlamidiAssignment4
          * Notes: NONE
          * 
          */
-        private void postSelection_SelectedValueChanged(object sender, EventArgs e)
+        /*private void postSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
             {
@@ -249,7 +245,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: commentSelection_SelectedValueChanged
@@ -265,7 +261,7 @@ namespace KozinskiAlamidiAssignment4
          * Notes: NONE
          * 
          */
-        private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
+       /* private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
             {
@@ -282,7 +278,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: userSelection_SelectedValueChanged
@@ -303,7 +299,7 @@ namespace KozinskiAlamidiAssignment4
          * Notes: NONE
          * 
          */
-        private void userSelection_SelectedValueChanged(object sender, EventArgs e)
+     /*   private void userSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             try
             {
@@ -337,7 +333,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: loginButton_MouseClick
@@ -356,7 +352,7 @@ namespace KozinskiAlamidiAssignment4
          * 
          */
 
-        private void loginButton_MouseClick(object sender, MouseEventArgs e)
+     /*   private void loginButton_MouseClick(object sender, MouseEventArgs e)
         {
             try
             {
@@ -400,7 +396,7 @@ namespace KozinskiAlamidiAssignment4
                             // Recursive call
                             StoreChildComments(userComment);
                         }
-                    }
+                    }*/
                     /**
                      * Method name: StoreChildComments
                      * 
@@ -412,7 +408,7 @@ namespace KozinskiAlamidiAssignment4
                      *
                      */
                     // Iterates recursively through comments
-                    void StoreChildComments(Comment currentComment)
+        /*            void StoreChildComments(Comment currentComment)
                     {
                         foreach (Comment userComment in currentComment.commentReplies.Values)
                         {
@@ -447,7 +443,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: addReplyButton_Click
@@ -467,7 +463,7 @@ namespace KozinskiAlamidiAssignment4
          * Notes: NONE
          * 
          */
-        private void addReplyButton_Click(object sender, EventArgs e)
+    /*    private void addReplyButton_Click(object sender, EventArgs e)
         {
 
             try
@@ -557,7 +553,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: deleteReplyButton_Click
@@ -575,7 +571,7 @@ namespace KozinskiAlamidiAssignment4
          *        or "cleared out". this assignment assumes the former approach
          * 
          */
-        private void deleteReplyButton_Click(object sender, EventArgs e)
+    /*    private void deleteReplyButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -649,7 +645,7 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
         /**
          * 
          * Method Name: deletePostButton_Click
@@ -667,7 +663,7 @@ namespace KozinskiAlamidiAssignment4
          * Notes: like comment deletion, the functionality of this button completely deletes the chosen post
          * 
          */
-        private void deletePostButton_Click(object sender, EventArgs e)
+    /*    private void deletePostButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -730,6 +726,6 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.Clear();
                 systemOutput.AppendText(exception.Message);
             }
-        }
+        }*/
     }
 }
