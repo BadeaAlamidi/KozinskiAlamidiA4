@@ -104,7 +104,9 @@ namespace KozinskiAlamidiAssignment4
          */
         private void Form1_Load(object sender, EventArgs e)
         {
+            DisplayPost post = new DisplayPost(8111);
             
+            panel1.Controls.Add(post);
             try
             {
                 // Runs file reader and stores error log
@@ -727,5 +729,13 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.AppendText(exception.Message);
             }
         }*/
+    private class DisplayPost : Panel
+        {
+            
+            public DisplayPost(uint postID)
+            {
+                Controls.Add(new RichTextBox());
+            }
+        }
     }
 }
