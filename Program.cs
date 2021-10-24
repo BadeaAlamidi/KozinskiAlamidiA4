@@ -829,7 +829,7 @@ namespace KozinskiAlamidiAssignment4
         }
         public uint Id => id;
         public uint subHomeId { get { return subHome; } }
-        public string DateString { get { return timeStamp.ToString("G"); } }
+        public DateTime DateString { get { return timeStamp; } }
         public uint AuthorId
         {
             get { return authorID; }
