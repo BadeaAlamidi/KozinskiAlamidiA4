@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace KozinskiAlamidiAssignment2
+namespace KozinskiAlamidiAssignment4
 {
     /** Class name: Form1
      * this partial class contains the different events that can be invoked while the user
@@ -104,6 +104,11 @@ namespace KozinskiAlamidiAssignment2
          */
         private void Form1_Load(object sender, EventArgs e)
         {
+            var formToShow = Application.OpenForms.Cast<Form>().FirstOrDefault(c => c is Form1);
+            if (formToShow != null)
+            {
+                formToShow.Show();
+            }
             try
             {
                 // Runs file reader and stores error log

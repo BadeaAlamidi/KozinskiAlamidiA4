@@ -1,5 +1,5 @@
 ﻿
-namespace KozinskiAlamidiAssignment2
+namespace KozinskiAlamidiAssignment4
 {
     partial class Form1
     {
@@ -58,10 +58,9 @@ namespace KozinskiAlamidiAssignment2
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label1.Location = new System.Drawing.Point(8, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(6, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 25);
+            this.label1.Size = new System.Drawing.Size(51, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Users";
             // 
@@ -69,11 +68,10 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.userSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userSelection.FormattingEnabled = true;
-            this.userSelection.ItemHeight = 17;
-            this.userSelection.Location = new System.Drawing.Point(13, 39);
-            this.userSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.userSelection.ItemHeight = 14;
+            this.userSelection.Location = new System.Drawing.Point(10, 32);
             this.userSelection.Name = "userSelection";
-            this.userSelection.Size = new System.Drawing.Size(435, 191);
+            this.userSelection.Size = new System.Drawing.Size(327, 144);
             this.userSelection.TabIndex = 1;
             this.userSelection.SelectedValueChanged += new System.EventHandler(this.userSelection_SelectedValueChanged);
             // 
@@ -82,10 +80,9 @@ namespace KozinskiAlamidiAssignment2
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(440, 11);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(330, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 25);
+            this.label2.Size = new System.Drawing.Size(86, 20);
             this.label2.TabIndex = 2;
             this.label2.Text = "Subreddits";
             // 
@@ -93,11 +90,10 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.subredditSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subredditSelection.FormattingEnabled = true;
-            this.subredditSelection.ItemHeight = 17;
-            this.subredditSelection.Location = new System.Drawing.Point(457, 39);
-            this.subredditSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.subredditSelection.ItemHeight = 14;
+            this.subredditSelection.Location = new System.Drawing.Point(343, 32);
             this.subredditSelection.Name = "subredditSelection";
-            this.subredditSelection.Size = new System.Drawing.Size(169, 191);
+            this.subredditSelection.Size = new System.Drawing.Size(128, 144);
             this.subredditSelection.TabIndex = 3;
             this.subredditSelection.SelectedValueChanged += new System.EventHandler(this.subredditSelection_SelectedValueChanged);
             // 
@@ -106,10 +102,9 @@ namespace KozinskiAlamidiAssignment2
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label3.Location = new System.Drawing.Point(631, 11);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(473, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 25);
+            this.label3.Size = new System.Drawing.Size(49, 20);
             this.label3.TabIndex = 4;
             this.label3.Text = "Posts";
             // 
@@ -118,21 +113,19 @@ namespace KozinskiAlamidiAssignment2
             this.postSelection.DisplayMember = "AbbreviateContent";
             this.postSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.postSelection.FormattingEnabled = true;
-            this.postSelection.ItemHeight = 17;
-            this.postSelection.Location = new System.Drawing.Point(636, 39);
-            this.postSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.postSelection.ItemHeight = 14;
+            this.postSelection.Location = new System.Drawing.Point(477, 32);
             this.postSelection.Name = "postSelection";
-            this.postSelection.Size = new System.Drawing.Size(811, 191);
+            this.postSelection.Size = new System.Drawing.Size(609, 144);
             this.postSelection.TabIndex = 5;
             this.postSelection.SelectedValueChanged += new System.EventHandler(this.postSelection_SelectedValueChanged);
             // 
             // systemOutput
             // 
-            this.systemOutput.Location = new System.Drawing.Point(19, 581);
-            this.systemOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.systemOutput.Location = new System.Drawing.Point(14, 472);
             this.systemOutput.Name = "systemOutput";
             this.systemOutput.ReadOnly = true;
-            this.systemOutput.Size = new System.Drawing.Size(1428, 80);
+            this.systemOutput.Size = new System.Drawing.Size(1072, 66);
             this.systemOutput.TabIndex = 6;
             this.systemOutput.Text = "";
             // 
@@ -140,10 +133,9 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label4.Location = new System.Drawing.Point(453, 238);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(340, 193);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 17);
+            this.label4.Size = new System.Drawing.Size(50, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Members";
             // 
@@ -151,10 +143,9 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label5.Location = new System.Drawing.Point(579, 238);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(434, 193);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(46, 17);
+            this.label5.Size = new System.Drawing.Size(37, 13);
             this.label5.TabIndex = 8;
             this.label5.Text = "Active";
             // 
@@ -163,28 +154,25 @@ namespace KozinskiAlamidiAssignment2
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label6.Location = new System.Drawing.Point(8, 247);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(6, 201);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(98, 25);
+            this.label6.Size = new System.Drawing.Size(78, 20);
             this.label6.TabIndex = 9;
             this.label6.Text = "Password";
             // 
             // passwordInput
             // 
-            this.passwordInput.Location = new System.Drawing.Point(13, 276);
-            this.passwordInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passwordInput.Location = new System.Drawing.Point(10, 224);
             this.passwordInput.Name = "passwordInput";
             this.passwordInput.PasswordChar = '*';
-            this.passwordInput.Size = new System.Drawing.Size(185, 22);
+            this.passwordInput.Size = new System.Drawing.Size(140, 20);
             this.passwordInput.TabIndex = 10;
             // 
             // loginButton
             // 
-            this.loginButton.Location = new System.Drawing.Point(215, 276);
-            this.loginButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loginButton.Location = new System.Drawing.Point(161, 224);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(100, 28);
+            this.loginButton.Size = new System.Drawing.Size(75, 23);
             this.loginButton.TabIndex = 11;
             this.loginButton.Text = "Log-In";
             this.loginButton.UseVisualStyleBackColor = true;
@@ -193,10 +181,9 @@ namespace KozinskiAlamidiAssignment2
             // deletePostButton
             // 
             this.deletePostButton.ForeColor = System.Drawing.Color.Red;
-            this.deletePostButton.Location = new System.Drawing.Point(1312, 244);
-            this.deletePostButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.deletePostButton.Location = new System.Drawing.Point(984, 198);
             this.deletePostButton.Name = "deletePostButton";
-            this.deletePostButton.Size = new System.Drawing.Size(136, 28);
+            this.deletePostButton.Size = new System.Drawing.Size(102, 23);
             this.deletePostButton.TabIndex = 12;
             this.deletePostButton.Text = "Delete Post";
             this.deletePostButton.UseVisualStyleBackColor = true;
@@ -207,10 +194,9 @@ namespace KozinskiAlamidiAssignment2
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label7.Location = new System.Drawing.Point(8, 553);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(6, 449);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(142, 25);
+            this.label7.Size = new System.Drawing.Size(115, 20);
             this.label7.TabIndex = 13;
             this.label7.Text = "System Output";
             // 
@@ -219,10 +205,9 @@ namespace KozinskiAlamidiAssignment2
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label8.Location = new System.Drawing.Point(8, 316);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(6, 257);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(107, 25);
+            this.label8.Size = new System.Drawing.Size(86, 20);
             this.label8.TabIndex = 14;
             this.label8.Text = "Comments";
             // 
@@ -231,21 +216,19 @@ namespace KozinskiAlamidiAssignment2
             this.commentSelection.DisplayMember = "AbbreviatedContent";
             this.commentSelection.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.commentSelection.FormattingEnabled = true;
-            this.commentSelection.ItemHeight = 17;
-            this.commentSelection.Location = new System.Drawing.Point(19, 352);
-            this.commentSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.commentSelection.ItemHeight = 14;
+            this.commentSelection.Location = new System.Drawing.Point(14, 286);
             this.commentSelection.Name = "commentSelection";
-            this.commentSelection.Size = new System.Drawing.Size(797, 174);
+            this.commentSelection.Size = new System.Drawing.Size(599, 130);
             this.commentSelection.TabIndex = 15;
             this.commentSelection.SelectedValueChanged += new System.EventHandler(this.commentSelection_SelectedValueChanged);
             // 
             // deleteCommentButton
             // 
             this.deleteCommentButton.ForeColor = System.Drawing.Color.Red;
-            this.deleteCommentButton.Location = new System.Drawing.Point(825, 505);
-            this.deleteCommentButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.deleteCommentButton.Location = new System.Drawing.Point(619, 410);
             this.deleteCommentButton.Name = "deleteCommentButton";
-            this.deleteCommentButton.Size = new System.Drawing.Size(136, 28);
+            this.deleteCommentButton.Size = new System.Drawing.Size(102, 23);
             this.deleteCommentButton.TabIndex = 16;
             this.deleteCommentButton.Text = "Delete Comment";
             this.deleteCommentButton.UseVisualStyleBackColor = true;
@@ -254,10 +237,9 @@ namespace KozinskiAlamidiAssignment2
             // addReplyButton
             // 
             this.addReplyButton.ForeColor = System.Drawing.Color.Lime;
-            this.addReplyButton.Location = new System.Drawing.Point(1312, 505);
-            this.addReplyButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.addReplyButton.Location = new System.Drawing.Point(984, 410);
             this.addReplyButton.Name = "addReplyButton";
-            this.addReplyButton.Size = new System.Drawing.Size(136, 28);
+            this.addReplyButton.Size = new System.Drawing.Size(102, 23);
             this.addReplyButton.TabIndex = 17;
             this.addReplyButton.Text = "Add Reply";
             this.addReplyButton.UseVisualStyleBackColor = true;
@@ -266,10 +248,9 @@ namespace KozinskiAlamidiAssignment2
             // replyInput
             // 
             this.replyInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.replyInput.Location = new System.Drawing.Point(825, 353);
-            this.replyInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.replyInput.Location = new System.Drawing.Point(619, 287);
             this.replyInput.Name = "replyInput";
-            this.replyInput.Size = new System.Drawing.Size(621, 143);
+            this.replyInput.Size = new System.Drawing.Size(467, 117);
             this.replyInput.TabIndex = 18;
             this.replyInput.Text = "";
             // 
@@ -278,10 +259,9 @@ namespace KozinskiAlamidiAssignment2
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label9.Location = new System.Drawing.Point(820, 316);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(615, 257);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(102, 25);
+            this.label9.Size = new System.Drawing.Size(82, 20);
             this.label9.TabIndex = 19;
             this.label9.Text = "Add Reply";
             // 
@@ -289,27 +269,25 @@ namespace KozinskiAlamidiAssignment2
             // 
             this.memberCount.AutoSize = true;
             this.memberCount.ForeColor = System.Drawing.Color.Black;
-            this.memberCount.Location = new System.Drawing.Point(528, 238);
-            this.memberCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.memberCount.Location = new System.Drawing.Point(396, 193);
             this.memberCount.Name = "memberCount";
-            this.memberCount.Size = new System.Drawing.Size(0, 17);
+            this.memberCount.Size = new System.Drawing.Size(0, 13);
             this.memberCount.TabIndex = 20;
             // 
             // activeCount
             // 
             this.activeCount.AutoSize = true;
             this.activeCount.ForeColor = System.Drawing.Color.Black;
-            this.activeCount.Location = new System.Drawing.Point(628, 238);
-            this.activeCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.activeCount.Location = new System.Drawing.Point(471, 193);
             this.activeCount.Name = "activeCount";
-            this.activeCount.Size = new System.Drawing.Size(0, 17);
+            this.activeCount.Size = new System.Drawing.Size(0, 13);
             this.activeCount.TabIndex = 21;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1464, 677);
+            this.ClientSize = new System.Drawing.Size(1098, 550);
             this.Controls.Add(this.activeCount);
             this.Controls.Add(this.memberCount);
             this.Controls.Add(this.label9);
@@ -333,7 +311,6 @@ namespace KozinskiAlamidiAssignment2
             this.Controls.Add(this.userSelection);
             this.Controls.Add(this.label1);
             this.ForeColor = System.Drawing.Color.Black;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Discount Reddit";
             this.Load += new System.EventHandler(this.Form1_Load);
