@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8CCBDB9B-8E0E-40DA-B4B7-7DB0E3A5E034}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>KozinskiAlamidiAssignment2</RootNamespace>
-    <AssemblyName>KozinskiAlamidiAssignment2</AssemblyName>
+    <RootNamespace>KozinskiAlamidiAssignment4</RootNamespace>
+    <AssemblyName>KozinskiAlamidiAssignment4</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -59,6 +59,12 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -66,6 +72,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -107,6 +116,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\comment_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\downVote_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\downVote_grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reply_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upVote_grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upVote_red.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

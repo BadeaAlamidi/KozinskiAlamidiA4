@@ -40,37 +40,43 @@ namespace KozinskiAlamidiAssignment4
             // 
             // systemOutput
             // 
-            this.systemOutput.Location = new System.Drawing.Point(12, 939);
+            this.systemOutput.Location = new System.Drawing.Point(16, 1156);
+            this.systemOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.systemOutput.Name = "systemOutput";
             this.systemOutput.ReadOnly = true;
-            this.systemOutput.Size = new System.Drawing.Size(1072, 66);
+            this.systemOutput.Size = new System.Drawing.Size(1428, 80);
             this.systemOutput.TabIndex = 6;
             this.systemOutput.Text = "";
             // 
             // loginButton
             // 
-            this.loginButton.Location = new System.Drawing.Point(1135, 16);
+            this.loginButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loginButton.Location = new System.Drawing.Point(1186, 23);
+            this.loginButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(231, 28);
+            this.loginButton.Size = new System.Drawing.Size(217, 34);
             this.loginButton.TabIndex = 11;
-            this.loginButton.Text = "Log-In";
+            this.loginButton.Text = "Log In";
             this.loginButton.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.logo;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 3);
+            this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.logo;
+            this.pictureBox1.Location = new System.Drawing.Point(6, 3);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(152, 60);
+            this.pictureBox1.Size = new System.Drawing.Size(203, 74);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 22;
             this.pictureBox1.TabStop = false;
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(401, 21);
+            this.richTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox2.Location = new System.Drawing.Point(528, 24);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(666, 28);
+            this.richTextBox2.Size = new System.Drawing.Size(622, 34);
             this.richTextBox2.TabIndex = 24;
             this.richTextBox2.Text = "";
             // 
@@ -78,25 +84,28 @@ namespace KozinskiAlamidiAssignment4
             // 
             this.subredditSelection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subredditSelection.FormattingEnabled = true;
-            this.subredditSelection.Location = new System.Drawing.Point(158, 21);
+            this.subredditSelection.ItemHeight = 25;
+            this.subredditSelection.Location = new System.Drawing.Point(242, 24);
+            this.subredditSelection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.subredditSelection.Name = "subredditSelection";
-            this.subredditSelection.Size = new System.Drawing.Size(229, 28);
+            this.subredditSelection.Size = new System.Drawing.Size(250, 33);
             this.subredditSelection.TabIndex = 25;
             // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Location = new System.Drawing.Point(12, 69);
+            this.panel1.Location = new System.Drawing.Point(16, 85);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1354, 852);
+            this.panel1.Size = new System.Drawing.Size(1805, 1049);
             this.panel1.TabIndex = 26;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1378, 1017);
+            this.ClientSize = new System.Drawing.Size(1837, 1055);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.subredditSelection);
             this.Controls.Add(this.richTextBox2);
@@ -104,6 +113,7 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.systemOutput);
             this.ForeColor = System.Drawing.Color.Black;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Discount Reddit";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -116,13 +116,19 @@ namespace KozinskiAlamidiAssignment4
 
                 systemOutput.AppendText("Welcome! Select a user and enter a password to log in.\n");
 
-                // Populate subreddit combobox
+                // Populate subreddit ComboBox
                 foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
                 subredditSelection.SelectedIndex = 0;
+
                 // Populates main panel with posts
                 foreach (KeyValuePair<uint, Post> post in Program.globalPosts.OrderBy(post => post.Value.PostRating))
                 {
-                    panel1.Controls.Add(new DisplayPost(post.Key));
+                    // Creates display object
+                    DisplayPost newPost = new DisplayPost(post.Key);
+                    newPost.Click += new EventHandler(DisplayPost_Click);
+
+                    // Adds display object to main panel
+                    panel1.Controls.Add(newPost);
                 }
             }
             catch (Exception exception)
@@ -749,7 +755,7 @@ namespace KozinskiAlamidiAssignment4
                 InitializeComponent();
                 Width = form1Instance.Width - 70;
                 Height = 180;
-
+                
             }
 
             #region Windows Form Designer generated code
@@ -841,7 +847,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox3
                 // 
-                this.pictureBox3.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.comment;
+                this.pictureBox3.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.comment;
                 this.pictureBox3.Location = new System.Drawing.Point(552, 110);
                 this.pictureBox3.Name = "pictureBox3";
                 this.pictureBox3.Size = new System.Drawing.Size(34, 30);
@@ -851,7 +857,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox2
                 // 
-                this.pictureBox2.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.downvote;
+                this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
                 this.pictureBox2.Location = new System.Drawing.Point(12, 87);
                 this.pictureBox2.Name = "pictureBox2";
                 this.pictureBox2.Size = new System.Drawing.Size(50, 53);
@@ -861,7 +867,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox1
                 // 
-                this.pictureBox1.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.upvote;
+                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
                 this.pictureBox1.Location = new System.Drawing.Point(12, 12);
                 this.pictureBox1.Name = "pictureBox1";
                 this.pictureBox1.Size = new System.Drawing.Size(50, 53);
@@ -913,6 +919,13 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.Label label5;
             private System.Windows.Forms.PictureBox pictureBox3;
             private System.Windows.Forms.Label label6;
+        }
+
+        public void DisplayPost_Click(Object sender, EventArgs e)
+        {
+            Form3 viewPost = new Form3();
+            viewPost.Show();
+            
         }
     }
 }

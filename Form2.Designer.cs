@@ -95,7 +95,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.comment;
+            this.pictureBox3.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.comment;
             this.pictureBox3.Location = new System.Drawing.Point(552, 110);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(34, 30);
@@ -105,7 +105,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.downvote;
+            this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
             this.pictureBox2.Location = new System.Drawing.Point(12, 87);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(50, 53);
@@ -115,7 +115,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::KozinskiAlamidiAssignment2.Properties.Resources.upvote;
+            this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(50, 53);
