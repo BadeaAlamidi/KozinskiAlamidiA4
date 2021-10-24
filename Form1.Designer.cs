@@ -55,7 +55,6 @@ namespace KozinskiAlamidiAssignment4
             this.loginButton.TabIndex = 11;
             this.loginButton.Text = "Log-In";
             this.loginButton.UseVisualStyleBackColor = true;
-            
             // 
             // pictureBox1
             // 
@@ -96,6 +95,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1378, 1017);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.subredditSelection);

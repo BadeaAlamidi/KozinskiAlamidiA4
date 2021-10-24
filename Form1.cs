@@ -104,9 +104,7 @@ namespace KozinskiAlamidiAssignment4
          */
         private void Form1_Load(object sender, EventArgs e)
         {
-            DisplayPost post = new DisplayPost(8111);
-            
-            panel1.Controls.Add(post);
+
             try
             {
                 // Runs file reader and stores error log
@@ -118,9 +116,14 @@ namespace KozinskiAlamidiAssignment4
 
                 systemOutput.AppendText("Welcome! Select a user and enter a password to log in.\n");
 
-                // Populates user, subreddit, and post boxes
-                //foreach (KeyValuePair<uint, User> user in Program.globalUsers.OrderBy(user => user.Value.Name)) { userSelection.Items.Add(user.Value); }
+                // Populate subreddit combobox
                 foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
+                subredditSelection.SelectedIndex = 0;
+                // Populates main panel with posts
+                foreach (KeyValuePair<uint, Post> post in Program.globalPosts.OrderBy(post => post.Value.PostRating))
+                {
+                    panel1.Controls.Add(new DisplayPost(post.Key));
+                }
             }
             catch (Exception exception)
             {
@@ -731,10 +734,15 @@ namespace KozinskiAlamidiAssignment4
         }*/
     private class DisplayPost : Panel
         {
-            
+            static int y_offset = 0;
+
             public DisplayPost(uint postID)
             {
-                Controls.Add(new RichTextBox());
+                BackColor = Color.LightGray;
+                Form1 form1Instance = (Form1)Application.OpenForms["Form1"];
+                Location = new Point(0, y_offset + 100);
+                y_offset += 100;
+                Width = form1Instance.Width - 50;
             }
         }
     }
