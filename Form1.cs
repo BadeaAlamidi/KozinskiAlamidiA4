@@ -738,11 +738,13 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.AppendText(exception.Message);
             }
         }*/
-    private class DisplayPost : Panel
+        private class DisplayPost : Panel
         {
             static int y_offset = 0;
             private Form1 form1Instance;
+
             private uint postId;
+            public uint PostId => postId;
 
             public DisplayPost(uint postID)
             {
@@ -923,7 +925,8 @@ namespace KozinskiAlamidiAssignment4
 
         public void DisplayPost_Click(Object sender, EventArgs e)
         {
-            Form3 viewPost = new Form3();
+            DisplayPost newPost = sender as DisplayPost;
+            Form3 viewPost = new Form3(newPost.PostId);
             viewPost.Show();
             
         }

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace KozinskiAlamidiAssignment4
 {
     partial class Form3
@@ -29,49 +31,51 @@ namespace KozinskiAlamidiAssignment4
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.DisplayUpvoteButton = new System.Windows.Forms.PictureBox();
             this.DisplayPostScore = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.DisplayDownvoteButton = new System.Windows.Forms.PictureBox();
             this.DisplayPostContext = new System.Windows.Forms.Label();
             this.DisplayPostTitle = new System.Windows.Forms.Label();
             this.DisplayPostContent = new System.Windows.Forms.RichTextBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.DisplayPostCommentCount = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayUpvoteButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayDownvoteButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // DisplayUpvoteButton
             // 
-            this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(22, 23);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.DisplayUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+            this.DisplayUpvoteButton.Location = new System.Drawing.Point(12, 12);
+            this.DisplayUpvoteButton.Name = "DisplayUpvoteButton";
+            this.DisplayUpvoteButton.Size = new System.Drawing.Size(22, 23);
+            this.DisplayUpvoteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.DisplayUpvoteButton.TabIndex = 0;
+            this.DisplayUpvoteButton.TabStop = false;
             // 
             // DisplayPostScore
             // 
+            this.DisplayPostScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.DisplayPostScore.AutoSize = true;
-            this.DisplayPostScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DisplayPostScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DisplayPostScore.ForeColor = System.Drawing.Color.White;
-            this.DisplayPostScore.Location = new System.Drawing.Point(23, 38);
+            this.DisplayPostScore.Location = new System.Drawing.Point(11, 39);
             this.DisplayPostScore.Name = "DisplayPostScore";
-            this.DisplayPostScore.Size = new System.Drawing.Size(0, 20);
+            this.DisplayPostScore.Size = new System.Drawing.Size(26, 17);
             this.DisplayPostScore.TabIndex = 1;
+            this.DisplayPostScore.Text = "SC";
             this.DisplayPostScore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBox2
+            // DisplayDownvoteButton
             // 
-            this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
-            this.pictureBox2.Location = new System.Drawing.Point(11, 61);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(26, 24);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox2.TabIndex = 2;
-            this.pictureBox2.TabStop = false;
+            this.DisplayDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+            this.DisplayDownvoteButton.Location = new System.Drawing.Point(11, 61);
+            this.DisplayDownvoteButton.Name = "DisplayDownvoteButton";
+            this.DisplayDownvoteButton.Size = new System.Drawing.Size(26, 24);
+            this.DisplayDownvoteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.DisplayDownvoteButton.TabIndex = 2;
+            this.DisplayDownvoteButton.TabStop = false;
             // 
             // DisplayPostContext
             // 
@@ -83,7 +87,6 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostContext.Size = new System.Drawing.Size(476, 17);
             this.DisplayPostContext.TabIndex = 3;
             this.DisplayPostContext.Text = "r/SUBREDDIT_HOME   |   Posted by u/AUTHOR_NAME TIME_FRAME ago";
-            this.DisplayPostContext.Click += new System.EventHandler(this.DisplaySubHome_Click);
             // 
             // DisplayPostTitle
             // 
@@ -92,18 +95,18 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostTitle.ForeColor = System.Drawing.Color.White;
             this.DisplayPostTitle.Location = new System.Drawing.Point(60, 38);
             this.DisplayPostTitle.Name = "DisplayPostTitle";
-            this.DisplayPostTitle.Size = new System.Drawing.Size(79, 29);
+            this.DisplayPostTitle.Size = new System.Drawing.Size(160, 29);
             this.DisplayPostTitle.TabIndex = 5;
-            this.DisplayPostTitle.Text = "label1";
+            this.DisplayPostTitle.Text = "POST_TITLE";
             // 
             // DisplayPostContent
             // 
             this.DisplayPostContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.DisplayPostContent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.DisplayPostContent.Enabled = false;
+            this.DisplayPostContent.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DisplayPostContent.ForeColor = System.Drawing.Color.White;
             this.DisplayPostContent.Location = new System.Drawing.Point(60, 89);
             this.DisplayPostContent.Name = "DisplayPostContent";
+            this.DisplayPostContent.ReadOnly = true;
             this.DisplayPostContent.Size = new System.Drawing.Size(664, 202);
             this.DisplayPostContent.TabIndex = 6;
             this.DisplayPostContent.Text = "";
@@ -127,7 +130,6 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostCommentCount.Size = new System.Drawing.Size(205, 17);
             this.DisplayPostCommentCount.TabIndex = 8;
             this.DisplayPostCommentCount.Text = "COMMENT_COUNT Comments";
-            this.DisplayPostCommentCount.Click += new System.EventHandler(this.DisplayPostCommentCount_Click);
             // 
             // Form3
             // 
@@ -140,13 +142,15 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.DisplayPostContent);
             this.Controls.Add(this.DisplayPostTitle);
             this.Controls.Add(this.DisplayPostContext);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.DisplayDownvoteButton);
             this.Controls.Add(this.DisplayPostScore);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.DisplayUpvoteButton);
+            this.ForeColor = System.Drawing.Color.White;
             this.Name = "Form3";
             this.Text = "Form3";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.Load += new System.EventHandler(this.Form3_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayUpvoteButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayDownvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -155,9 +159,9 @@ namespace KozinskiAlamidiAssignment4
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox DisplayUpvoteButton;
         private System.Windows.Forms.Label DisplayPostScore;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox DisplayDownvoteButton;
         private System.Windows.Forms.Label DisplayPostContext;
         private System.Windows.Forms.Label DisplayPostTitle;
         private System.Windows.Forms.RichTextBox DisplayPostContent;
