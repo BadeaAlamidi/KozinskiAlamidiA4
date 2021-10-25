@@ -104,7 +104,6 @@ namespace KozinskiAlamidiAssignment4
          */
         private void Form1_Load(object sender, EventArgs e)
         {
-
             try
             {
                 // Runs file reader and stores error log
