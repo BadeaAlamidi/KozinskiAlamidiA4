@@ -739,7 +739,7 @@ namespace KozinskiAlamidiAssignment4
         }*/
         private class DisplayPost : Panel
         {
-            static int y_offset = 0;
+            public static int y_offset = 0;
             private Form1 form1Instance;
 
             private uint postId;
@@ -928,6 +928,30 @@ namespace KozinskiAlamidiAssignment4
             Form3 viewPost = new Form3(newPost.PostId);
             viewPost.Show();
             
+        }
+
+        private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
+        {
+            Subreddit selectedSubreddit = subredditSelection.SelectedItem as Subreddit;
+            if (selectedSubreddit == null) { MessageBox.Show("failed to cast subreddit.selecteditem to a subreddit in function subredditSelection_selectedValueChanged"); return; }
+            if (selectedSubreddit.Name == "all") 
+            {
+                DisplayPost.y_offset = 0;
+                panel1.Controls.Clear();
+                foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts)
+                {
+                    panel1.Controls.Add(new DisplayPost(postTuple.Value.Id));
+                }
+            }
+            else
+            {
+                DisplayPost.y_offset = 0;
+                panel1.Controls.Clear();
+                foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(postTuple => postTuple.Value.subHomeId == selectedSubreddit.Id))
+                {
+                    panel1.Controls.Add(new DisplayPost(postTuple.Value.Id));
+                }
+            }
         }
     }
 }
