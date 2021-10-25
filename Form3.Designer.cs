@@ -145,7 +145,7 @@ namespace KozinskiAlamidiAssignment4
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.ClientSize = new System.Drawing.Size(782, 603);
+            this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.DisplayCommentContainer);
             this.Controls.Add(this.DisplayPostCommentCount);
             this.Controls.Add(this.pictureBox3);
