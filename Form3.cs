@@ -163,7 +163,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // DisplayPostContent
             // 
-            this.DisplayPostContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20))))); ;
+            this.DisplayPostContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.DisplayPostContent.BorderStyle = BorderStyle.None;
             this.DisplayPostContent.ForeColor = System.Drawing.Color.White;
             this.DisplayPostContent.Location = new System.Drawing.Point(60, 80);
@@ -202,6 +202,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // DisplayCommentContainer
             // 
+            this.DisplayCommentContainer.BackColor = System.Drawing.Color.Yellow;
             this.DisplayCommentContainer.AutoScroll = true;
             this.DisplayCommentContainer.Location = new System.Drawing.Point(60, 235);
             this.DisplayCommentContainer.Name = "DisplayCommentContainer";
@@ -214,6 +215,7 @@ namespace KozinskiAlamidiAssignment4
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.DisplayCommentContainer);
             this.Controls.Add(this.DisplayPostCommentCount);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.DisplayPostContent);
@@ -374,8 +376,8 @@ namespace KozinskiAlamidiAssignment4
                     DisplayComment newComment = new DisplayComment(postComment);
                     this.DisplayCommentContainer.Controls.Add(newComment);
 
-                    PrintChildComments(postComment);
-                }                
+                    //PrintChildComments(postComment);
+                }
 
                 /**
                  * Method Name: PrintChildComments
@@ -421,18 +423,25 @@ namespace KozinskiAlamidiAssignment4
         class DisplayComment : Panel
         {
             private Form3 form3Instance;
+            private int commentWidth;
+            private int commentHeight;
 
             public DisplayComment(Comment newComment)
             {
                 form3Instance = (Form3)Application.OpenForms["Form3"];
-                Location = new Point(form3Instance.DisplayCommentContainer.Location.X + form3Instance.OffsetXComment, 
-                                     form3Instance.DisplayCommentContainer.Location.Y + form3Instance.OffsetYComment);
-                Width = form3Instance.Width - form3Instance.OffsetXComment;
-                Height = 180;
+                commentWidth = form3Instance.DisplayCommentContainer.Width - form3Instance.OffsetXComment;
+                commentHeight = 120;
+
+                Location = new Point(form3Instance.OffsetXComment, form3Instance.OffsetYComment);
 
                 InitializeComponent(newComment);
-                
-                form3Instance.OffsetYComment += 180;
+
+                this.BackColor = System.Drawing.Color.Blue;
+
+                Width = commentWidth;
+                Height = commentHeight;
+
+                form3Instance.OffsetYComment += Height;
             }
 
             #region InitializeComponent(postID): Programmer generated layout code
@@ -443,7 +452,8 @@ namespace KozinskiAlamidiAssignment4
             private void InitializeComponent(Comment comment)
             {
                 // VARIABLES
-                MessageBox.Show(comment.Content);
+                MessageBox.Show(comment.Content + " " + Location.X + " " + Location.Y + " " + form3Instance.OffsetXComment + " " + form3Instance.OffsetYComment + " " + Width + " " + Height + " ");
+                int column2 = 60;
                 string commentContentText = comment.Content;
                 string authorText = Program.globalUsers[comment.AuthorID].Name;
                 string timespanText = "";
@@ -511,38 +521,39 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // DisplayPostContext
                 // 
+                this.DisplayCommentContext.BackColor = System.Drawing.Color.Orange;
                 this.DisplayCommentContext.AutoSize = true;
                 this.DisplayCommentContext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 this.DisplayCommentContext.ForeColor = System.Drawing.Color.White;
-                this.DisplayCommentContext.Location = new System.Drawing.Point(Location.X + 60, Location.Y + 12);
+                this.DisplayCommentContext.Location = new System.Drawing.Point(Location.X + column2, Location.Y + 12);
                 this.DisplayCommentContext.Name = "DisplayCommentContext";
-                this.DisplayCommentContext.Size = new System.Drawing.Size(476, 17);
+                this.DisplayCommentContext.Size = new System.Drawing.Size(commentWidth - column2, 17);
                 this.DisplayCommentContext.TabIndex = 13;
                 this.DisplayCommentContext.Text = $"{authorText} | {timespanText}";
                 // 
                 // DisplayCommentContent
                 // 
-                this.DisplayCommentContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20))))); ;
+                this.DisplayCommentContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
                 this.DisplayCommentContent.BorderStyle = BorderStyle.None;
                 this.DisplayCommentContent.ForeColor = System.Drawing.Color.White;
-                this.DisplayCommentContent.Location = new System.Drawing.Point(Location.X + 60, Location.Y + 80);
+                this.DisplayCommentContent.Location = new System.Drawing.Point(Location.X + column2, Location.Y + 40);
                 this.DisplayCommentContent.Name = "DisplayCommentContent";
                 this.DisplayCommentContent.ReadOnly = true;
-                this.DisplayCommentContent.Size = new System.Drawing.Size(665, 100);
+                this.DisplayCommentContent.Size = new System.Drawing.Size(commentWidth - column2, 40);
                 this.DisplayCommentContent.TabIndex = 14;
                 this.DisplayCommentContent.Text = $"{commentContentText}";
                 // 
                 // DisplayReplyIcon
                 // 
-                this.DisplayReplyIcon.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.comment_icon;
-                this.DisplayReplyIcon.Location = new System.Drawing.Point(Location.X + 60, Location.Y + 195);
+                this.DisplayReplyIcon.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.reply_icon;
+                this.DisplayReplyIcon.Location = new System.Drawing.Point(Location.X + column2, Location.Y + 40 + 40 + 6);
                 this.DisplayReplyIcon.Name = "DisplayReplyIcon";
                 this.DisplayReplyIcon.Size = new System.Drawing.Size(23, 21);
                 this.DisplayReplyIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
                 this.DisplayReplyIcon.TabIndex = 15;
                 this.DisplayReplyIcon.TabStop = false;
                 // 
-                // Form3
+                // Form4
                 // 
                 //this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
                 //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -554,8 +565,8 @@ namespace KozinskiAlamidiAssignment4
                 this.Controls.Add(this.DisplayCommentDownvoteButton);
                 this.Controls.Add(this.DisplayCommentScore);
                 this.Controls.Add(this.DisplayCommentUpvoteButton);
-                //this.Name = "Form3";
-                //this.Text = "Form3";
+                this.Name = "Form4";
+                this.Text = "Form4";
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentUpvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentDownvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyIcon)).EndInit();
