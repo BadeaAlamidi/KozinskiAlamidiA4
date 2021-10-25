@@ -57,16 +57,15 @@ namespace KozinskiAlamidiAssignment4
             PrintComments(PostID);
         }
 
-        #region InitializeComponent(postID): Programmer generated layout code
+        #region InitializeComponent(PostID): Programmer generated layout code
 
         /// <summary>
         /// Programmer-defined method that supports a particular post ID.
         /// </summary>
         private void InitializeComponent(uint postID)
         {
-            PostID = postID;
-
             // VARIABLES
+            PostID = postID;
             Post post = Program.globalPosts[postID];
             string postTitleText = post.Title;
             string postContentText = post.PostContent;
@@ -227,12 +226,104 @@ namespace KozinskiAlamidiAssignment4
             this.Name = "Form3";
             this.Text = "Post View";
             this.Load += new System.EventHandler(this.Form3_Load);
+            this.DisplayPostUpvoteButton.MouseEnter += new System.EventHandler(this.PostUpvote_MouseEnter);
+            this.DisplayPostUpvoteButton.MouseLeave += new System.EventHandler(this.PostUpvote_MouseLeave);
+            this.DisplayPostUpvoteButton.Click += new System.EventHandler(this.PostUpvote_Click);
+            this.DisplayPostDownvoteButton.MouseEnter += new System.EventHandler(this.PostDownvote_MouseEnter);
+            this.DisplayPostDownvoteButton.MouseLeave += new System.EventHandler(this.PostDownvote_MouseLeave);
+            this.DisplayPostDownvoteButton.Click += new System.EventHandler(this.PostDownvote_Click);
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostUpvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostDownvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        #endregion
+
+        #region Upvote/downvote button event handlers
+
+        public void PostUpvote_MouseEnter(object sender, EventArgs e)
+        {
+            this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+        }
+
+        public void PostUpvote_MouseLeave(object sender, EventArgs e)
+        {
+            this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+        }
+
+        public void PostUpvote_Click(object sender, EventArgs e)
+        {
+            if (Program.activeUser == null)
+            {
+                MessageBox.Show("You must be logged in to vote on posts.");
+                return;
+            }
+
+            bool hasVoted = Program.activeUser.PostVoteStatuses.ContainsKey(postID);
+
+            if (!hasVoted)
+            {
+                Program.activeUser.PostVoteStatuses.Add(postID, 1);
+                this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+            }
+            else
+            {
+                if (Program.activeUser.PostVoteStatuses[postID] < 1)
+                {
+                    Program.activeUser.PostVoteStatuses[postID] = 1;
+                    this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+                    this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                }
+                else
+                {
+                    Program.activeUser.PostVoteStatuses[postID] = 0;
+                    this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                }
+            }
+        }
+        
+        public void PostDownvote_MouseEnter(object sender, EventArgs e)
+        {
+            this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+        }
+
+        public void PostDownvote_MouseLeave(object sender, EventArgs e)
+        {
+            this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+        }
+
+        public void PostDownvote_Click(object sender, EventArgs e)
+        {
+            if (Program.activeUser == null)
+            {
+                MessageBox.Show("You must be logged in to vote on posts.");
+                return;
+            }
+
+            bool hasVoted = Program.activeUser.PostVoteStatuses.ContainsKey(postID);
+
+            if (!hasVoted)
+            {
+                Program.activeUser.PostVoteStatuses.Add(postID, -1);
+                this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+            }
+            else
+            {
+                if (Program.activeUser.PostVoteStatuses[postID] > -1)
+                {
+                    Program.activeUser.PostVoteStatuses[postID] = -1;
+                    this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+                    this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                }
+                else
+                {
+                    Program.activeUser.PostVoteStatuses[postID] = 0;
+                    this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+                }
+            }
         }
 
         #endregion
@@ -608,7 +699,7 @@ namespace KozinskiAlamidiAssignment4
                 form3Instance.OffsetYComment += Height;
             }
 
-            #region InitializeComponent(Comment newComment): Programmer generated layout code
+            #region InitializeComponent(): Programmer generated layout code
 
             /// <summary>
             /// Programmer-defined method that supports a particular comment.

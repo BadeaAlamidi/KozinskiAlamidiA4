@@ -742,7 +742,7 @@ namespace KozinskiAlamidiAssignment4
             public static int y_offset = 0;
             private Form1 form1Instance;
 
-            private uint postId;
+            private uint postId = 0;
             public uint PostId => postId;
 
             public DisplayPost(uint postID)
