@@ -964,5 +964,10 @@ namespace KozinskiAlamidiAssignment4
             }
         }
 
+        private void loginButton_Click(object sender, EventArgs e)
+        {
+            var form3 = new Form3();
+            form3.ShowDialog();
+        }
     }
 }
