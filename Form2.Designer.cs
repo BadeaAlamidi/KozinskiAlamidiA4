@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace KozinskiAlamidiAssignment4
 {
     partial class Form2
@@ -29,129 +31,136 @@ namespace KozinskiAlamidiAssignment4
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.DisplayPostUpvoteButton = new System.Windows.Forms.PictureBox();
+            this.DisplayPostScore = new System.Windows.Forms.Label();
+            this.DisplayPostDownvoteButton = new System.Windows.Forms.PictureBox();
+            this.DisplayPostContext = new System.Windows.Forms.Label();
+            this.DisplayPostTitle = new System.Windows.Forms.Label();
+            this.DisplayPostContent = new System.Windows.Forms.RichTextBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.DisplayPostCommentCount = new System.Windows.Forms.Label();
+            this.DisplayCommentContainer = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayPostUpvoteButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayPostDownvoteButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // DisplayPostUpvoteButton
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(17, 68);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 16);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
+            this.DisplayPostUpvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+            this.DisplayPostUpvoteButton.Location = new System.Drawing.Point(11, 12);
+            this.DisplayPostUpvoteButton.Name = "DisplayPostUpvoteButton";
+            this.DisplayPostUpvoteButton.Size = new System.Drawing.Size(42, 23);
+            this.DisplayPostUpvoteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.DisplayPostUpvoteButton.TabIndex = 0;
+            this.DisplayPostUpvoteButton.TabStop = false;
             // 
-            // label2
+            // DisplayPostScore
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(538, 12);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(169, 24);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "TIME_FRAME ago";
+            this.DisplayPostScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DisplayPostScore.ForeColor = System.Drawing.Color.White;
+            this.DisplayPostScore.Location = new System.Drawing.Point(12, 43);
+            this.DisplayPostScore.Name = "DisplayPostScore";
+            this.DisplayPostScore.Size = new System.Drawing.Size(41, 17);
+            this.DisplayPostScore.TabIndex = 1;
+            this.DisplayPostScore.Text = "SCR";
+            this.DisplayPostScore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label3
+            // DisplayPostDownvoteButton
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(268, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(264, 24);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "| Posted by r/AUTHOR_NAME";
+            this.DisplayPostDownvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+            this.DisplayPostDownvoteButton.Location = new System.Drawing.Point(11, 68);
+            this.DisplayPostDownvoteButton.Name = "DisplayPostDownvoteButton";
+            this.DisplayPostDownvoteButton.Size = new System.Drawing.Size(42, 24);
+            this.DisplayPostDownvoteButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.DisplayPostDownvoteButton.TabIndex = 2;
+            this.DisplayPostDownvoteButton.TabStop = false;
             // 
-            // label4
+            // DisplayPostContext
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(68, 12);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(194, 24);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "r/SUBREDDIT_HOME";
+            this.DisplayPostContext.AutoSize = true;
+            this.DisplayPostContext.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DisplayPostContext.ForeColor = System.Drawing.Color.White;
+            this.DisplayPostContext.Location = new System.Drawing.Point(60, 12);
+            this.DisplayPostContext.Name = "DisplayPostContext";
+            this.DisplayPostContext.Size = new System.Drawing.Size(476, 17);
+            this.DisplayPostContext.TabIndex = 3;
+            this.DisplayPostContext.Text = "r/SUBREDDIT_HOME   |   Posted by u/AUTHOR_NAME TIME_FRAME ago";
             // 
-            // label5
+            // DisplayPostTitle
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(79, 59);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(138, 25);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "POST_TITLE";
+            this.DisplayPostTitle.AutoSize = true;
+            this.DisplayPostTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DisplayPostTitle.ForeColor = System.Drawing.Color.White;
+            this.DisplayPostTitle.Location = new System.Drawing.Point(60, 38);
+            this.DisplayPostTitle.Name = "DisplayPostTitle";
+            this.DisplayPostTitle.Size = new System.Drawing.Size(160, 29);
+            this.DisplayPostTitle.TabIndex = 5;
+            this.DisplayPostTitle.Text = "POST_TITLE";
+            // 
+            // DisplayPostContent
+            // 
+            this.DisplayPostContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.DisplayPostContent.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DisplayPostContent.ForeColor = System.Drawing.Color.White;
+            this.DisplayPostContent.Location = new System.Drawing.Point(60, 80);
+            this.DisplayPostContent.Name = "DisplayPostContent";
+            this.DisplayPostContent.ReadOnly = true;
+            this.DisplayPostContent.Size = new System.Drawing.Size(665, 100);
+            this.DisplayPostContent.TabIndex = 6;
+            this.DisplayPostContent.Text = "";
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.comment;
-            this.pictureBox3.Location = new System.Drawing.Point(552, 110);
+            this.pictureBox3.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.comment_icon;
+            this.pictureBox3.Location = new System.Drawing.Point(60, 195);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(34, 30);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.Size = new System.Drawing.Size(23, 21);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox3.TabIndex = 7;
             this.pictureBox3.TabStop = false;
             // 
-            // pictureBox2
+            // DisplayPostCommentCount
             // 
-            this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
-            this.pictureBox2.Location = new System.Drawing.Point(12, 87);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(50, 53);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
+            this.DisplayPostCommentCount.AutoSize = true;
+            this.DisplayPostCommentCount.ForeColor = System.Drawing.Color.White;
+            this.DisplayPostCommentCount.Location = new System.Drawing.Point(90, 200);
+            this.DisplayPostCommentCount.Name = "DisplayPostCommentCount";
+            this.DisplayPostCommentCount.Size = new System.Drawing.Size(205, 17);
+            this.DisplayPostCommentCount.TabIndex = 8;
+            this.DisplayPostCommentCount.Text = "COMMENT_COUNT Comments";
             // 
-            // pictureBox1
+            // DisplayCommentContainer
             // 
-            this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 53);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.DisplayCommentContainer.AutoScroll = true;
+            this.DisplayCommentContainer.Location = new System.Drawing.Point(60, 235);
+            this.DisplayCommentContainer.Name = "DisplayCommentContainer";
+            this.DisplayCommentContainer.Size = new System.Drawing.Size(665, 300);
+            this.DisplayCommentContainer.TabIndex = 9;
             // 
-            // label6
+            // Form3
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(592, 124);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(199, 16);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "COMMENT_COUNT Comments";
-            // 
-            // Form2
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 141);
-            this.Controls.Add(this.label6);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.ClientSize = new System.Drawing.Size(782, 553);
+            this.Controls.Add(this.DisplayCommentContainer);
+            this.Controls.Add(this.DisplayPostCommentCount);
             this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
-            this.Name = "Form2";
-            this.Text = "Form2";
+            this.Controls.Add(this.DisplayPostContent);
+            this.Controls.Add(this.DisplayPostTitle);
+            this.Controls.Add(this.DisplayPostContext);
+            this.Controls.Add(this.DisplayPostDownvoteButton);
+            this.Controls.Add(this.DisplayPostScore);
+            this.Controls.Add(this.DisplayPostUpvoteButton);
+            this.ForeColor = System.Drawing.Color.White;
+            this.Name = "Form3";
+            this.Text = "Form3";
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayPostUpvoteButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayPostDownvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,14 +168,14 @@ namespace KozinskiAlamidiAssignment4
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.PictureBox DisplayPostUpvoteButton;
+        private System.Windows.Forms.Label DisplayPostScore;
+        private System.Windows.Forms.PictureBox DisplayPostDownvoteButton;
+        private System.Windows.Forms.Label DisplayPostContext;
+        private System.Windows.Forms.Label DisplayPostTitle;
+        private System.Windows.Forms.RichTextBox DisplayPostContent;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label DisplayPostCommentCount;
+        private System.Windows.Forms.Panel DisplayCommentContainer;
     }
 }

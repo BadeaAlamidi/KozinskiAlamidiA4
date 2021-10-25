@@ -124,7 +124,7 @@ namespace KozinskiAlamidiAssignment4
                 {
                     // Creates display object
                     DisplayPost newPost = new DisplayPost(post.Key);
-                    newPost.Click += new EventHandler(DisplayPost_Click);
+                    //newPost.Click += new EventHandler(this.DisplayPost_Click);
 
                     // Adds display object to main panel
                     panel1.Controls.Add(newPost);
@@ -783,6 +783,10 @@ namespace KozinskiAlamidiAssignment4
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
                 this.SuspendLayout();
+                //
+                // click event for this panel
+                //
+                Click += new System.EventHandler(this.DisplayPost_Click);
                 // 
                 // label1
                 // 
@@ -898,8 +902,7 @@ namespace KozinskiAlamidiAssignment4
                 this.Controls.Add(this.label1);
                 this.Controls.Add(this.pictureBox2);
                 this.Controls.Add(this.pictureBox1);
-                this.Name = $"Form2";
-                this.Text = "Form2";
+                this.Name = $"postID{post.Id}";
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -908,9 +911,23 @@ namespace KozinskiAlamidiAssignment4
 
             }
 
-            #endregion
-            
 
+            #endregion
+
+            //
+            // Events
+            //
+
+            public void DisplayPost_Click(Object sender, EventArgs e)
+            {
+                DisplayPost newPost = sender as DisplayPost;
+                Form2 viewPost = new Form2(newPost.PostId);
+                viewPost.Show();
+            
+            }
+            //
+            // Controls
+            //
             private System.Windows.Forms.PictureBox pictureBox1;
             private System.Windows.Forms.PictureBox pictureBox2;
             private System.Windows.Forms.Label label1;
@@ -922,13 +939,6 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.Label label6;
         }
 
-        public void DisplayPost_Click(Object sender, EventArgs e)
-        {
-            DisplayPost newPost = sender as DisplayPost;
-            Form3 viewPost = new Form3(newPost.PostId);
-            viewPost.Show();
-            
-        }
 
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -953,5 +963,6 @@ namespace KozinskiAlamidiAssignment4
                 }
             }
         }
+
     }
 }

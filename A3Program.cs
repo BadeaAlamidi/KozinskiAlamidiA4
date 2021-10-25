@@ -1,16 +1,15 @@
-﻿/* Assignment 2
+﻿/* Assignment 3
  * CSCI 473 / 504
  * 
- * September 23, 2021
+ * October 7, 2021
  * 
  * Badea Alamidi, Z1882808
  * Katelyn Kozinski, Z167824
  * 
- * This program emulates some of the functionality of Reddit, using a graphical interface.
- * 
- * Users can log in, view posts and comments from the various subreddits, and
- * add posts and comments. Users can also delete their own posts and comments
- * (and administrators can delete others' posts and comments).
+ * This program expands on our Reddit emulator, using a graphical interface to
+ * query the system for posts from a specific date; lowest, highest, and average
+ * post scores by subreddit and user; award counts for each subreddit; subreddit
+ * activity for each user; and posts that are above or below a certain score threshold.
  */
 
 using System;
@@ -448,6 +447,10 @@ namespace KozinskiAlamidiAssignment4
     * uint upVotes                  Number of comment upvotes
     * uint downVotes                Number of comment downvotes
     * uint indentation              represents the level of the comment
+    * uint silver                   represents the amount of silver points on the comment
+    * uint gold                     represents the amount of gold points on the comment
+    * uint platinum                 represents the amount of platinum points on the comment
+    * 
     * 
     * readonly DateTime timeStamp                          Time comment was posted
     * SortedDictionary<uint, Comment> commentReplies       Collection of nested Comment objects
@@ -479,6 +482,8 @@ namespace KozinskiAlamidiAssignment4
     * Sortable by Score using the IComparable interface
     * Enumerable through IEnumberable interface
     * Overrides ToString()
+    * When an instance is followed by square brackets[], a value of
+    *   0 --> silver    1--> gold       2--> platinum
     */
     public class Comment : IComparable, IEnumerable
     {
@@ -495,6 +500,9 @@ namespace KozinskiAlamidiAssignment4
         private readonly DateTime timeStamp;
         public SortedDictionary<uint, Comment> commentReplies;
         private uint indentation;
+        private uint silver;
+        private uint gold;
+        private uint platinum;
 
         // Properties to control read/write access to private attributes
         public uint Id => id;
@@ -506,11 +514,7 @@ namespace KozinskiAlamidiAssignment4
         public string Content
         {
             get { return content; }
-            set {
-                if (value.Split().Intersect(RedditUtilities.badWords).Any())
-                    throw new FoulLanguageException("Foul word was detected. Try posting again without foul language.\n");
-                content = value; 
-            }
+            set { content = value; }
         }
         public uint ParentID => parentID;
         public uint UpVotes
@@ -530,7 +534,43 @@ namespace KozinskiAlamidiAssignment4
             get { return indentation; }
             set { indentation = value; }
         }
+
         public string AbbreviatedContent { get { return this.ToString("ListBox"); } }
+        public uint this[uint index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return silver;
+                    case 1:
+                        return gold;
+                    case 2:
+                        return platinum;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
+            set
+            {
+                switch (index)
+                {
+                    case 0:
+                        silver = value;
+                        break;
+                    case 1:
+                        gold = value;
+                        break;
+                    case 2:
+                        platinum = value;
+                        break;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
+
+        }
         // Default constructor
         public Comment()
         {
@@ -543,54 +583,50 @@ namespace KozinskiAlamidiAssignment4
             timeStamp = new DateTime(0);
             commentReplies = new SortedDictionary<uint, Comment>();
             Indentation = 0;
+            silver = gold = platinum = 0;
         }
-        //      ID | AuthorID | Content | ParentID | UpVotes | DownVotes | Year | Month | Day | Hour | Min | Sec
-        // OLD: ID | authorID | content | post/comment ID being replied to | upVotes | downVotes | year | month | day | hour | min | sec
+        // ID | AuthorID | Content | ParentID | UpVotes | DownVotes | Year | Month | Day | Hour | Min | Sec | Silver | Gold | Platinum
+        // OLD  ID | AuthorID | Content | ParentID | UpVotes | DownVotes | Year | Month | Day | Hour | Min | Sec
+        // OLDER: ID | authorID | content | post/comment ID being replied to | upVotes | downVotes | year | month | day | hour | min | sec
         // Alternate constructor (for reading from a file)
         public Comment(string[] commentData, uint indentLevel)
         {
-            try { Content = commentData[2]; }
-            catch (FoulLanguageException)
+            try
             {
-                throw new FoulLanguageException("Warning: Content for comment " + commentData[0] + " does not meet parameters; adding anyway");
+                id = Convert.ToUInt32(commentData[0]);
+                authorID = Convert.ToUInt32(commentData[1]);
+                Content = commentData[2];
+                parentID = Convert.ToUInt32(commentData[3]);
+                UpVotes = Convert.ToUInt32(commentData[4]);
+                DownVotes = Convert.ToUInt32(commentData[5]);
+                timeStamp = new DateTime(Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 0]),
+                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
+                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
+                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
+                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
+                                         Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
+                commentReplies = new SortedDictionary<uint, Comment>();
+                Indentation = indentLevel;
+                this[0] = Convert.ToUInt32(commentData[12]);
+                this[1] = Convert.ToUInt32(commentData[13]);
+                this[2] = Convert.ToUInt32(commentData[14]);
             }
-            finally
-            {
-                try
-                {
-                    id = Convert.ToUInt32(commentData[0]);
-                    authorID = Convert.ToUInt32(commentData[1]);
-                    content = commentData[2];
-                    parentID = Convert.ToUInt32(commentData[3]);
-                    UpVotes = Convert.ToUInt32(commentData[4]);
-                    DownVotes = Convert.ToUInt32(commentData[5]);
-                    timeStamp = new DateTime(Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 0]),
-                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 1]),
-                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 2]),
-                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 3]),
-                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 4]),
-                                                Convert.ToInt32(commentData[COMMENT_YEAR_INDEX + 5]));
-                    commentReplies = new SortedDictionary<uint, Comment>();
-                    Indentation = indentLevel;
-                }
-                catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
-            }
+            catch { throw new Exception("Error: File input does not match format expected by [Comment] constructor"); }
         }
 
         // Alternate constructor (for creating a new comment)
         public Comment(string newContent, uint newAuthorID, uint newParentID, uint indentLevel)
         {
-            try { Content = newContent; }
-            catch (FoulLanguageException) { throw new FoulLanguageException(); }
-
             id = RedditUtilities.GenerateUniqueId();
             authorID = newAuthorID;
+            Content = newContent;
             parentID = newParentID;
             UpVotes = 1;
             DownVotes = 1;
             timeStamp = DateTime.Now;
             commentReplies = new SortedDictionary<uint, Comment>();
             Indentation = indentLevel;
+            silver = gold = platinum = 0;
         }
 
         // Defines Comment object comparison method
@@ -630,22 +666,37 @@ namespace KozinskiAlamidiAssignment4
         // Includes indentation
         public string ToString(string shortTitle)
         {
-            string commentDescription = "";
-
-            // Adds indentation
-            for (int i = 0; i < Indentation; ++i)
-                commentDescription += RedditUtilities.INDENTATION;
-
-            // Shortens title if needed
             StringBuilder newTitle = new StringBuilder(Content);
-            if (shortTitle == "ListBox" && Content.Length > 35)
+
+            if (shortTitle == "ListBox")
             {
-                newTitle.Remove(35, Content.Length - 35);
-                newTitle.Append("...");
+                string commentDescription = "";
+
+                // Adds indentation
+                for (int i = 0; i < Indentation; ++i)
+                    commentDescription += RedditUtilities.INDENTATION;
+
+                // Shortens title if needed
+                if (Content.Length > 35)
+                {
+                    newTitle.Remove(35, Content.Length - 35);
+                    newTitle.Append("...");
+                }
+
+                commentDescription += $"<{Id}> ({Score}) {newTitle.ToString()} - { Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|";
+                return commentDescription;
             }
 
-            commentDescription += $"<{Id}> ({Score}) {newTitle.ToString()} - { Program.globalUsers[AuthorID].Name} |{TimeStamp:G}|";
-            return commentDescription;
+            else if (shortTitle == "Query")
+            {
+                if (Content.Length > 30)
+                    newTitle.Remove(30, Content.Length - 30);
+
+                return String.Format("{0, 32}", newTitle) + " --" + String.Format("{0, 8}", Score) + "\n";
+            }
+
+            // Else
+            return "Error: Post ToString(string) method did not receive an appropriate argument.\n";
         }
 
         // Implements GetEnumerator method
@@ -750,6 +801,9 @@ namespace KozinskiAlamidiAssignment4
     * Title         same as above
     * AuthorID      same as above
     * DateString    returns a string representation of the post's creation date
+    * silver        represents the amount of silver points on the post
+    * gold          represents the amount of gold points on the post
+    * platinum      represents the amount of platinum points on the post
     *
     * Methods: none
     * 
@@ -761,6 +815,8 @@ namespace KozinskiAlamidiAssignment4
     *
     * this class implements both the icomparable and Ienumerable interfaces
     *   warrants the use of foreach and sorting 
+    * When an instance is followed by square brackets[], a value of
+    *   0 --> silver    1--> gold       2--> platinum
     ********************************************************************************/
     public class Post : IComparable, IEnumerable
     {
@@ -776,6 +832,9 @@ namespace KozinskiAlamidiAssignment4
         private uint weight;
         private readonly DateTime timeStamp;
         public SortedDictionary<uint, Comment> postComments;
+        private uint silver;
+        private uint gold;
+        private uint platinum;
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
@@ -836,7 +895,41 @@ namespace KozinskiAlamidiAssignment4
             set { authorID = value; }
         }
         public string AbbreviateContent { get { return this.ToString("ListBox"); } }
+        public uint this[uint index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return silver;
+                    case 1:
+                        return gold;
+                    case 2:
+                        return platinum;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
+            set
+            {
+                switch (index)
+                {
+                    case 0:
+                        silver = value;
+                        break;
+                    case 1:
+                        gold = value;
+                        break;
+                    case 2:
+                        platinum = value;
+                        break;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
 
+        }
         public Post()
         {
             Locked = false;
@@ -850,10 +943,12 @@ namespace KozinskiAlamidiAssignment4
             weight = 0;
             timeStamp = new DateTime();
             postComments = new SortedDictionary<uint, Comment>();
+            silver = gold = platinum = 0;
         }
 
-        // OLD: unique ID | authorID | title | content | subredditID | upVotes | downVotes | weight | year | month | day | hour | min | sec
-        // Locked | ID | AuthorID | Title | Content | SubredditID | UpVotes | DownVotes | Weight | Year | Month | Day | Hour | Min | Sec
+        // OLDER: unique ID | authorID | title | content | subredditID | upVotes | downVotes | weight | year | month | day | hour | min | sec
+        // OLD:   Locked | ID | AuthorID | Title | Content | SubredditID | UpVotes | DownVotes | Weight | Year | Month | Day | Hour | Min | Sec
+        //        Locked | ID | AuthorID | Title | Content | SubredditID | UpVotes | DownVotes | Weight | Year | Month | Day | Hour | Min | Sec | Silver | Gold | Platinum
         // this constructor assumes the order of data and assumes unique Id's
         public Post(string[] parameters)
         {
@@ -904,6 +999,9 @@ namespace KozinskiAlamidiAssignment4
                                                     Convert.ToInt32(parameters[12]),
                                                     Convert.ToInt32(parameters[13]),
                                                     Convert.ToInt32(parameters[14]));
+                    this[0] = Convert.ToUInt32(parameters[15]);
+                    this[1] = Convert.ToUInt32(parameters[16]);
+                    this[2] = Convert.ToUInt32(parameters[17]);
                     postComments = new SortedDictionary<uint, Comment>();
                 }
                 catch { throw new Exception("Error: Could not add post" + id + "; file input does not match format expected by [Post] constructor"); }
@@ -945,7 +1043,7 @@ namespace KozinskiAlamidiAssignment4
             postComments = new SortedDictionary<uint, Comment>();
 
             timeStamp = DateTime.Now;
-
+            silver = gold = platinum = 0;
             // Attempts to add post to global collection
             // Generates an ArgumentException if post is already in the collection
             try { Program.globalPosts.Add(Id, this); }
@@ -986,7 +1084,7 @@ namespace KozinskiAlamidiAssignment4
         // Overrides ToString() method (for showing full post content)
         public override string ToString()
         {
-            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({Score}) {Title} {postContent} - {Program.globalUsers[AuthorId].Name} |{DateString}|\n";
+            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({Score}) {Title} {postContent} - {Program.globalUsers[AuthorId].Name} |{DateString:G}|\n";
         }
         
         // Overloads ToString() method (for showing abbreviated post content)
@@ -994,14 +1092,27 @@ namespace KozinskiAlamidiAssignment4
         {
             StringBuilder newTitle = new StringBuilder(Title);
 
-            if (shortTitle == "ListBox" && Title.Length > 35)
+            if (shortTitle == "ListBox")
             {
-                newTitle.Remove(35, Title.Length - 35);
-                newTitle.Append("...");
+                if (Title.Length > 35)
+                {
+                    newTitle.Remove(35, Title.Length - 35);
+                    newTitle.Append("...");
+                }
+                string lockStatus = Locked == true ? " **LOCKED** " : " ";
+                return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({ Score}) {newTitle.ToString()}{lockStatus}- { Program.globalUsers[AuthorId].Name} |{ DateString:G}|\n";
             }
 
-            string lockStatus = Locked == true ? " **LOCKED** " : " ";
-            return $"<{Id}> [{Program.globalSubreddits[subHomeId].Name}] ({ Score}) {newTitle.ToString()}{lockStatus}- { Program.globalUsers[AuthorId].Name} |{ DateString}|";
+            else if (shortTitle == "Query")
+            {
+                if (Title.Length > 30)
+                    newTitle.Remove(30, Title.Length - 30);
+                
+                return String.Format("{0, 32}", newTitle) + " --" + String.Format("{0, 8}", Score) + "\n";
+            }
+
+            // Else
+            return "Error: Post ToString(string) method did not receive an appropriate argument.\n";
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -1423,7 +1534,6 @@ namespace KozinskiAlamidiAssignment4
                                         }
                                     }
                                     catch (ArgumentException e) { fileErrors.Add(e.Message); }
-                                    catch (FoulLanguageException e) { fileErrors.Add(e.Message); } // Warns, but doesn't scold user, for foul language
                                     catch (Exception e) { fileErrors.Add(e.Message); }
                                     break;
                                 default:
@@ -1478,7 +1588,6 @@ namespace KozinskiAlamidiAssignment4
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-
         }
     }
 }
