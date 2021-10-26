@@ -826,16 +826,16 @@ namespace KozinskiAlamidiAssignment4
                 this.label2.TabIndex = 3;
                 // TIME MEASUREMENT:
                 var timeSincePost = DateTime.Now - post.DateString;
-                if (timeSincePost < new TimeSpan(1,0,0))
-                    this.label2.Text = $"Less than an hour old from {DateTime.Now:G}";
-                else if (timeSincePost < new TimeSpan(1,0,0,0))
-                    this.label2.Text = $"Less than a day old from {DateTime.Now:G}";
-                else if (timeSincePost < new TimeSpan(30,0,0,0))
-                    this.label2.Text = $"Less than a month old from {DateTime.Now:G}";
-                else if (timeSincePost < new TimeSpan(365,0,0,0))
-                    this.label2.Text = $"Less than a year old from {DateTime.Now:G}";
+                if (timeSincePost < new TimeSpan(1, 0, 0))
+                    label2.Text = $"{timeSincePost.Minutes} minutes ago";
+                else if (timeSincePost < new TimeSpan(1, 0, 0, 0))
+                    label2.Text = $"{timeSincePost.Hours} hours ago";
+                else if (timeSincePost < new TimeSpan(30, 0, 0, 0))
+                    label2.Text = $"{timeSincePost.Days} days ago";
+                else if (timeSincePost < new TimeSpan(365, 0, 0, 0))
+                    label2.Text = $"{timeSincePost.Days / 30} months ago";
                 else
-                    this.label2.Text = $"More than a year old from {DateTime.Now:G}";
+                    label2.Text = $"{timeSincePost.Days / 365} years ago";
 
                 // 
                 // label3
@@ -1066,6 +1066,7 @@ namespace KozinskiAlamidiAssignment4
             if (selectedSubreddit == null) { MessageBox.Show("failed to cast subreddit.selecteditem to a subreddit in function subredditSelection_selectedValueChanged"); return; }
             if (selectedSubreddit.Name == "all") 
             {
+                addPostButton.Enabled = false;
                 DisplayPost.y_offset = 0;
                 panel1.Controls.Clear();
                 foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts)
@@ -1075,6 +1076,7 @@ namespace KozinskiAlamidiAssignment4
             }
             else
             {
+                if(Program.activeUser!=null) addPostButton.Enabled = true;
                 DisplayPost.y_offset = 0;
                 panel1.Controls.Clear();
                 foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(postTuple => postTuple.Value.subHomeId == selectedSubreddit.Id))
@@ -1100,8 +1102,25 @@ namespace KozinskiAlamidiAssignment4
                 if (Program.activeUser is User) {loginButton.BackColor = Color.RoyalBlue; loginButton.Text = $"{Program.activeUser.Name} ( log-out )";}
 
             }
-            
-            // test if the user successfully logged in
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (textBox1.Text == "") subredditSelection_SelectedValueChanged(sender, e);
+            else
+            {
+                DisplayPost.y_offset = 0;
+                panel1.Controls.Clear();
+                foreach (Post post in Program.globalPosts.Values.OrderBy(post => post.PostRating).Where(post => post.Title.Contains(textBox1.Text))){
+                    panel1.Controls.Add(new DisplayPost(post.Id));
+                }
+            }
+        }
+
+         static void RefreshPanel1(object sender, KeyEventArgs e)
+        {
+         //   subredditSelection_SelectedValueChanged(sender, e);
+         
         }
     }
 }
