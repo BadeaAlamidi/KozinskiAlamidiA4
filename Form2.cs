@@ -242,7 +242,7 @@ namespace KozinskiAlamidiAssignment4
 
         #endregion
 
-        #region Upvote/downvote button event handlers
+        #region Post upvote/downvote button event handlers
 
         public void PostUpvote_MouseEnter(object sender, EventArgs e)
         {
@@ -251,6 +251,10 @@ namespace KozinskiAlamidiAssignment4
 
         public void PostUpvote_MouseLeave(object sender, EventArgs e)
         {
+            if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postID))
+                if (Program.activeUser.PostVoteStatuses[postID] == 1) return;
+            
+            // Else
             this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
         }
 
@@ -275,11 +279,11 @@ namespace KozinskiAlamidiAssignment4
                 {
                     Program.activeUser.PostVoteStatuses[postID] = 1;
                     this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
-                    this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                    this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 }
                 else
                 {
-                    Program.activeUser.PostVoteStatuses[postID] = 0;
+                    Program.activeUser.PostVoteStatuses.Remove(postID);
                     this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                 }
             }
@@ -292,6 +296,10 @@ namespace KozinskiAlamidiAssignment4
 
         public void PostDownvote_MouseLeave(object sender, EventArgs e)
         {
+            if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postID))
+                if (Program.activeUser.PostVoteStatuses[postID] == -1) return;
+
+            // Else
             this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
         }
 
@@ -320,7 +328,7 @@ namespace KozinskiAlamidiAssignment4
                 }
                 else
                 {
-                    Program.activeUser.PostVoteStatuses[postID] = 0;
+                    Program.activeUser.PostVoteStatuses.Remove(postID);
                     this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 }
             }
@@ -513,12 +521,15 @@ namespace KozinskiAlamidiAssignment4
 
         class DisplayComment : Panel
         {
+            private uint commentID;
             private Form2 form3Instance;
             private int commentWidth;
             private int commentHeight;
 
             public DisplayComment(Comment newComment)
             {
+                commentID = newComment.Id;
+
                 form3Instance = (Form2)Application.OpenForms["Form3"];
                 commentWidth = form3Instance.DisplayCommentContainer.Width
                                - form3Instance.OffsetXComment
@@ -656,12 +667,112 @@ namespace KozinskiAlamidiAssignment4
                 this.Controls.Add(this.DisplayCommentUpvoteButton);
                 this.Name = "Form4";
                 this.Text = "Form4";
+                this.DisplayCommentUpvoteButton.MouseEnter += new System.EventHandler(this.CommentUpvote_MouseEnter);
+                this.DisplayCommentUpvoteButton.MouseLeave += new System.EventHandler(this.CommentUpvote_MouseLeave);
+                this.DisplayCommentUpvoteButton.Click += new System.EventHandler(this.CommentUpvote_Click);
+                this.DisplayCommentDownvoteButton.MouseEnter += new System.EventHandler(this.CommentDownvote_MouseEnter);
+                this.DisplayCommentDownvoteButton.MouseLeave += new System.EventHandler(this.CommentDownvote_MouseLeave);
+                this.DisplayCommentDownvoteButton.Click += new System.EventHandler(this.CommentDownvote_Click);
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentUpvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentDownvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyIcon)).EndInit();
                 this.ResumeLayout(false);
                 this.PerformLayout();
 
+            }
+
+            #endregion
+
+            #region Comment upvote/downvote button event handlers
+
+            public void CommentUpvote_MouseEnter(object sender, EventArgs e)
+            {
+                this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+            }
+
+            public void CommentUpvote_MouseLeave(object sender, EventArgs e)
+            {
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(commentID))
+                    if (Program.activeUser.CommentVoteStatuses[commentID] == 1) return;
+
+                // Else
+                this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+            }
+
+            public void CommentUpvote_Click(object sender, EventArgs e)
+            {
+                if (Program.activeUser == null)
+                {
+                    MessageBox.Show("You must be logged in to vote on comments.");
+                    return;
+                }
+
+                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(commentID);
+
+                if (!hasVoted)
+                {
+                    Program.activeUser.CommentVoteStatuses.Add(commentID, 1);
+                    this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+                }
+                else
+                {
+                    if (Program.activeUser.CommentVoteStatuses[commentID] < 1)
+                    {
+                        Program.activeUser.CommentVoteStatuses[commentID] = 1;
+                        this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
+                        this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+                    }
+                    else
+                    {
+                        Program.activeUser.CommentVoteStatuses.Remove(commentID);
+                        this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                    }
+                }
+            }
+
+            public void CommentDownvote_MouseEnter(object sender, EventArgs e)
+            {
+                this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+            }
+
+            public void CommentDownvote_MouseLeave(object sender, EventArgs e)
+            {
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(commentID))
+                    if (Program.activeUser.CommentVoteStatuses[commentID] == -1) return;
+
+                // Else
+                this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+            }
+
+            public void CommentDownvote_Click(object sender, EventArgs e)
+            {
+                if (Program.activeUser == null)
+                {
+                    MessageBox.Show("You must be logged in to vote on comments.");
+                    return;
+                }
+
+                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(commentID);
+
+                if (!hasVoted)
+                {
+                    Program.activeUser.CommentVoteStatuses.Add(commentID, -1);
+                    this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+                }
+                else
+                {
+                    if (Program.activeUser.CommentVoteStatuses[commentID] > -1)
+                    {
+                        Program.activeUser.CommentVoteStatuses[commentID] = -1;
+                        this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
+                        this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                    }
+                    else
+                    {
+                        Program.activeUser.CommentVoteStatuses.Remove(commentID);
+                        this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+                    }
+                }
             }
 
             #endregion

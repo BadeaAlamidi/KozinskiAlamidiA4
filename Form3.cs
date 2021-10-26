@@ -20,15 +20,16 @@ namespace KozinskiAlamidiAssignment4
         private void button1_Click(object sender, EventArgs e)
         {
             if (usernameField.Text == "" || passwordField.Text == ""){ MessageBox.Show("Please fill both username and password fields"); return; }
-            var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Id.ToString() == usernameField.Text select currentUser;
-            if (!(resultingUser.First() is User user))
+            var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Name == usernameField.Text select currentUser;
+            if (resultingUser.Count() == 0 || !(resultingUser.First() is User user))
             {
-                MessageBox.Show($"username {usernameField.Text} was not found in the database"); return;
+                MessageBox.Show($"Username {usernameField.Text} was not found in the database.");
+                return;
             }
             else
             {
                 if (user.PasswordHash == passwordField.Text.GetHashCode().ToString("X")) { Program.activeUser = user;  Close(); }
-                else { MessageBox.Show("authentication failed. please re-type your password"); }
+                else { MessageBox.Show("Authentication failed. Please re-type your password."); }
             }
         }
 

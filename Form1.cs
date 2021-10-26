@@ -862,7 +862,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox2
                 // 
-                this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
+                this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
                 this.pictureBox2.Location = new System.Drawing.Point(12, 87);
                 this.pictureBox2.Name = "pictureBox2";
                 this.pictureBox2.Size = new System.Drawing.Size(50, 53);
@@ -872,7 +872,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox1
                 // 
-                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
+                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
                 this.pictureBox1.Location = new System.Drawing.Point(12, 12);
                 this.pictureBox1.Name = "pictureBox1";
                 this.pictureBox1.Size = new System.Drawing.Size(50, 53);
@@ -903,6 +903,12 @@ namespace KozinskiAlamidiAssignment4
                 this.Controls.Add(this.pictureBox2);
                 this.Controls.Add(this.pictureBox1);
                 this.Name = $"postID{post.Id}";
+                this.pictureBox1.MouseEnter += new System.EventHandler(this.PostUpvote_MouseEnter);
+                this.pictureBox1.MouseLeave += new System.EventHandler(this.PostUpvote_MouseLeave);
+                this.pictureBox1.Click += new System.EventHandler(this.PostUpvote_Click);
+                this.pictureBox2.MouseEnter += new System.EventHandler(this.PostDownvote_MouseEnter);
+                this.pictureBox2.MouseLeave += new System.EventHandler(this.PostDownvote_MouseLeave);
+                this.pictureBox2.Click += new System.EventHandler(this.PostDownvote_Click);
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -925,6 +931,102 @@ namespace KozinskiAlamidiAssignment4
                 viewPost.Show();
             
             }
+
+            #region Post upvote/downvote button event handlers
+
+            public void PostUpvote_MouseEnter(object sender, EventArgs e)
+            {
+                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
+            }
+
+            public void PostUpvote_MouseLeave(object sender, EventArgs e)
+            {
+                if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postId))
+                    if (Program.activeUser.PostVoteStatuses[postId] == 1) return;
+
+                // Else
+                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
+            }
+
+            public void PostUpvote_Click(object sender, EventArgs e)
+            {
+                if (Program.activeUser == null)
+                {
+                    MessageBox.Show("You must be logged in to vote on posts.");
+                    return;
+                }
+
+                bool hasVoted = Program.activeUser.PostVoteStatuses.ContainsKey(postId);
+
+                if (!hasVoted)
+                {
+                    Program.activeUser.PostVoteStatuses.Add(postId, 1);
+                    this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
+                }
+                else
+                {
+                    if (Program.activeUser.PostVoteStatuses[postId] < 1)
+                    {
+                        Program.activeUser.PostVoteStatuses[postId] = 1;
+                        this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
+                        this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
+                    }
+                    else
+                    {
+                        Program.activeUser.PostVoteStatuses.Remove(postId);
+                        this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
+                    }
+                }
+            }
+
+            public void PostDownvote_MouseEnter(object sender, EventArgs e)
+            {
+                this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
+            }
+
+            public void PostDownvote_MouseLeave(object sender, EventArgs e)
+            {
+                if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postId))
+                    if (Program.activeUser.PostVoteStatuses[postId] == -1) return;
+
+                // Else
+                this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
+            }
+
+            public void PostDownvote_Click(object sender, EventArgs e)
+            {
+                if (Program.activeUser == null)
+                {
+                    MessageBox.Show("You must be logged in to vote on posts.");
+                    return;
+                }
+
+                bool hasVoted = Program.activeUser.PostVoteStatuses.ContainsKey(postId);
+
+                if (!hasVoted)
+                {
+                    Program.activeUser.PostVoteStatuses.Add(postId, -1);
+                    this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
+                }
+                else
+                {
+                    if (Program.activeUser.PostVoteStatuses[postId] > -1)
+                    {
+                        Program.activeUser.PostVoteStatuses[postId] = -1;
+                        this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
+                        this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
+                    }
+                    else
+                    {
+                        Program.activeUser.PostVoteStatuses.Remove(postId);
+                        this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
+                    }
+                }
+            }
+
+            #endregion
+
+
             //
             // Controls
             //
