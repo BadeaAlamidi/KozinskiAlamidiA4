@@ -740,9 +740,12 @@ namespace KozinskiAlamidiAssignment4
         private class DisplayPost : Panel
         {
             public static int y_offset = 0;
+
             private Form1 form1Instance;
 
             private uint postId = 0;
+            private uint totalComments;
+
             public uint PostId => postId;
 
             public DisplayPost(uint postID)
@@ -753,6 +756,21 @@ namespace KozinskiAlamidiAssignment4
                 Location = new Point(0, y_offset );
                 y_offset += 180;
                 postId = postID;
+                totalComments = (uint)Program.globalPosts[postId].postComments.Count();
+
+                // COUNTING TOTAL COMMENTS:
+                Action<Comment> traverse = null;
+                traverse = (Comment currentComment) => {
+                    totalComments += (uint)currentComment.commentReplies.Count();
+                    foreach (Comment reply in currentComment.commentReplies.Values)
+                        traverse(reply);
+                };
+
+                foreach(Comment comment in Program.globalPosts[postId].postComments.Values)
+                {
+                    traverse(comment);
+                }
+
                 InitializeComponent();
                 Width = form1Instance.Width - 70;
                 Height = 180;
@@ -888,7 +906,7 @@ namespace KozinskiAlamidiAssignment4
                 this.label6.Name = "label6";
                 this.label6.Size = new System.Drawing.Size(199, 16);
                 this.label6.TabIndex = 8;
-                this.label6.Text = $"{post.postComments.Count} Comments";
+                this.label6.Text = $"{totalComments} Comments";
                 // 
                 // Form2
                 // 
