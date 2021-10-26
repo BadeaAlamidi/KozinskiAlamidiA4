@@ -121,20 +121,14 @@
   <data name="comment" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\comment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="upVote_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\upVote_grey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reply_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reply_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="greyDownvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\greyDownvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="downvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\downvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="upvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\upvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="greyUpvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\greyUpvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="comment_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\comment_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,16 +136,28 @@
   <data name="downVote_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\downVote_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="downVote_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\downVote_grey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="reply_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\reply_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="upVote_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\upVote_grey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="downvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\downvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="upVote_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\upVote_red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="upvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\upvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="greyUpvote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\greyUpvote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="downVote_grey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\downVote_grey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cancel_button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reply_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reply_button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

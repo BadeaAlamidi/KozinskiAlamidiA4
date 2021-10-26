@@ -52,7 +52,7 @@ namespace KozinskiAlamidiAssignment4
             InitializeComponent(newPostID);
         }
 
-        public void Form3_Load(object sender, EventArgs e)
+        public void Form2_Load(object sender, EventArgs e)
         {
             PrintComments(PostID);
         }
@@ -207,7 +207,7 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayCommentContainer.Size = new System.Drawing.Size(665, 300);
             this.DisplayCommentContainer.TabIndex = 9;
             // 
-            // Form3
+            // View Post
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -223,9 +223,9 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.DisplayPostScore);
             this.Controls.Add(this.DisplayPostUpvoteButton);
             this.ForeColor = System.Drawing.Color.White;
-            this.Name = "Form3";
+            this.Name = "View Post";
             this.Text = "Post View";
-            this.Load += new System.EventHandler(this.Form3_Load);
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.DisplayPostUpvoteButton.MouseEnter += new System.EventHandler(this.PostUpvote_MouseEnter);
             this.DisplayPostUpvoteButton.MouseLeave += new System.EventHandler(this.PostUpvote_MouseLeave);
             this.DisplayPostUpvoteButton.Click += new System.EventHandler(this.PostUpvote_Click);
@@ -522,28 +522,31 @@ namespace KozinskiAlamidiAssignment4
         class DisplayComment : Panel
         {
             private uint commentID;
-            private Form2 form3Instance;
+            private Comment comment;
+
+            private Form2 form2Instance;
             private int commentWidth;
             private int commentHeight;
 
             public DisplayComment(Comment newComment)
             {
                 commentID = newComment.Id;
+                comment = newComment;
 
-                form3Instance = (Form2)Application.OpenForms["Form3"];
-                commentWidth = form3Instance.DisplayCommentContainer.Width
-                               - form3Instance.OffsetXComment
+                form2Instance = (Form2)Application.OpenForms["View Post"];
+                commentWidth = form2Instance.DisplayCommentContainer.Width
+                               - form2Instance.OffsetXComment
                                - (Margin.Horizontal * 4);
                 commentHeight = 125;
 
-                Location = new Point(form3Instance.OffsetXComment, form3Instance.OffsetYComment);
+                Location = new Point(form2Instance.OffsetXComment, form2Instance.OffsetYComment);
 
                 InitializeComponent(newComment);
 
                 Width = commentWidth;
                 Height = commentHeight;
 
-                form3Instance.OffsetYComment += Height;
+                form2Instance.OffsetYComment += Height;
             }
 
             #region InitializeComponent(Comment newComment): Programmer generated layout code
@@ -673,6 +676,7 @@ namespace KozinskiAlamidiAssignment4
                 this.DisplayCommentDownvoteButton.MouseEnter += new System.EventHandler(this.CommentDownvote_MouseEnter);
                 this.DisplayCommentDownvoteButton.MouseLeave += new System.EventHandler(this.CommentDownvote_MouseLeave);
                 this.DisplayCommentDownvoteButton.Click += new System.EventHandler(this.CommentDownvote_Click);
+                this.DisplayReplyIcon.Click += new System.EventHandler(this.ReplyIcon_Click);
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentUpvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentDownvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyIcon)).EndInit();
@@ -777,6 +781,25 @@ namespace KozinskiAlamidiAssignment4
 
             #endregion
 
+            public void ReplyIcon_Click(object sender, EventArgs e)
+            {
+                form2Instance = (Form2)Application.OpenForms["View Post"];
+
+                if (DisplayReplyBox.Active == false)
+                {
+                    DisplayReplyBox newReplyBox = new DisplayReplyBox(comment);
+                    //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
+                    this.Controls.Add(newReplyBox);
+                }
+                else
+                    MessageBox.Show("Finish writing your comment, or press 'cancel' to continue.");
+
+                if (form2Instance.DisplayCommentContainer.Controls.Contains(this)) MessageBox.Show("HI");
+
+                Control thing = GetNextControl(this, true);
+                thing.Location = new Point(thing.Location.X, thing.Location.Y + 125);
+            }
+
 
             private System.Windows.Forms.PictureBox DisplayCommentUpvoteButton;
             private System.Windows.Forms.Label DisplayCommentScore;
@@ -788,26 +811,26 @@ namespace KozinskiAlamidiAssignment4
 
         class DisplayNoComment : Panel
         {
-            private Form2 form3Instance;
+            private Form2 form2Instance;
             private int commentWidth;
             private int commentHeight;
 
             public DisplayNoComment()
             {
-                form3Instance = (Form2)Application.OpenForms["Form3"];
-                commentWidth = form3Instance.DisplayCommentContainer.Width
-                               - form3Instance.OffsetXComment
+                form2Instance = (Form2)Application.OpenForms["View Post"];
+                commentWidth = form2Instance.DisplayCommentContainer.Width
+                               - form2Instance.OffsetXComment
                                - (Margin.Horizontal * 4);
                 commentHeight = 125;
 
-                Location = new Point(form3Instance.OffsetXComment, form3Instance.OffsetYComment);
+                Location = new Point(form2Instance.OffsetXComment, form2Instance.OffsetYComment);
 
                 InitializeComponent();
 
                 Width = commentWidth;
                 Height = commentHeight;
 
-                form3Instance.OffsetYComment += Height;
+                form2Instance.OffsetYComment += Height;
             }
 
             #region InitializeComponent(): Programmer generated layout code
@@ -855,6 +878,129 @@ namespace KozinskiAlamidiAssignment4
 
 
             private System.Windows.Forms.RichTextBox DisplayCommentContent;
+        }
+
+        class DisplayReplyBox : Panel
+        {
+            private static bool active = false;
+            public static bool Active => active;
+
+            private uint commentID;
+            private Form2 form2Instance;
+            private int commentWidth;
+            private int commentHeight;
+
+            public DisplayReplyBox(Comment newComment)
+            {
+                active = true;
+
+                commentID = newComment.Id;
+
+                form2Instance = (Form2)Application.OpenForms["View Post"];
+                commentWidth = form2Instance.DisplayCommentContainer.Width
+                               //- form2Instance.OffsetXComment
+                               - (Margin.Horizontal * 4);
+                commentHeight = 125;
+
+                Location = new Point(form2Instance.OffsetXComment, form2Instance.OffsetYComment);
+
+                InitializeComponent(newComment);
+
+                Width = commentWidth;
+                Height = commentHeight;
+
+                //form2Instance.OffsetYComment += Height;
+            }
+
+            #region InitializeComponent(Comment newComment): Programmer generated layout code
+
+            /// <summary>
+            /// Programmer-defined method that supports a particular comment.
+            /// </summary>
+            private void InitializeComponent(Comment comment)
+            {
+                // VARIABLES
+                int column2 = 60;
+                string commentContentText = "What are your thoughts?";
+                //
+                // BEGIN FORM INITIALIZATION
+                //
+                this.DisplayReplyContent = new System.Windows.Forms.RichTextBox();
+                this.DisplayReplyButton = new System.Windows.Forms.PictureBox();
+                this.DisplayCancelButton = new System.Windows.Forms.PictureBox();
+                ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyButton)).BeginInit();
+                ((System.ComponentModel.ISupportInitialize)(this.DisplayCancelButton)).BeginInit();
+                this.SuspendLayout();
+                // 
+                // DisplayReplyContent
+                // 
+                this.DisplayReplyContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+                this.DisplayReplyContent.BorderStyle = BorderStyle.None;
+                this.DisplayReplyContent.ForeColor = System.Drawing.Color.DarkGray;
+                this.DisplayReplyContent.Location = new System.Drawing.Point(0, 0);
+                this.DisplayReplyContent.Name = "DisplayReplyContent";
+                this.DisplayReplyContent.Size = new System.Drawing.Size(commentWidth - column2, 40);
+                this.DisplayReplyContent.TabIndex = 20;
+                this.DisplayReplyContent.Text = $"{commentContentText}";
+                // 
+                // DisplayReplyButton
+                // 
+                this.DisplayReplyButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+                this.DisplayReplyButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.reply_button;
+                this.DisplayReplyButton.Location = new System.Drawing.Point(Width - 5, 50);
+                this.DisplayReplyButton.Name = "DisplayReplyButton";
+                this.DisplayReplyButton.Size = new System.Drawing.Size(104, 33);
+                this.DisplayReplyButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+                this.DisplayReplyButton.TabIndex = 21;
+                this.DisplayReplyButton.TabStop = false;
+                // 
+                // DisplayCancelButton
+                // 
+                this.DisplayCancelButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+                this.DisplayCancelButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.cancel_button;
+                this.DisplayCancelButton.Location = new System.Drawing.Point(Width - 110 - column2, 50);
+                this.DisplayCancelButton.Name = "DisplayCancelButton";
+                this.DisplayCancelButton.Size = new System.Drawing.Size(68, 33);
+                this.DisplayCancelButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+                this.DisplayCancelButton.TabIndex = 22;
+                this.DisplayCancelButton.TabStop = false;
+                // 
+                // Reply to Comment Panel
+                // 
+                //this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+                //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+                this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+                //this.ClientSize = new System.Drawing.Size(800, 450);
+                this.Controls.Add(this.DisplayCancelButton);
+                this.Controls.Add(this.DisplayReplyButton);
+                this.Controls.Add(this.DisplayReplyContent);
+                this.Name = "Reply to Comment";
+                this.DisplayReplyButton.Click += new System.EventHandler(this.ReplyButton_Click);
+                this.DisplayCancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+                ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyButton)).EndInit();
+                ((System.ComponentModel.ISupportInitialize)(this.DisplayCancelButton)).EndInit();
+                this.ResumeLayout(false);
+                this.PerformLayout();
+
+            }
+
+            public void ReplyButton_Click(object sender, EventArgs e)
+            {
+
+            }
+
+            public void CancelButton_Click(object sender,EventArgs e)
+            {
+                Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
+                form2Instance.DisplayCommentContainer.Controls.Remove(this);
+            }
+
+
+            #endregion
+
+            private System.Windows.Forms.RichTextBox DisplayReplyContent;
+            private System.Windows.Forms.PictureBox DisplayReplyButton;
+            private System.Windows.Forms.PictureBox DisplayCancelButton;
         }
     }
 }
