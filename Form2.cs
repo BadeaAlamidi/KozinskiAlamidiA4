@@ -784,20 +784,24 @@ namespace KozinskiAlamidiAssignment4
             public void ReplyIcon_Click(object sender, EventArgs e)
             {
                 form2Instance = (Form2)Application.OpenForms["View Post"];
+                ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
 
                 if (DisplayReplyBox.Active == false)
                 {
                     DisplayReplyBox newReplyBox = new DisplayReplyBox(comment);
                     //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
+                    this.Height += 125;
                     this.Controls.Add(newReplyBox);
                 }
                 else
                     MessageBox.Show("Finish writing your comment, or press 'cancel' to continue.");
 
-                if (form2Instance.DisplayCommentContainer.Controls.Contains(this)) MessageBox.Show("HI");
-
-                Control thing = GetNextControl(this, true);
-                thing.Location = new Point(thing.Location.X, thing.Location.Y + 125);
+                int index = ctrls.IndexOf(this);
+                for (int i = index + 1; i < ctrls.Count; i++)
+                {
+                    if (ctrls[i] is DisplayComment)
+                        ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y + 125);
+                }
             }
 
 
@@ -883,7 +887,11 @@ namespace KozinskiAlamidiAssignment4
         class DisplayReplyBox : Panel
         {
             private static bool active = false;
-            public static bool Active => active;
+            public static bool Active
+            {
+                get { return active; }
+                set { active = value; }
+            }
 
             private uint commentID;
             private Form2 form2Instance;
@@ -902,7 +910,7 @@ namespace KozinskiAlamidiAssignment4
                                - (Margin.Horizontal * 4);
                 commentHeight = 125;
 
-                Location = new Point(form2Instance.OffsetXComment, form2Instance.OffsetYComment);
+                Location = new Point(form2Instance.OffsetXComment, 150);
 
                 InitializeComponent(newComment);
 
@@ -992,7 +1000,19 @@ namespace KozinskiAlamidiAssignment4
             public void CancelButton_Click(object sender,EventArgs e)
             {
                 Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
-                form2Instance.DisplayCommentContainer.Controls.Remove(this);
+                ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
+
+                int index = ctrls.IndexOf(this.Parent);
+                for (int i = index + 1; i < ctrls.Count; i++)
+                {
+                    if (ctrls[i] is DisplayComment)
+                        ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y - 125);
+                }
+
+                this.Parent.Height -= 125;
+                this.Parent.Controls.Remove(this);
+
+                Active = false;
             }
 
 
