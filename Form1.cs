@@ -1099,7 +1099,12 @@ namespace KozinskiAlamidiAssignment4
                 var form3 = new Form3();
                 form3.ShowDialog();
                 // check for successful authentication
-                if (Program.activeUser is User) {loginButton.BackColor = Color.RoyalBlue; loginButton.Text = $"{Program.activeUser.Name} ( log-out )";}
+                if (Program.activeUser is User) {
+                    loginButton.BackColor = Color.RoyalBlue;
+                    loginButton.Text = $"{Program.activeUser.Name} ( log-out )";
+                    if ((subredditSelection.SelectedItem as Subreddit).Name != "all")
+                        addPostButton.Enabled = true;
+                }
 
             }
         }
@@ -1117,10 +1122,18 @@ namespace KozinskiAlamidiAssignment4
             }
         }
 
-        public static void RefreshPanel1(object sender, KeyEventArgs e)
+        public static void RefreshPanel1(object sender, EventArgs e)
         {
-         //   subredditSelection_SelectedValueChanged(sender, e);
-         
+            (Application.OpenForms["Form1"] as Form1).subredditSelection_SelectedValueChanged(sender, e);
+
+        }
+
+        private void addPostButton_Click(object sender, EventArgs e)
+        {
+            //var chosenSubreddit = subredditSelection.SelectedItem as Subreddit;
+            //var form4Instance = new Form4(chosenSubreddit.Id);
+            //form4Instance.ShowDialog();
+
         }
     }
 }

@@ -105,6 +105,7 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.richTextBox1);
             this.Name = "Form4";
             this.Text = "Add Post";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form4_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

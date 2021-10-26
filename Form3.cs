@@ -23,8 +23,8 @@ namespace KozinskiAlamidiAssignment4
             if (e.KeyCode == Keys.Enter)
             {
                 if (usernameField.Text == "" || passwordField.Text == "") { MessageBox.Show("Please fill both username and password fields"); return; }
-                var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Id.ToString() == usernameField.Text select currentUser;
-                if (!(resultingUser.First() is User user))
+                var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Name == usernameField.Text select currentUser;
+                if (resultingUser.Count() == 0 || !(resultingUser.First() is User user))
                 {
                     MessageBox.Show($"username {usernameField.Text} was not found in the database"); return;
                 }

@@ -12,8 +12,11 @@ namespace KozinskiAlamidiAssignment4
 {
     public partial class Form4 : Form
     {
+        static bool postAdded;
+
         public Form4()
         {
+            postAdded = false;
             InitializeComponent();
         }
 
@@ -28,8 +31,14 @@ namespace KozinskiAlamidiAssignment4
             else {
             Close();
             
-                //Form1.RefreshPanel1(sender,e);
             }
+        }
+
+        private void Form4_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (postAdded)
+                Form1.RefreshPanel1(sender, e);
+
         }
     }
 }
