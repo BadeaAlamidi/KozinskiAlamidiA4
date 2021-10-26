@@ -77,6 +77,22 @@ namespace KozinskiAlamidiAssignment4
         private int postScore;
         private int commentScore;
         private string[] moderatingSubs;
+        public Dictionary<uint, int> PostVoteStatuses;
+        public Dictionary<uint, int> CommentVoteStatuses;
+
+        /*
+        public Dictionary<uint, int> PostVoteStatuses
+        {
+            get { return postVoteStatuses; }
+            set { postVoteStatuses = value; }
+        }
+
+        public Dictionary<uint, int> CommentVoteStatuses
+        {
+            get { return CommentVoteStatuses; }
+            set { commentVoteStatuses = value; }
+        }
+        */
 
         // Properties to control read/write access to private attributes
         public uint Id => id;
@@ -110,6 +126,8 @@ namespace KozinskiAlamidiAssignment4
             PostScore = 0;
             CommentScore = 0;
             ModeratingSubs = new string[0];
+            PostVoteStatuses = new Dictionary<uint, int>();
+            CommentVoteStatuses = new Dictionary<uint, int>();
         }
 
         // Alternate constructor (for reading from a file)
@@ -136,6 +154,8 @@ namespace KozinskiAlamidiAssignment4
                 ModeratingSubs = new string[0];
                 for (int i = 6; i < userData.Length; i++)
                     ModeratingSubs.Append(userData[i]);
+                PostVoteStatuses = new Dictionary<uint, int>();
+                CommentVoteStatuses = new Dictionary<uint, int>();
             }
             catch { throw new ArgumentException("Error: File input does not match format expected by [User] constructor"); }
 
@@ -993,15 +1013,17 @@ namespace KozinskiAlamidiAssignment4
 
                     // safe guard in case the default constructor is used (it is unknown if the default constructor will ever get used)
                     if (parameters.Length > 8)
+                    {
                         timeStamp = new DateTime(Convert.ToInt32(parameters[9]),
                                                     Convert.ToInt32(parameters[10]),
                                                     Convert.ToInt32(parameters[11]),
                                                     Convert.ToInt32(parameters[12]),
                                                     Convert.ToInt32(parameters[13]),
                                                     Convert.ToInt32(parameters[14]));
-                    this[0] = Convert.ToUInt32(parameters[15]);
-                    this[1] = Convert.ToUInt32(parameters[16]);
-                    this[2] = Convert.ToUInt32(parameters[17]);
+                        this[0] = Convert.ToUInt32(parameters[15]);
+                        this[1] = Convert.ToUInt32(parameters[16]);
+                        this[2] = Convert.ToUInt32(parameters[17]);
+                    }
                     postComments = new SortedDictionary<uint, Comment>();
                 }
                 catch { throw new Exception("Error: Could not add post" + id + "; file input does not match format expected by [Post] constructor"); }
@@ -1044,6 +1066,7 @@ namespace KozinskiAlamidiAssignment4
 
             timeStamp = DateTime.Now;
             silver = gold = platinum = 0;
+
             // Attempts to add post to global collection
             // Generates an ArgumentException if post is already in the collection
             try { Program.globalPosts.Add(Id, this); }
