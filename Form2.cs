@@ -788,6 +788,7 @@ namespace KozinskiAlamidiAssignment4
 
                 if (DisplayReplyBox.Active == false)
                 {
+                    DisplayReplyBox.Active = true;
                     DisplayReplyBox newReplyBox = new DisplayReplyBox(comment);
                     //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
                     this.Height += 125;
@@ -900,8 +901,7 @@ namespace KozinskiAlamidiAssignment4
 
             public DisplayReplyBox(Comment newComment)
             {
-                active = true;
-
+                
                 commentID = newComment.Id;
 
                 form2Instance = (Form2)Application.OpenForms["View Post"];
@@ -1021,6 +1021,11 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.RichTextBox DisplayReplyContent;
             private System.Windows.Forms.PictureBox DisplayReplyButton;
             private System.Windows.Forms.PictureBox DisplayCancelButton;
+        }
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DisplayReplyBox.Active = false;
         }
     }
 }

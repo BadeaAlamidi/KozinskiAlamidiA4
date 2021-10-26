@@ -1066,7 +1066,6 @@ namespace KozinskiAlamidiAssignment4
             if (selectedSubreddit == null) { MessageBox.Show("failed to cast subreddit.selecteditem to a subreddit in function subredditSelection_selectedValueChanged"); return; }
             if (selectedSubreddit.Name == "all") 
             {
-                addPostButton.Enabled = false;
                 DisplayPost.y_offset = 0;
                 panel1.Controls.Clear();
                 foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts)
@@ -1076,7 +1075,6 @@ namespace KozinskiAlamidiAssignment4
             }
             else
             {
-                if(Program.activeUser!=null) addPostButton.Enabled = true;
                 DisplayPost.y_offset = 0;
                 panel1.Controls.Clear();
                 foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(postTuple => postTuple.Value.subHomeId == selectedSubreddit.Id))
@@ -1102,8 +1100,6 @@ namespace KozinskiAlamidiAssignment4
                 if (Program.activeUser is User) {
                     loginButton.BackColor = Color.RoyalBlue;
                     loginButton.Text = $"{Program.activeUser.Name} ( log-out )";
-                    if ((subredditSelection.SelectedItem as Subreddit).Name != "all")
-                        addPostButton.Enabled = true;
                 }
 
             }

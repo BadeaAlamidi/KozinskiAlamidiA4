@@ -87,7 +87,7 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostContent.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DisplayPostContent.ForeColor = System.Drawing.Color.White;
             this.DisplayPostContent.Location = new System.Drawing.Point(45, 65);
-            this.DisplayPostContent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DisplayPostContent.Margin = new System.Windows.Forms.Padding(2);
             this.DisplayPostContent.Name = "DisplayPostContent";
             this.DisplayPostContent.ReadOnly = true;
             this.DisplayPostContent.Size = new System.Drawing.Size(499, 81);
@@ -109,7 +109,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             this.DisplayCommentContainer.AutoScroll = true;
             this.DisplayCommentContainer.Location = new System.Drawing.Point(45, 191);
-            this.DisplayCommentContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DisplayCommentContainer.Margin = new System.Windows.Forms.Padding(2);
             this.DisplayCommentContainer.Name = "DisplayCommentContainer";
             this.DisplayCommentContainer.Size = new System.Drawing.Size(499, 244);
             this.DisplayCommentContainer.TabIndex = 9;
@@ -165,9 +165,10 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.DisplayPostScore);
             this.Controls.Add(this.DisplayPostUpvoteButton);
             this.ForeColor = System.Drawing.Color.White;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form2";
             this.Text = "View Post";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostDownvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostUpvoteButton)).EndInit();

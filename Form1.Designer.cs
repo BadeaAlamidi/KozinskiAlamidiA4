@@ -34,7 +34,6 @@ namespace KozinskiAlamidiAssignment4
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.subredditSelection = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.addPostButton = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -87,24 +86,12 @@ namespace KozinskiAlamidiAssignment4
             this.panel1.Size = new System.Drawing.Size(1354, 852);
             this.panel1.TabIndex = 26;
             // 
-            // addPostButton
-            // 
-            this.addPostButton.BackColor = System.Drawing.Color.White;
-            this.addPostButton.Enabled = false;
-            this.addPostButton.Location = new System.Drawing.Point(993, 19);
-            this.addPostButton.Name = "addPostButton";
-            this.addPostButton.Size = new System.Drawing.Size(136, 25);
-            this.addPostButton.TabIndex = 27;
-            this.addPostButton.Text = "Add Post";
-            this.addPostButton.UseVisualStyleBackColor = false;
-            this.addPostButton.Click += new System.EventHandler(this.addPostButton_Click);
-            // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(393, 24);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(594, 22);
+            this.textBox1.Size = new System.Drawing.Size(736, 22);
             this.textBox1.TabIndex = 28;
             this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
             // 
@@ -115,7 +102,6 @@ namespace KozinskiAlamidiAssignment4
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.addPostButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.subredditSelection);
             this.Controls.Add(this.pictureBox1);
@@ -137,7 +123,6 @@ namespace KozinskiAlamidiAssignment4
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox subredditSelection;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button addPostButton;
         private System.Windows.Forms.TextBox textBox1;
     }
 }
