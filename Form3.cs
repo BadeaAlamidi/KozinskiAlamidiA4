@@ -20,7 +20,7 @@ namespace KozinskiAlamidiAssignment4
         private void button1_Click(object sender, EventArgs e)
         {
             if (usernameField.Text == "" || passwordField.Text == ""){ MessageBox.Show("Please fill both username and password fields"); return; }
-            var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Id.ToString() == usernameField.Text select currentUser;
+            var resultingUser = from currentUser in Program.globalUsers.Values where currentUser.Name == usernameField.Text select currentUser;
             if (!(resultingUser.First() is User user))
             {
                 MessageBox.Show($"username {usernameField.Text} was not found in the database"); return;

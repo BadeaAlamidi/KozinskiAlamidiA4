@@ -966,8 +966,22 @@ namespace KozinskiAlamidiAssignment4
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            var form3 = new Form3();
-            form3.ShowDialog();
+            if (Program.activeUser != null)
+            {
+                Program.activeUser = null;
+                loginButton.BackColor = Color.White;
+                loginButton.Text = "log-in";
+            }
+            else
+            {
+                var form3 = new Form3();
+                form3.ShowDialog();
+                // check for successful authentication
+                if (Program.activeUser is User) {loginButton.BackColor = Color.RoyalBlue; loginButton.Text = $"{Program.activeUser.Name} ( log-out )";}
+
+            }
+            
+            // test if the user successfully logged in
         }
     }
 }

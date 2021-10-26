@@ -49,12 +49,13 @@ namespace KozinskiAlamidiAssignment4
             // 
             // loginButton
             // 
+            this.loginButton.BackColor = System.Drawing.Color.White;
             this.loginButton.Location = new System.Drawing.Point(1135, 16);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(231, 28);
             this.loginButton.TabIndex = 11;
             this.loginButton.Text = "Log-In";
-            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.UseVisualStyleBackColor = false;
             this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
             // 
             // pictureBox1
