@@ -27,7 +27,8 @@ namespace KozinskiAlamidiAssignment4
             if (textBox1.Text == "" || richTextBox1.Text == "") MessageBox.Show("Please fill the Content and the Title text boxes.");
             else {
             Close();
-            Form1.RefreshPanel1();
+            
+                //Form1.RefreshPanel1(sender,e);
             }
         }
     }

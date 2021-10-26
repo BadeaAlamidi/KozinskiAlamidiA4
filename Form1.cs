@@ -1117,7 +1117,7 @@ namespace KozinskiAlamidiAssignment4
             }
         }
 
-         static void RefreshPanel1(object sender, KeyEventArgs e)
+        public static void RefreshPanel1(object sender, KeyEventArgs e)
         {
          //   subredditSelection_SelectedValueChanged(sender, e);
          

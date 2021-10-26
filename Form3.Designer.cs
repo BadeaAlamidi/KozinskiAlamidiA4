@@ -73,7 +73,7 @@ namespace KozinskiAlamidiAssignment4
             this.passwordField.PasswordChar = '*';
             this.passwordField.Size = new System.Drawing.Size(199, 20);
             this.passwordField.TabIndex = 6;
-            this.passwordField.Enter += new System.EventHandler(this.button1_Click);
+            this.passwordField.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passwordField_KeyDown);
             // 
             // usernameField
             // 
@@ -81,7 +81,7 @@ namespace KozinskiAlamidiAssignment4
             this.usernameField.Name = "usernameField";
             this.usernameField.Size = new System.Drawing.Size(199, 20);
             this.usernameField.TabIndex = 5;
-            this.usernameField.Enter += new System.EventHandler(this.button1_Click);
+            this.usernameField.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passwordField_KeyDown);
             // 
             // Form3
             // 
