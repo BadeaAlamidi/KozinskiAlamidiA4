@@ -1087,7 +1087,8 @@ namespace KozinskiAlamidiAssignment4
 
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
-                DisplayReplyBox.Active = false;
+            Form1.RefreshPanel1(sender, e);
+            DisplayReplyBox.Active = false;
         }
     }
 }
