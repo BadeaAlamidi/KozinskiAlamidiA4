@@ -232,6 +232,7 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostDownvoteButton.MouseEnter += new System.EventHandler(this.PostDownvote_MouseEnter);
             this.DisplayPostDownvoteButton.MouseLeave += new System.EventHandler(this.PostDownvote_MouseLeave);
             this.DisplayPostDownvoteButton.Click += new System.EventHandler(this.PostDownvote_Click);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostUpvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayPostDownvoteButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -528,6 +529,7 @@ namespace KozinskiAlamidiAssignment4
             private int commentWidth;
             private int commentHeight;
 
+            public Comment CommentView => comment;
             public DisplayComment(Comment newComment)
             {
                 commentID = newComment.Id;
@@ -677,6 +679,7 @@ namespace KozinskiAlamidiAssignment4
                 this.DisplayCommentDownvoteButton.MouseLeave += new System.EventHandler(this.CommentDownvote_MouseLeave);
                 this.DisplayCommentDownvoteButton.Click += new System.EventHandler(this.CommentDownvote_Click);
                 this.DisplayReplyIcon.Click += new System.EventHandler(this.ReplyIcon_Click);
+
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentUpvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCommentDownvoteButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyIcon)).EndInit();
@@ -783,9 +786,9 @@ namespace KozinskiAlamidiAssignment4
 
             public void ReplyIcon_Click(object sender, EventArgs e)
             {
+                if (Program.activeUser == null) { MessageBox.Show("You are not logged in."); return; }
                 form2Instance = (Form2)Application.OpenForms["View Post"];
                 ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
-
                 if (DisplayReplyBox.Active == false)
                 {
                     DisplayReplyBox.Active = true;
@@ -793,16 +796,16 @@ namespace KozinskiAlamidiAssignment4
                     //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
                     this.Height += 125;
                     this.Controls.Add(newReplyBox);
+                    int index = ctrls.IndexOf(this);
+                    for (int i = index + 1; i < ctrls.Count; i++)
+                    {
+                        if (ctrls[i] is DisplayComment)
+                            ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y + 125);
+                    }
                 }
                 else
                     MessageBox.Show("Finish writing your comment, or press 'cancel' to continue.");
 
-                int index = ctrls.IndexOf(this);
-                for (int i = index + 1; i < ctrls.Count; i++)
-                {
-                    if (ctrls[i] is DisplayComment)
-                        ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y + 125);
-                }
             }
 
 
@@ -910,7 +913,7 @@ namespace KozinskiAlamidiAssignment4
                                - (Margin.Horizontal * 4);
                 commentHeight = 125;
 
-                Location = new Point(form2Instance.OffsetXComment, 150);
+                Location = new Point(form2Instance.OffsetXComment, commentHeight);
 
                 InitializeComponent(newComment);
 
@@ -994,7 +997,14 @@ namespace KozinskiAlamidiAssignment4
 
             public void ReplyButton_Click(object sender, EventArgs e)
             {
-
+                if (DisplayReplyContent.Text == "") { MessageBox.Show("Your comment must have content.");  return; }
+                var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, (Parent as DisplayComment).CommentView.AuthorID, (Parent as DisplayComment).CommentView.Indentation + 1);
+                (Parent as DisplayComment).CommentView.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
+                DisplayComment newDisplayComment = new DisplayComment(replyBoxResult);
+                newDisplayComment.Location = Location;
+                Parent.Controls.Add(newDisplayComment);
+                Parent.Controls.Remove(this);
+                Active = false;
             }
 
             public void CancelButton_Click(object sender,EventArgs e)
@@ -1025,7 +1035,7 @@ namespace KozinskiAlamidiAssignment4
 
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
-            DisplayReplyBox.Active = false;
+                DisplayReplyBox.Active = false;
         }
     }
 }
