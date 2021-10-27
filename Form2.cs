@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace KozinskiAlamidiAssignment4
 {
@@ -18,6 +19,9 @@ namespace KozinskiAlamidiAssignment4
         private int offsetXComment = 0;
         private int offsetYComment = 0;
         private int offsetYCommentContainer = 0;
+
+        //private SortedList<uint, uint> PostsToWrite;
+        private SortedSet<Comment> CommentsToWrite;
 
         public uint PostID
         {
@@ -57,7 +61,8 @@ namespace KozinskiAlamidiAssignment4
         public Form2(uint newPostID)
         {
             PostID = newPostID;
-
+            //PostsToWrite = new SortedList<uint, uint>();
+            CommentsToWrite = new SortedSet<Comment>();
             // Counts total comments
             TotalComments = (uint)Program.globalPosts[PostID].postComments.Count();
             Action<Comment> traverse = null;
@@ -171,7 +176,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // DisplayPostTitle
             // 
-            this.DisplayPostTitle.AutoSize = true;
+            this.DisplayPostTitle.AutoSize = true; ;
             this.DisplayPostTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DisplayPostTitle.ForeColor = System.Drawing.Color.White;
             this.DisplayPostTitle.Location = new System.Drawing.Point(60, 38);
@@ -179,6 +184,52 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostTitle.Size = new System.Drawing.Size(160, 29);
             this.DisplayPostTitle.TabIndex = 5;
             this.DisplayPostTitle.Text = $"{postTitleText}";
+            //
+            // DisplayCommentBox
+            //
+            if (Program.activeUser != null)
+            {
+
+                DisplayCommentBox = new Panel() {
+                    Location = new Point(60, 235),
+                    Size = new Size(665,300),
+                };
+                var textBoxContainer = new Panel() {
+                    Size = new Size(650,245),
+                    Padding = new Padding(10),
+                    Name = "DisplayCommentBoxRichTextFieldContainer",
+
+                };
+                var submitButton = new Button() {
+                    Text = "Submit",
+                    Location = new Point(455, 250),
+                    Size = new Size(190, 40),
+                    ForeColor = Color.White,
+                    BackColor = Color.Black,
+                };
+                var RichTextBoxField = new RichTextBox() { 
+                    Name = "DisplayCommentBoxRichTextField",
+                    Location = new Point(5,5),
+                    ForeColor = Color.White,
+                    BackColor = Color.Black,
+                    Dock = DockStyle.Fill,
+                };
+                var GhostLabel = new Label() {
+                    ForeColor = Color.Silver,
+                    BackColor = Color.Transparent,
+                    AutoSize = true,
+                    Text = "What are your thoughts?",
+                    Location = new Point(2,0),
+                };
+                //EVENTS:
+                RichTextBoxField.TextChanged += RichTextBoxField_TextChanged;
+                submitButton.Click += SubmitButton_Click;
+
+                RichTextBoxField.Controls.Add(GhostLabel);
+                textBoxContainer.Controls.Add(RichTextBoxField);
+                DisplayCommentBox.Controls.Add(textBoxContainer);
+                DisplayCommentBox.Controls.Add(submitButton);
+            }
             // 
             // DisplayPostContent
             // 
@@ -211,18 +262,13 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostCommentCount.Size = new System.Drawing.Size(205, 17);
             this.DisplayPostCommentCount.TabIndex = 8;
             this.DisplayPostCommentCount.Text = $"{TotalComments} Comments";
-            //
-            // DisplayCommentBox
-            //
-            if (Program.activeUser != null)
-            {
 
-            }
             // 
             // DisplayCommentContainer
             // 
             this.DisplayCommentContainer.AutoScroll = true;
-            this.DisplayCommentContainer.Location = new System.Drawing.Point(60, 235);
+            this.DisplayCommentContainer.Location = 
+                Program.activeUser == null ? new System.Drawing.Point(60, 235) : new Point (60,535);
             this.DisplayCommentContainer.Name = "DisplayCommentContainer";
             this.DisplayCommentContainer.Size = new System.Drawing.Size(665, 300);
             this.DisplayCommentContainer.TabIndex = 9;
@@ -232,7 +278,8 @@ namespace KozinskiAlamidiAssignment4
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.ClientSize = new System.Drawing.Size(800, 600);
+            this.ClientSize = 
+                Program.activeUser == null? new System.Drawing.Size(800, 600) : new Size(800,900);
             this.Controls.Add(this.DisplayCommentContainer);
             this.Controls.Add(this.DisplayPostCommentCount);
             this.Controls.Add(this.pictureBox3);
@@ -242,6 +289,7 @@ namespace KozinskiAlamidiAssignment4
             this.Controls.Add(this.DisplayPostDownvoteButton);
             this.Controls.Add(this.DisplayPostScore);
             this.Controls.Add(this.DisplayPostUpvoteButton);
+            if (Program.activeUser != null)this.Controls.Add(this.DisplayCommentBox);
             this.ForeColor = System.Drawing.Color.White;
             this.Name = "View Post";
             this.Text = "Post View";
@@ -259,6 +307,53 @@ namespace KozinskiAlamidiAssignment4
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void SubmitButton_Click(object sender, EventArgs e)
+        {
+            RichTextBox DisplayCommentBoxControlRichTextBox = null;
+            for (int i = 0; i < DisplayCommentBox.Controls.Count; ++i)
+            {
+                if (DisplayCommentBox.Controls[i].Name == "DisplayCommentBoxRichTextFieldContainer")
+                    DisplayCommentBoxControlRichTextBox = DisplayCommentBox.Controls[i].Controls[0] as RichTextBox;
+            }
+            if (DisplayCommentBoxControlRichTextBox != null)
+            {
+                if (DisplayCommentBoxControlRichTextBox.Text == "")
+                    MessageBox.Show("Your Content is empty.");
+                else
+                {
+                    var new1stLevelComment = new Comment(
+                        DisplayCommentBoxControlRichTextBox.Text, 
+                        Program.activeUser.Id,
+                        Program.globalPosts[PostID].Id,
+                        0);
+                    CommentsToWrite.Add(new1stLevelComment);
+                    Program.globalPosts[postID].postComments.Add(new1stLevelComment.Id, new1stLevelComment);
+                    var newDisplayComment = new DisplayComment(new1stLevelComment);
+                    newDisplayComment.Height = 125;
+                    newDisplayComment.Location = new Point(0,0);
+                    DisplayCommentContainer.Controls.Add(newDisplayComment);
+                    DisplayCommentContainer.Controls.SetChildIndex(newDisplayComment, 0);
+                    for (int i = 1; i < DisplayCommentContainer.Controls.Count; ++i)
+                    {
+                        DisplayCommentContainer.Controls[i].Location =
+                            new Point(DisplayCommentContainer.Controls[i].Location.X,
+                            DisplayCommentContainer.Controls[i].Location.Y + 125);
+                    }
+                    DisplayComment_CommentReplyAdded();
+                    DisplayCommentBoxControlRichTextBox.Text = "";
+                }
+            }
+            else MessageBox.Show("Comment Box rich text field was not found.");
+        }
+
+        private void RichTextBoxField_TextChanged(object sender, EventArgs e)
+        {
+            var richTextBox = sender as RichTextBox;
+            if (richTextBox.Text == "")
+                richTextBox.Controls[0].Text = "What are your thoughts?";
+            else richTextBox.Controls[0].Text = "";
         }
 
         #endregion
@@ -469,6 +564,12 @@ namespace KozinskiAlamidiAssignment4
         }
         */
         #endregion
+
+        public void DisplayComment_CommentReplyAdded()
+        {
+            var temp = Convert.ToInt32(DisplayPostCommentCount.Text.Split()[0]);
+            DisplayPostCommentCount.Text = $"{temp + 1} comments";
+        }
 
         #region PrintComments(uint postID)
         /**
@@ -1034,29 +1135,29 @@ namespace KozinskiAlamidiAssignment4
                 ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
                 if (DisplayReplyContent.Text == "") { MessageBox.Show("Your comment must have content.");  return; }
                 var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, Program.activeUser.Id, this.comment.Indentation + 1);
+                form2Instance.CommentsToWrite.Add(replyBoxResult);
                 this.comment.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
                 DisplayComment newDisplayComment = new DisplayComment(replyBoxResult);
                 newDisplayComment.Location = new Point(Convert.ToInt32(replyBoxResult.Indentation * 40), Location.Y);
                 newDisplayComment.Height = 125;
                 ctrls.Add(newDisplayComment);
                 ctrls.SetChildIndex(newDisplayComment, ctrls.IndexOf(this));
+                form2Instance.DisplayComment_CommentReplyAdded();
                 ctrls.Remove(this);
                 Active = false;
             }
 
             public void CancelButton_Click(object sender,EventArgs e)
             {
-                Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
-                ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
+                ControlCollection ctrls = ((Form2)Application.OpenForms["View Post"]).DisplayCommentContainer.Controls;
 
-                int index = ctrls.IndexOf(this.Parent);
+                int index = ctrls.IndexOf(this);
                 for (int i = index + 1; i < ctrls.Count; i++)
                 {
                     if (ctrls[i] is DisplayComment)
                         ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y - 125);
                 }
 
-                //this.Parent.Height -= 125;
                 this.Parent.Controls.Remove(this);
 
                 Active = false;
@@ -1095,6 +1196,36 @@ namespace KozinskiAlamidiAssignment4
         {
             Form1.RefreshPanel1(sender, e);
             DisplayReplyBox.Active = false;
+            //WRITE BACK COMMENTS TO COMMENTS FILE
+            Action<Comment> asyncWrite = async (Comment newTuple) => {
+                
+                using (StreamWriter file = new StreamWriter("comments.txt", append: true)) {
+                    await file.WriteLineAsync($"{newTuple.Id}\t{newTuple.AuthorID}\t{newTuple.Content}\t{newTuple.ParentID}\t"
+                        + $"{newTuple.UpVotes}\t{newTuple.DownVotes}\t{newTuple.TimeStamp.Year}\t"
+                        + $"{newTuple.TimeStamp.Month}\t{newTuple.TimeStamp.Day}\t{newTuple.TimeStamp.Hour}\t"
+                        + $"{newTuple.TimeStamp.Minute}\t{newTuple.TimeStamp.Second}\t{newTuple[0]}\t{newTuple[1]}\t{newTuple[2]}");
+                };
+            };
+            /*using (StreamReader file = new StreamReader("..\\..\\comments.txt"))
+            {
+                string fileLine;
+                fileLine = file.ReadLine();
+                uint lineNumber = 1;
+                while (fileLine != null)
+                {
+
+                    if (CommentsToUpdate.Keys.Contains(Convert.ToUInt32(fileLine.Split('\t')[0])))
+                    {
+                        PostsToWrite[Convert.ToUInt32(fileLine.Split('\t')[1])] = lineNumber;
+                    }
+                    ++lineNumber;
+                    fileLine = file.ReadLine();
+                }
+            };
+
+            // add new comments: */
+            foreach (Comment comment in CommentsToWrite) asyncWrite(comment);
+
         }
     }
 }

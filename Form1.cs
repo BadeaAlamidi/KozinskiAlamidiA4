@@ -120,7 +120,9 @@ namespace KozinskiAlamidiAssignment4
                 subredditSelection.SelectedIndex = 0;
 
                 // Populates main panel with posts
-                foreach (KeyValuePair<uint, Post> post in Program.globalPosts.OrderBy(post => post.Value.PostRating))
+                // COMMENTED OUT BECAUSE SUBREDDIT_SELECTEDVALUECHANGED EVENT
+                // IS TRIGGERED FROM ABOVE CODE, CAUSING PANEL1 TO BE POPULATED TWICE
+                /*foreach (KeyValuePair<uint, Post> post in Program.globalPosts.OrderBy(post => post.Value.PostRating))
                 {
                     // Creates display object
                     DisplayPost newPost = new DisplayPost(post.Key);
@@ -128,7 +130,7 @@ namespace KozinskiAlamidiAssignment4
 
                     // Adds display object to main panel
                     panel1.Controls.Add(newPost);
-                }
+                }*/
             }
             catch (Exception exception)
             {
@@ -789,7 +791,6 @@ namespace KozinskiAlamidiAssignment4
                 var post = Program.globalPosts[postId];
 
                 this.label1 = new System.Windows.Forms.Label();
-                this.label2 = new System.Windows.Forms.Label();
                 this.label3 = new System.Windows.Forms.Label();
                 this.label4 = new System.Windows.Forms.Label();
                 this.label5 = new System.Windows.Forms.Label();
@@ -815,27 +816,6 @@ namespace KozinskiAlamidiAssignment4
                 this.label1.Size = new System.Drawing.Size(45, 16);
                 this.label1.TabIndex = 2;
                 this.label1.Text = $"{post.Score}";
-                // 
-                // label2
-                // 
-                this.label2.AutoSize = true;
-                this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                this.label2.Location = new System.Drawing.Point(538, 12);
-                this.label2.Name = "label2";
-                this.label2.Size = new System.Drawing.Size(169, 24);
-                this.label2.TabIndex = 3;
-                // TIME MEASUREMENT:
-                var timeSincePost = DateTime.Now - post.DateString;
-                if (timeSincePost < new TimeSpan(1, 0, 0))
-                    label2.Text = $"{timeSincePost.Minutes} minutes ago";
-                else if (timeSincePost < new TimeSpan(1, 0, 0, 0))
-                    label2.Text = $"{timeSincePost.Hours} hours ago";
-                else if (timeSincePost < new TimeSpan(30, 0, 0, 0))
-                    label2.Text = $"{timeSincePost.Days} days ago";
-                else if (timeSincePost < new TimeSpan(365, 0, 0, 0))
-                    label2.Text = $"{timeSincePost.Days / 30} months ago";
-                else
-                    label2.Text = $"{timeSincePost.Days / 365} years ago";
 
                 // 
                 // label3
@@ -847,6 +827,18 @@ namespace KozinskiAlamidiAssignment4
                 this.label3.Size = new System.Drawing.Size(264, 24);
                 this.label3.TabIndex = 4;
                 this.label3.Text = $"| Posted by r/{Program.globalUsers[post.AuthorId].Name}";
+                // TIME MEASUREMENT:
+                var timeSincePost = DateTime.Now - post.DateString;
+                if (timeSincePost < new TimeSpan(1, 0, 0))
+                    label3.Text += $" {timeSincePost.Minutes} minutes ago";
+                else if (timeSincePost < new TimeSpan(1, 0, 0, 0))
+                    label3.Text += $" {timeSincePost.Hours} hours ago";
+                else if (timeSincePost < new TimeSpan(30, 0, 0, 0))
+                    label3.Text += $" {timeSincePost.Days} days ago";
+                else if (timeSincePost < new TimeSpan(365, 0, 0, 0))
+                    label3.Text += $" {timeSincePost.Days / 30} months ago";
+                else
+                    label3.Text += $" {timeSincePost.Days / 365} years ago";
                 // 
                 // label4
                 // 
@@ -916,7 +908,6 @@ namespace KozinskiAlamidiAssignment4
                 this.Controls.Add(this.label5);
                 this.Controls.Add(this.label4);
                 this.Controls.Add(this.label3);
-                this.Controls.Add(this.label2);
                 this.Controls.Add(this.label1);
                 this.Controls.Add(this.pictureBox2);
                 this.Controls.Add(this.pictureBox1);
@@ -946,7 +937,7 @@ namespace KozinskiAlamidiAssignment4
             {
                 DisplayPost newPost = sender as DisplayPost;
                 Form2 viewPost = new Form2(newPost.PostId);
-                viewPost.Show();
+                viewPost.ShowDialog();
             
             }
 
@@ -1051,7 +1042,6 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.PictureBox pictureBox1;
             private System.Windows.Forms.PictureBox pictureBox2;
             private System.Windows.Forms.Label label1;
-            private System.Windows.Forms.Label label2;
             private System.Windows.Forms.Label label3;
             private System.Windows.Forms.Label label4;
             private System.Windows.Forms.Label label5;
@@ -1124,12 +1114,5 @@ namespace KozinskiAlamidiAssignment4
 
         }
 
-        private void addPostButton_Click(object sender, EventArgs e)
-        {
-            //var chosenSubreddit = subredditSelection.SelectedItem as Subreddit;
-            //var form4Instance = new Form4(chosenSubreddit.Id);
-            //form4Instance.ShowDialog();
-
-        }
     }
 }

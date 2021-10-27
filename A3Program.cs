@@ -642,7 +642,7 @@ namespace KozinskiAlamidiAssignment4
             Content = newContent;
             parentID = newParentID;
             UpVotes = 1;
-            DownVotes = 1;
+            DownVotes = 0;
             timeStamp = DateTime.Now;
             commentReplies = new SortedDictionary<uint, Comment>();
             Indentation = indentLevel;

@@ -108,7 +108,7 @@ namespace KozinskiAlamidiAssignment4
             // DisplayCommentContainer
             // 
             this.DisplayCommentContainer.AutoScroll = true;
-            this.DisplayCommentContainer.Location = new System.Drawing.Point(45, 191);
+            this.DisplayCommentContainer.Location = new System.Drawing.Point(45, 378);
             this.DisplayCommentContainer.Margin = new System.Windows.Forms.Padding(2);
             this.DisplayCommentContainer.Name = "DisplayCommentContainer";
             this.DisplayCommentContainer.Size = new System.Drawing.Size(499, 244);
@@ -154,7 +154,7 @@ namespace KozinskiAlamidiAssignment4
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.ClientSize = new System.Drawing.Size(586, 449);
+            this.ClientSize = new System.Drawing.Size(586, 633);
             this.Controls.Add(this.DisplayCommentContainer);
             this.Controls.Add(this.DisplayPostCommentCount);
             this.Controls.Add(this.pictureBox3);
@@ -178,7 +178,7 @@ namespace KozinskiAlamidiAssignment4
         }
 
         #endregion
-
+        private System.Windows.Forms.Panel DisplayCommentBox;
         private System.Windows.Forms.PictureBox DisplayPostUpvoteButton;
         private System.Windows.Forms.Label DisplayPostScore;
         private System.Windows.Forms.PictureBox DisplayPostDownvoteButton;
