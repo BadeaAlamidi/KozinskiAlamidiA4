@@ -816,6 +816,8 @@ namespace KozinskiAlamidiAssignment4
                     //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
                     //this.Height += 125;
                     //this.Controls.Add(newReplyBox);
+                    newReplyBox.Location = new Point(Location.X, Location.Y + 125);
+                    newReplyBox.Height = 125;
                     ctrls.Add(newReplyBox);
                     ctrls.SetChildIndex(newReplyBox, ctrls.IndexOf(this) + 1);
 
@@ -823,7 +825,10 @@ namespace KozinskiAlamidiAssignment4
                     for (int i = index + 1; i < ctrls.Count; i++)
                     {
                         if (ctrls[i] is DisplayComment)
+                        {
                             ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y + 125);
+                            //MessageBox.Show("index is " + i.ToString() + ". y is " + ctrls[i].Location.Y.ToString());
+                        }
                     }
                 }
                 else
@@ -1031,7 +1036,8 @@ namespace KozinskiAlamidiAssignment4
                 var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, Program.activeUser.Id, this.comment.Indentation + 1);
                 this.comment.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
                 DisplayComment newDisplayComment = new DisplayComment(replyBoxResult);
-                newDisplayComment.Location = Location;
+                newDisplayComment.Location = new Point(Convert.ToInt32(replyBoxResult.Indentation * 40), Location.Y);
+                newDisplayComment.Height = 125;
                 ctrls.Add(newDisplayComment);
                 ctrls.SetChildIndex(newDisplayComment, ctrls.IndexOf(this));
                 ctrls.Remove(this);
