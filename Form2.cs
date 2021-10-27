@@ -13,6 +13,7 @@ namespace KozinskiAlamidiAssignment4
     public partial class Form2 : Form
     {
         private uint postID;
+        private uint totalComments = 0;
 
         private int offsetXComment = 0;
         private int offsetYComment = 0;
@@ -22,6 +23,12 @@ namespace KozinskiAlamidiAssignment4
         {
             get { return postID; }
             set { postID = value; }
+        }
+
+        public uint TotalComments
+        {
+            get { return totalComments; }
+            set { totalComments = value; }
         }
 
         public int OffsetXComment
@@ -49,6 +56,21 @@ namespace KozinskiAlamidiAssignment4
         // Constructor for a particular post
         public Form2(uint newPostID)
         {
+            PostID = newPostID;
+
+            // Counts total comments
+            TotalComments = (uint)Program.globalPosts[PostID].postComments.Count();
+            Action<Comment> traverse = null;
+            traverse = (Comment currentComment) => 
+            {
+                TotalComments += (uint)currentComment.commentReplies.Count();
+                foreach (Comment reply in currentComment.commentReplies.Values)
+                    traverse(reply);
+            };
+            foreach (Comment comment in Program.globalPosts[PostID].postComments.Values)
+                traverse(comment);
+
+            // Builds form
             InitializeComponent(newPostID);
         }
 
@@ -65,11 +87,9 @@ namespace KozinskiAlamidiAssignment4
         private void InitializeComponent(uint postID)
         {
             // VARIABLES
-            PostID = postID;
             Post post = Program.globalPosts[postID];
             string postTitleText = post.Title;
             string postContentText = post.PostContent;
-            string commentCountText = post.postComments.Count.ToString();
             string subText = Program.globalSubreddits[post.subHomeId].Name;
             string authorText = Program.globalUsers[post.AuthorId].Name;
             string timespanText = "";
@@ -190,7 +210,7 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostCommentCount.Name = "DisplayPostCommentCount";
             this.DisplayPostCommentCount.Size = new System.Drawing.Size(205, 17);
             this.DisplayPostCommentCount.TabIndex = 8;
-            this.DisplayPostCommentCount.Text = $"{commentCountText} Comments";
+            this.DisplayPostCommentCount.Text = $"{TotalComments} Comments";
             //
             // DisplayCommentBox
             //
@@ -945,7 +965,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // DisplayReplyContent
                 // 
-                this.DisplayReplyContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+                this.DisplayReplyContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
                 this.DisplayReplyContent.BorderStyle = BorderStyle.None;
                 this.DisplayReplyContent.ForeColor = System.Drawing.Color.DarkGray;
                 this.DisplayReplyContent.Location = new System.Drawing.Point(0, 0);
@@ -988,6 +1008,8 @@ namespace KozinskiAlamidiAssignment4
                 this.Name = "Reply to Comment";
                 this.DisplayReplyButton.Click += new System.EventHandler(this.ReplyButton_Click);
                 this.DisplayCancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+                this.DisplayReplyContent.GotFocus += new System.EventHandler(this.ReplyContent_GotFocus);
+                this.DisplayReplyContent.LostFocus += new System.EventHandler(this.ReplyContent_LostFocus);
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayReplyButton)).EndInit();
                 ((System.ComponentModel.ISupportInitialize)(this.DisplayCancelButton)).EndInit();
                 this.ResumeLayout(false);
@@ -1025,6 +1047,27 @@ namespace KozinskiAlamidiAssignment4
                 Active = false;
             }
 
+            public void ReplyContent_GotFocus(object sender, EventArgs e)
+            {
+                RichTextBox replyBox = this.DisplayReplyContent;
+
+                if (replyBox.Text.CompareTo("What are your thoughts?") == 0)
+                {
+                    replyBox.Text = "";
+                    replyBox.ForeColor = System.Drawing.Color.Black;
+                }
+            }
+
+            public void ReplyContent_LostFocus(object sender, EventArgs e)
+            {
+                RichTextBox replyBox = this.DisplayReplyContent;
+
+                if (replyBox.Text.CompareTo("") == 0)
+                {
+                    replyBox.ForeColor = System.Drawing.Color.DarkGray;
+                    replyBox.Text = "What are your thoughts?";
+                }
+            }
 
             #endregion
 
