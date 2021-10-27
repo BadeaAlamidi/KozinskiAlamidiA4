@@ -1090,7 +1090,7 @@ namespace KozinskiAlamidiAssignment4
             {
                 Program.activeUser = null;
                 loginButton.BackColor = Color.White;
-                loginButton.Text = "log-in";
+                loginButton.Text = "Log in";
             }
             else
             {
@@ -1099,7 +1099,7 @@ namespace KozinskiAlamidiAssignment4
                 // check for successful authentication
                 if (Program.activeUser is User) {
                     loginButton.BackColor = Color.RoyalBlue;
-                    loginButton.Text = $"{Program.activeUser.Name} ( log-out )";
+                    loginButton.Text = $"{Program.activeUser.Name} [{Program.activeUser.PostScore + Program.activeUser.CommentScore}] ( Log out )";
                 }
 
             }
