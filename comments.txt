@@ -20,6 +20,4 @@
 1114	1111	Wait, who are you?	9231	12	11	2019	9	11	12	13	14	1	0	0
 5132	5555	The symmetry here is simply excellent. Well done!	1999	10	1	2019	9	13	14	9	55	0	0	0
 1993	4321	This	3991	19	5	2019	9	15	18	8	18	0	0	0
-
-4216	3321	1st level comment	1912	1	0	2021	10	27	14	37	34	0	0	0
-2641	3321	program-made reply to 1st level comment	4216	1	0	2021	10	28	0	42	33	0	0	0
+4996	3321	top level comment	1912	1	0	2021	10	28	16	24	53	0	0	0

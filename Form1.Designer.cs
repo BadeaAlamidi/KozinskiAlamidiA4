@@ -40,7 +40,7 @@ namespace KozinskiAlamidiAssignment4
             // 
             // systemOutput
             // 
-            this.systemOutput.Location = new System.Drawing.Point(12, 939);
+            this.systemOutput.Location = new System.Drawing.Point(12, 671);
             this.systemOutput.Name = "systemOutput";
             this.systemOutput.ReadOnly = true;
             this.systemOutput.Size = new System.Drawing.Size(1072, 66);
@@ -83,7 +83,7 @@ namespace KozinskiAlamidiAssignment4
             this.panel1.AutoScroll = true;
             this.panel1.Location = new System.Drawing.Point(12, 69);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1354, 852);
+            this.panel1.Size = new System.Drawing.Size(1354, 596);
             this.panel1.TabIndex = 26;
             // 
             // textBox1

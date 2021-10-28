@@ -21,7 +21,7 @@ namespace KozinskiAlamidiAssignment4
         private int offsetYCommentContainer = 0;
 
         //private SortedList<uint, uint> PostsToWrite;
-        private SortedSet<Comment> CommentsToWrite;
+        private List<Comment> CommentsToWrite;
 
         public uint PostID
         {
@@ -62,7 +62,7 @@ namespace KozinskiAlamidiAssignment4
         {
             PostID = newPostID;
             //PostsToWrite = new SortedList<uint, uint>();
-            CommentsToWrite = new SortedSet<Comment>();
+            CommentsToWrite = new List<Comment>();
             // Counts total comments
             TotalComments = (uint)Program.globalPosts[PostID].postComments.Count();
             Action<Comment> traverse = null;
@@ -1062,6 +1062,7 @@ namespace KozinskiAlamidiAssignment4
                 set { active = value; }
             }
 
+            private bool RTFGainedFocus;
             private uint commentID;
             private Comment comment;
 
@@ -1074,6 +1075,8 @@ namespace KozinskiAlamidiAssignment4
                 
                 commentID = newComment.Id;
                 comment = newComment;
+
+                RTFGainedFocus = false;
 
                 form2Instance = (Form2)Application.OpenForms["View Post"];
                 commentWidth = form2Instance.DisplayCommentContainer.Width
@@ -1169,7 +1172,7 @@ namespace KozinskiAlamidiAssignment4
             {
                 Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
                 ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
-                if (DisplayReplyContent.Text == "") { MessageBox.Show("Your comment must have content.");  return; }
+                if (DisplayReplyContent.Text == "" || RTFGainedFocus == false) { MessageBox.Show("Your comment must have content.");  return; }
                 var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, comment.Id, this.comment.Indentation + 1);
                 form2Instance.CommentsToWrite.Add(replyBoxResult);
                 this.comment.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
@@ -1203,6 +1206,8 @@ namespace KozinskiAlamidiAssignment4
             {
                 RichTextBox replyBox = this.DisplayReplyContent;
 
+                RTFGainedFocus = true;
+
                 if (replyBox.Text.CompareTo("What are your thoughts?") == 0)
                 {
                     replyBox.Text = "";
@@ -1214,8 +1219,10 @@ namespace KozinskiAlamidiAssignment4
             {
                 RichTextBox replyBox = this.DisplayReplyContent;
 
+
                 if (replyBox.Text.CompareTo("") == 0)
                 {
+                    RTFGainedFocus = false;
                     replyBox.ForeColor = System.Drawing.Color.DarkGray;
                     replyBox.Text = "What are your thoughts?";
                 }

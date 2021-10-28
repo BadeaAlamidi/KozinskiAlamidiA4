@@ -1,15 +1,16 @@
-﻿/* Assignment 3
+﻿/* Assignment 4
  * CSCI 473 / 504
  * 
- * October 7, 2021
+ * October 28, 2021
  * 
  * Badea Alamidi, Z1882808
  * Katelyn Kozinski, Z167824
  * 
  * This program expands on our Reddit emulator, using a graphical interface to
- * query the system for posts from a specific date; lowest, highest, and average
- * post scores by subreddit and user; award counts for each subreddit; subreddit
- * activity for each user; and posts that are above or below a certain score threshold.
+ * display posts and comments in a fashion that is more similar to the website Reddit.
+ * the user is able to browse a front page with a search functionality, go to a specific
+ * post and reply to it or its many comments (only if logged in). changes made to the program's
+ * memory are written back to the datafiles comments.txt and posts.txt
  */
 
 using System;
@@ -166,32 +167,6 @@ namespace KozinskiAlamidiAssignment4
             catch (Exception e) { throw new Exception(e.Message); }
         }
 
-        // Not needed for this iteration of the program (no sign up functionality included; only log in)
-        // Alternate constructor (for creating a new user)
-        // Enforces name format and uniqueness
-        /*
-        public User(string newName)
-        {
-            // Rejects input name if it begins or ends with space characters
-            if (Char.IsWhiteSpace(newName, 0) || Char.IsWhiteSpace(newName, newName.Length - 1))
-                throw new ArgumentException("Error: Usernames cannot begin or end with space characters. Please try again: ");
-
-            // Rejects input name if it is < 5 or > 21 characters
-            else if (newName.Length < 5 || newName.Length > 21)
-                throw new ArgumentException("Error: Usernames must contain between 5 and 21 characters. Please try again: ");
-
-            id = RedditUtilities.GenerateUniqueId();
-            name = newName;
-            PostScore = 0;
-            CommentScore = 0;
-
-            // Attempts to add user to global collection
-            // Generates an ArgumentException if user is already in the collection
-            try { Program.globalUsers.Add(Id, this); }
-            catch (ArgumentException) { throw new ArgumentException("Error: That username is taken. Please try another: "); }
-            catch (Exception e) { throw new Exception(e.Message); }
-        }
-        */
 
         // Defines User object comparison method
         // Required to implement IComparable interface
@@ -332,26 +307,6 @@ namespace KozinskiAlamidiAssignment4
             catch (Exception e) { throw new Exception(e.Message); }
         }
 
-        // constructor made for user-created subreddits
-        // THE USER DOES NOT HAVE THE OPTION OF CREATIN THE SUBREDDITS AS OF ASSIGNMENTS 1 & 2
-/*        public Subreddit(string NameParam)
-        {
-            // this is assigning to the public property which already checks for valid names
-            try { Name = NameParam; }
-            catch (ArgumentException e) { throw new ArgumentException(e.Message); }
-
-            id = RedditUtilities.GenerateUniqueId();
-            members = 0;
-            active = 0;
-            subPostIDs = new SortedSet<uint>();
-
-            // Attempts to add subreddit to global collection
-            // Generates an ArgumentException if subreddit is already in the collection
-            try { Program.globalSubreddits.Add(Id, this); }
-            catch (ArgumentException) { throw new ArgumentException("Error: That subreddit already exists."); }
-            catch (Exception e) { throw new Exception(e.Message); }
-        }
-*/
         public int CompareTo(Object otherObject)
         {
             if (otherObject == null)
@@ -1486,7 +1441,7 @@ namespace KozinskiAlamidiAssignment4
             }
 
             if (returnedComment == null)
-                throw new Exception("Error: A parent comment could not be found");
+                throw new Exception($"Error: A parent comment with id of {potentialParentID} could not be found");
             else
                 return returnedComment;
         }

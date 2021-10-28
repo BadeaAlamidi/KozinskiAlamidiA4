@@ -22,22 +22,31 @@ namespace KozinskiAlamidiAssignment4
      * Form1()                      Generic default constructor
      * 
      * Methods:
-     * PrintChildComments           used to populate the comment listbox with nested comments
+     * RefreshPanel1                triggers the subredditValue_changed event 
+     * 
      * Event Methods:
      * Form1_Load                   triggers upon the windows form startup. performs necessary
      *                               - initializtion steps such as populating Program.global*
      *                               - dictionaries with data
+     * subredditSelection_ValueChanged  triggers when the user chooses a value from the subreddit combo box.
+     *                                  - performs a reset of panel1, which holds DisplayPost panels in order
+     *                                  - to filter the display posts in panel1 to only reflect the posts that 
+     *                                  - belong to that subreddit
+     * 
+     * loginButton_Click              instantiates an instance of form3 for prompting the user to set the
+     *                               - activeUser variable in the program
+     *                               
+     * textBox1_keyUp               triggers upon every keystroke while typing into the textbox textBox1
+     *                              - calls reset panel1 whenever triggered to show DisplayPosts in panel1 that
+     *                              - whose title contents contain a substring of the text entered into textBox1
+     *                              
+     * Form1_FormClosed             triggers when this form is closed to update the votes of all posts that have been
+     *                              voted at run time
+     * 
      *                               
      * subredditSelection_SelectedValueChanged  triggers when the user chooses/changes a selectable item
      *                                           - in the list subreddit listbox
-     * postSelection_SelectedValueChanged       same as above
-     * commentSelection_SelectedValueChanged    same as above
-     * userSelection_SelectedValueChanged       same as above
-     * 
-     * loginButton_MouseClick                   triggers when the user clicks on this component
-     * addReplyButton_Click                     same as above
-     * deleteReplyButton_Click                  same as above
-     * deletePostButton_Click                   same as above
+     *
      * 
      * Notes: NONE
      * 
@@ -52,49 +61,14 @@ namespace KozinskiAlamidiAssignment4
 
         /**
          * 
-         * Method Name: PrintChildComments
-         * 
-         * Iterates recursively through comments
-         * Only shows the first 5 levels of comments
-         * 
-         * Returns: void
-         * 
-         * Notes:
-         * Not to be used to print comments upon log-in
-         * Caps the number of comment levels printed
-         * 
-         */
-     /*   void PrintChildComments(Comment currentComment)
-        {
-            try
-            {
-                foreach (Comment commentReply in currentComment.commentReplies.Values.OrderBy(comment => comment).ThenBy(postComment => postComment.TimeStamp))
-                {
-                    if (commentReply.Indentation < 5)
-                        commentSelection.Items.Add(commentReply);
-                    else
-                        commentSelection.Items.Add(RedditUtilities.FinalIndentation(5) + "...\n");
-
-                    // Recursive call
-                    PrintChildComments(commentReply);
-                }
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            } 
-        }*/
-        /**
-         * 
          * Method Name: Form1_Load
          * 
          * Triggers when the application starts. This event is responsble for
-         * invoking the ReadFiles function in Program.cs and populating
+         * invoking the ReadFiles function in A3Program.cs and populating
          * the global subreddits with the corresponding data retained from
-         * ReadFiles. After this, the corresponding listboxes for posts,
-         * subreddits, and users are populated with the global dictionaries'
-         * data in the right order
+         * ReadFiles. After this, the panel 1 is populated with instances of
+         * displayposts showing the posts that fall under the value of this subreddit
+         * value. by extension, the subreddit value combo vbox is also populated
          * 
          * Returns: void
          * 
@@ -109,7 +83,7 @@ namespace KozinskiAlamidiAssignment4
             {
                 // Runs file reader and stores error log
                 List<string> fileReadErrors = RedditUtilities.ReadFiles();
-
+                WindowState = FormWindowState.Maximized;
                 // Prints error log to system output
                 foreach (string line in fileReadErrors)
                     systemOutput.AppendText(line + "\n");
@@ -118,18 +92,6 @@ namespace KozinskiAlamidiAssignment4
                 foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
                 subredditSelection.SelectedIndex = 0;
 
-                // Populates main panel with posts
-                // COMMENTED OUT BECAUSE SUBREDDIT_SELECTEDVALUECHANGED EVENT
-                // IS TRIGGERED FROM ABOVE CODE, CAUSING PANEL1 TO BE POPULATED TWICE
-                /*foreach (KeyValuePair<uint, Post> post in Program.globalPosts.OrderBy(post => post.Value.PostRating))
-                {
-                    // Creates display object
-                    DisplayPost newPost = new DisplayPost(post.Key);
-                    //newPost.Click += new EventHandler(this.DisplayPost_Click);
-
-                    // Adds display object to main panel
-                    panel1.Controls.Add(newPost);
-                }*/
             }
             catch (Exception exception)
             {
@@ -137,607 +99,53 @@ namespace KozinskiAlamidiAssignment4
                 systemOutput.AppendText(exception.Message);
             }
         }
+
+
         /**
+         * Class : DisplayPost
+         * this class is a panel with a certain design meant to reflect the information of a post
+         * that is associated with it. instances of this class are meant to be added to the controls of 
+         * panel1 of the containing class Form1.
          * 
-         * Method Name: subredditSelection_SelectedValueChanged
+         * Attributes:
+         * y_offset         an offset used to determine the ylocation of the next displayPost that will get added
+         * form1Instance    an instance of the containing class used to determine the size of this DisplayPost
+         * postId           the id of the post that this DisplayPost represents. used to retain the post's information 
+         *                  - such as the score and content
+         * totalComments    represents the number of comments under the post that this DisplayPost is representing
+         *                  - determined in the constructor
+         * Properties
+         * PostId           getter for postId
          * 
-         * the following triggers when 1. the highlighted item in the subreddit
-         * selection changes. and 2. when the currently selected item gets unselected
-         * the responsibilities of this event include:
-         *  - setting the member count and active member count labels
-         *    to the appropriate number depending on the chosen post
-         *  - listing the posts of the currently selected subreddit item
-         *    in the post listbox (abbreviated version)
+         * Controls properties:
+         * pictureBox1      contains the image of an upvote
+         * pictureBox2      contains the image of a downvote
+         * pictureBox3      contians the image of a comment
+         * label1           displays the Score of the post
+         * label3           // the poster of the post and the duration since the post was made
+         * label4           // the subreddit this post is under
+         * label5           // post title
+         * lebel6           // the number of comments under that post
          * 
-         * Returns: void
+         * Constructors:
+         * DisplayPost(postId)  refer to documentation box where this is declared
          * 
-         * Notes: NONE
+         * Events:
+         * DisplayPost_Click    shows an instance of form2 that gets instantiated with the id of the
+         *                      - post of that is repreented by this displayPost
+         * postUpvote_mouseEnter    changes the picture that is shown in DisplayPost to redOrange
+         * postUpvote_mouseLeave    // // back to the right color (dependent on whether the user has already voted on 
+         *                          - this DisplayPost or not
+         * postUpvote_Click         adjusts the value of this DisplayPost's score and changes the color of the upvote
+         *                          -both are dependent on whether the activeUser has already voted
+         * postDownvote_mouseEnter  similar to postUpvote_mouseEnter
+         * postUpvote_mouseLeave    similar to postUpvote_mouseLeave
+         * postDownvote_Click       similar to postUpvote_Click
+         * 
+         * 
+         * 
          * 
          */
-        // this triggers when the user chooses a subreddit
-       /* private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                memberCount.Text = "";
-                activeCount.Text = "";
-                if (subredditSelection.SelectedItem == null)
-                    return;
-
-                postSelection.Items.Clear();
-                commentSelection.Items.Clear();
-                systemOutput.Clear();
-                replyInput.Clear();
-
-                if ("all" == subredditSelection.SelectedItem.ToString())
-                {
-                    foreach (KeyValuePair<uint, Subreddit> subredditTuple in Program.globalSubreddits.OrderBy(subredditTuple => subredditTuple.Value))
-                    {
-                        // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                        foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => subredditTuple.Value.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
-                            postSelection.Items.Add(postTuple.Value);
-                    }
-                }
-                else
-                {
-                    if (!(subredditSelection.SelectedItem is Subreddit chosenSubreddit))
-                        return;
-
-                    // Displays abbreviated title if appropriate: postSelection.DisplayMember -> Post.AbbreviatedTitle property -> ToString("ListBox") (extra step required by assignment specification)
-                    foreach (KeyValuePair<uint, Post> postTuple in Program.globalPosts.Where(globalPostTuple => chosenSubreddit.subPostIDs.Contains(globalPostTuple.Key)).OrderBy(globalPostTuple => globalPostTuple.Value))
-                        postSelection.Items.Add(postTuple.Value);
-
-                    memberCount.Text = chosenSubreddit.Members.ToString();
-                    activeCount.Text = chosenSubreddit.Active.ToString();
-                }
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        } */
-        /**
-         * 
-         * Method Name: postSelection_SelectedValueChanged
-         * 
-         * the following triggers when 1. the highlighted item in the post
-         * selection changes. and 2. when the currently selected item gets unselected
-         * the responsibilities of this event include:
-         *  
-         *  - displaying the full contents of the chosen item in systemOutput
-         *  - showing the comments (abbreviated) of the selected item in the comment listbox
-         *    with appropriate indentation (up to 5 levels deep lest the comments won't be visible).
-         * 
-         * Returns: void
-         * 
-         * Notes: NONE
-         * 
-         */
-        /*private void postSelection_SelectedValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (postSelection.SelectedItem == null)
-                    return;
-
-                systemOutput.Clear();
-                systemOutput.AppendText(postSelection.SelectedItem.ToString());
-
-                commentSelection.Items.Clear();
-                replyInput.Clear();
-
-                Post chosenPost = postSelection.SelectedItem as Post;
-                if (chosenPost == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You did not select a valid post\n");
-                    return;
-                }
-
-                // Shows default message if post has no comments
-                if (chosenPost.postComments.Count == 0)
-                {
-                    commentSelection.Items.Add("\n---no comments associated with this post---\n");
-                    return;
-                }
-
-                // Populates comment box (comments are sorted by score, then by date/time posted)
-                // Starts recursion at the post level
-                // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                foreach (Comment postComment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
-                {
-                    commentSelection.Items.Add(postComment);
-                    PrintChildComments(postComment);
-                }
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: commentSelection_SelectedValueChanged
-         * 
-         * the following triggers when 1. the highlighted item in the comment
-         * selection changes. and 2. when the currently selected item gets unselected
-         * the responsibilities of this event include:
-         *  
-         *  - displaying the full contents of the chosen comment in systemOutput
-         * 
-         * Returns: void
-         * 
-         * Notes: NONE
-         * 
-         */
-       /* private void commentSelection_SelectedValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (commentSelection.SelectedItem == null)
-                    return;
-
-                systemOutput.Clear();
-                systemOutput.AppendText(commentSelection.SelectedItem.ToString());
-
-                replyInput.Clear();
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: userSelection_SelectedValueChanged
-         * 
-         * the following triggers when 1. the highlighted item in the comment
-         * selection changes. and 2. when the currently selected item gets unselected
-         * the responsibilities of this event include:
-         *  
-         *  - switching the text of the log-in button back to Log-in should the user
-         *    decide to log into another account after failing to log-in to their original choice
-         *  - clearing all of the listboxes except for itself as a subtle message to the user to
-         *    indicate that a new log-in under a differnt account could have different privilages
-         *  - prompt the user to enter a password for the chosen username in systemOutput
-         *  
-         * 
-         * Returns: void
-         * 
-         * Notes: NONE
-         * 
-         */
-     /*   private void userSelection_SelectedValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                // reset the text of the log-in button in case there was a previous failed attempt at entering the password
-                loginButton.Text = "Log-in";
-
-                // Safety check
-                if (!(userSelection.SelectedItem is User chosenUser))
-                    return;
-
-                // Clears all form fields
-
-                subredditSelection.SelectedItem = null;
-                postSelection.SelectedItem = null;
-                commentSelection.SelectedItem = null;
-
-                postSelection.Items.Clear();
-                commentSelection.Items.Clear();
-
-                systemOutput.Clear();
-                replyInput.Clear();
-
-                if (Program.activeUser == null || Program.activeUser != chosenUser)
-                    systemOutput.AppendText($"Enter a password to log in as the username: {chosenUser.Name}\n");
-
-                if (Program.activeUser == chosenUser)
-                    systemOutput.AppendText($"You are logged in as: {chosenUser.Name}\n");
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: loginButton_MouseClick
-         * 
-         * The following triggers when the user clicks on this component( represented by a button: Log-in/Retry Password)
-         * 
-         * This event includes the following responsibilities
-         *  - inform the user about whether their log-in attempt was done correctly/successful/unsuccessful
-         *  - authenticate the user by turning their string input into a hashcode that gets further translated into hex,
-         *    which is compared against the highlighted user's hex'd hashcode string to test if the two values are the same
-         *  - upon successful log-in, displaying the authenticated user's posts and comments (without indentation)
-         * 
-         * Returns: void
-         * 
-         * Notes: NONE
-         * 
-         */
-
-     /*   private void loginButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                if (userSelection.SelectedIndex == -1) { systemOutput.AppendText("You haven't specified a username!\n"); return; }
-                if (passwordInput.Text == "") { systemOutput.AppendText("Please enter a password. Be sure to choose your intended username\n"); return; }
-
-                // authentication happens here:
-                User chosenUser = userSelection.SelectedItem as User;
-                if (passwordInput.Text.GetHashCode().ToString("X") == chosenUser.PasswordHash)
-                {
-                    // reset the text of the log-in button in case there was a previous failed attempt at entering the password
-                    loginButton.Text = "Log-in";
-
-                    systemOutput.Clear();
-                    systemOutput.AppendText($"Authentication successful! Welcome, {chosenUser.Name}\n");
-                    Program.activeUser = chosenUser;
-
-                    subredditSelection.SelectedItem = null;
-                    postSelection.Items.Clear();
-                    commentSelection.Items.Clear();
-
-                    List<Comment> comments = new List<Comment>();
-
-                    // Adds user's own posts and comments to respective ListBoxes
-                    // Sorts posts by subreddit name, then by post rating
-                    foreach (Post post in Program.globalPosts.Values.OrderBy(post => Program.globalSubreddits[post.subHomeId]).ThenBy(post => post))
-                    {
-                        // Adds posts to ListBox
-                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                        if (post.AuthorId == Program.activeUser.Id)
-                            postSelection.Items.Add(post);
-
-                        // Adds comments to list (to be sorted and printed later)
-                        // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                        // Starts recursion at the post level
-                        foreach (Comment userComment in post.postComments.Values)
-                        {
-                            if (userComment.AuthorID == Program.activeUser.Id)
-                                comments.Add(userComment);
-
-                            // Recursive call
-                            StoreChildComments(userComment);
-                        }
-                    }*/
-                    /**
-                     * Method name: StoreChildComments
-                     * 
-                     * this method recursively searches comment trees, with posts serving as the root, in order to
-                     * find the comments that belong to the currently authenticated user
-                     * 
-                     * returns void
-                     * 
-                     *
-                     */
-                    // Iterates recursively through comments
-        /*            void StoreChildComments(Comment currentComment)
-                    {
-                        foreach (Comment userComment in currentComment.commentReplies.Values)
-                        {
-                            if (userComment.AuthorID == Program.activeUser.Id)
-                                comments.Add(userComment);
-
-                            // Recursive call
-                            StoreChildComments(userComment);
-                        }
-                    }
-
-                    // Sorts and prints comments (without indentation) to ListBox
-                    comments.Sort();
-                    foreach (Comment c in comments)
-                    {
-                        uint originalLevel = c.Indentation;
-                        c.Indentation = 0;
-                        commentSelection.Items.Add(c);
-                        c.Indentation = originalLevel;
-                    }
-
-                    systemOutput.AppendText($"Displaying all posts and comments made by user \'{chosenUser.Name}\'\n");
-                }
-                else
-                {
-                    systemOutput.AppendText("Authentication failed\n");
-                    loginButton.Text = "Retry Password";
-                }
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: addReplyButton_Click
-         * 
-         * The following triggers when the user clicks on this component( represented by a button: Add Reply)
-         * 
-         * This event includes the following responsibilities
-         *  - inform the user about whether their reply attempt was appropriate: disallow empty replies, disallow replying without
-         *    logging in, disallow replies with no chosen post, disallow average users to comment on locked posts, disallow users from
-         *    using foul language
-         *  - replying to posts when only a post is chosen
-         *  - replying to a comment when both a post and a comment are chosen
-         *  - displaying the newly added comment by refreshing the comment listbox
-         * 
-         * Returns: void
-         * 
-         * Notes: NONE
-         * 
-         */
-    /*    private void addReplyButton_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                if (replyInput.Text == "")
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You may not post an empty comment\n");
-                    return;
-                }
-                if (Program.activeUser == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("Log-in is required to add posts and comments\n");
-                    return;
-                }
-                // the following check is for when neither a post nor a comment is chosen
-                if (postSelection.SelectedIndex == -1)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("Choose a post to reply to a post, or choose a post + comment to reply to a comment.\n");
-                    return;
-                }
-                Post chosenPost = postSelection.SelectedItem as Post;
-                if (chosenPost == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You have not selected a valid post\n");
-                    return;
-                }
-                if (chosenPost.Locked == true)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("Post is marked as \'Locked\' -- replies are disabled.\n");
-                    return;
-                }
-                // case for when posting a reply to a post
-                if (commentSelection.SelectedIndex == -1)
-                {   
-                    try
-                    {
-                        Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenPost.Id, 0);
-                        chosenPost.postComments.Add(newComment.Id, newComment);
-                    }
-                    catch (FoulLanguageException) {
-                        systemOutput.Clear();
-                        systemOutput.AppendText("Please refrain from using foul language and try again\n");
-                        MessageBox.Show("Please refrain from using foul language and try again\n");
-                        return;
-                    }
-                }
-                // this will trigger if a comment is selected (the commentSelection.SelectedIndex is not -1)
-                else
-                {
-                    Comment chosenComment = commentSelection.SelectedItem as Comment;
-                    if (chosenComment == null)
-                    {
-                        systemOutput.Clear();
-                        systemOutput.AppendText("You have not selected a valid comment\n");
-                        return;
-                    }
-                    try
-                    {
-                        Comment newComment = new Comment(replyInput.Text, Program.activeUser.Id, chosenComment.Id, chosenComment.Indentation + 1);
-                        chosenPost.postComments.Add(newComment.Id, newComment);
-                    }
-                    catch (FoulLanguageException)
-                    {
-                        MessageBox.Show("Please refrain from using foul language and try again\n");
-                        systemOutput.AppendText("Please refrain from using foul language and try again\n");
-                        return;
-                    }
-                }
-                // refreshes comments printed to comment ListBox
-                commentSelection.Items.Clear();
-                foreach (Comment comment in chosenPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
-                {
-                    commentSelection.Items.Add(comment);
-                    PrintChildComments(comment);
-                }
-                replyInput.Clear();
-                systemOutput.Clear();
-                systemOutput.AppendText("Comment successfully added\n");
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: deleteReplyButton_Click
-         * 
-         * The following triggers when the user clicks on this component( represented by a button: Delete Comment)
-         * 
-         * This event includes the following responsibilities
-         *  - inform the user about whether their delete  attempt was appropriate: disallow deletion without authentication,
-         *    disallow deletions when the user is not an administrator or if said comment does not belong to the user
-         *  - removing the selected comment if the conditions above permit so
-         *  - displaying the removal by refreshing the comment listbox
-         * Returns: void
-         * 
-         * Notes: the assignemnt spec does not indicate whether the deleted content is to be deleted completely
-         *        or "cleared out". this assignment assumes the former approach
-         * 
-         */
-    /*    private void deleteReplyButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Program.activeUser == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("Log-in is required to delete posts and comments\n");
-                    return;
-                }
-
-                if (postSelection.SelectedItem == null || commentSelection.SelectedItem == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You must select a post and one of its comments first\n");
-                    return;
-                }
-
-                Comment selectedComment = commentSelection.SelectedItem as Comment;
-                if (selectedComment == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You have not selected a valid comment to delete\n");
-                    return;
-                }
-
-                Post selectedPost = postSelection.SelectedItem as Post;
-                if (selectedPost == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You have not selected a valid post\n");
-                    return;
-                }
-
-                // Removes comment
-                if (selectedComment.AuthorID == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
-                {
-                    // Removes comment from parent's comment collection
-                    if (Program.globalPosts.ContainsKey(selectedComment.ParentID))
-                        Program.globalPosts[selectedComment.ParentID].postComments.Remove(selectedComment.Id);
-                    else
-                    {
-                        Comment parentComment = RedditUtilities.CommentReplyAdderExtension(selectedComment.ParentID);
-                        parentComment.commentReplies.Remove(selectedComment.Id);
-                    }
-
-                    // Refreshes post comments
-                    // Displays abbreviated content if appropriate: commentSelection.DisplayMember -> Comment.AbbreviatedContent property -> ToString("ListBox") (extra step required by assignment specification)
-                    commentSelection.Items.Clear();
-                    foreach (Comment postComment in selectedPost.postComments.Values.OrderBy(postComment => postComment).ThenBy(postComment => postComment.TimeStamp))
-                    {
-                        commentSelection.Items.Add(postComment);
-                        PrintChildComments(postComment);
-                    }
-                }
-                else
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You cannot delete other users' comments\n");
-                    return;
-                }
-
-                // Removes object from comment ListBox
-                commentSelection.Items.Remove(commentSelection.SelectedItem);
-
-                // Prints success message
-                systemOutput.Clear();
-                systemOutput.AppendText("Comment successfully deleted\n");
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
-        /**
-         * 
-         * Method Name: deletePostButton_Click
-         * 
-         * The following triggers when the user clicks on this component( represented by a button: Delete Post)
-         * 
-         * This event includes the following responsibilities
-         *  - inform the user about whether their delete attempt was appropriate: disallow deletion without authentication,
-         *    disallow deletions when the user is not an administrator or if said post does not belong to the user
-         *  - removing the selected post if the conditions above permit so
-         *  - displaying the removal by clearing the comment box
-         *  - printing feedback to the user on system output
-         * Returns: void
-         * 
-         * Notes: like comment deletion, the functionality of this button completely deletes the chosen post
-         * 
-         */
-    /*    private void deletePostButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Program.activeUser == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("Log-in is required to delete posts and comments\n");
-                    return;
-                }
-
-                if (postSelection.SelectedItem == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You must select a post first\n");
-                    return;
-                }
-
-                Post selectedPost = postSelection.SelectedItem as Post;
-                if (selectedPost == null)
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You did not select a valid post\n");
-                    return;
-                }
-
-                if (selectedPost.AuthorId == Program.activeUser.Id || Program.activeUser.Type == User.UserType.Admin)
-                {
-                    if (!Program.globalPosts.ContainsKey(selectedPost.Id))
-                    {
-                        systemOutput.Clear();
-                        systemOutput.AppendText("Post with id " + selectedPost.Id + " was not found\n");
-                        return;
-                    }
-
-                    // Clears comment ListBox
-                    commentSelection.Items.Clear();
-
-                    // Removes post from home subreddit
-                    Program.globalSubreddits[selectedPost.subHomeId].subPostIDs.Remove(selectedPost.Id);
-
-                    // Removes post from global post collection
-                    Program.globalPosts.Remove(selectedPost.Id);
-                }
-                else
-                {
-                    systemOutput.Clear();
-                    systemOutput.AppendText("You cannot delete other users' posts\n");
-                    return;
-                }
-
-                // Removes object from post ListBox
-                postSelection.Items.Remove(postSelection.SelectedItem);
-
-                // Prints success message
-                systemOutput.Clear();
-                systemOutput.AppendText("Post successfully deleted\n");
-            }
-            catch (Exception exception)
-            {
-                systemOutput.Clear();
-                systemOutput.AppendText(exception.Message);
-            }
-        }*/
         private class DisplayPost : Panel
         {
             public static int y_offset = 0;
@@ -941,6 +349,13 @@ namespace KozinskiAlamidiAssignment4
             // Events
             //
 
+            /**
+             * this event is triggered when a displayPost panel is clicked
+             * the responsiblity of this event is to instantiate an instance of form2
+             * with the corresponding id of this DisplayPost
+             * 
+             * 
+             */
             public void DisplayPost_Click(Object sender, EventArgs e)
             {
                 DisplayPost newPost = sender as DisplayPost;
@@ -949,12 +364,22 @@ namespace KozinskiAlamidiAssignment4
             }
 
             #region Post upvote/downvote button event handlers
-
+            /**
+             * triggered when mouse enters the upvote button
+             * responsible for changing the upvote picture to red
+             * 
+             */
             public void PostUpvote_MouseEnter(object sender, EventArgs e)
             {
                 this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
             }
-
+            /**
+             * triggered when mouse no longer hovers over the upvote button
+             * responsible for changing the picture of the upvote button, depending on whether the user
+             * is logged in:
+             * if the user is logged in, the image does not change, otherwise the image will turn back to
+             * the grey upvote counterpart
+             */
             public void PostUpvote_MouseLeave(object sender, EventArgs e)
             {
                 if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postId))
@@ -963,7 +388,15 @@ namespace KozinskiAlamidiAssignment4
                 // Else
                 this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
             }
-
+            /**
+             * 
+             * triggered when the user clicks on the upvote button
+             * -responsible for changing the amount of upvotes on the associated post with this displaylist
+             * -responsible for setting the upvote to be permenantly colored to red, unless clicked again, in which
+             *      case the upvote will be taken away from the post and the picture of the upvote will turn back to
+             *      grey
+             * -responsible for changing label1 score to reflect the new score of the post
+             */
             public void PostUpvote_Click(object sender, EventArgs e)
             {
                 if (Program.activeUser == null)
@@ -999,12 +432,22 @@ namespace KozinskiAlamidiAssignment4
                 }
                 label1.Text = $"{Program.globalPosts[postId].Score}";
             }
-
+            /**
+             * triggered when mouse enters the downvote button
+             * responsible for changing the downvote picture to blue
+             * 
+             */
             public void PostDownvote_MouseEnter(object sender, EventArgs e)
             {
                 this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
             }
-
+            /**
+             * triggered when mouse no longer hovers over the downvote button
+             * responsible for changing the picture of the downvote button, depending on whether the user
+             * is logged in:
+             * if the user is logged in, the image does not change, otherwise the image will turn back to
+             * the grey upvote counterpart
+             */
             public void PostDownvote_MouseLeave(object sender, EventArgs e)
             {
                 if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postId))
@@ -1013,7 +456,15 @@ namespace KozinskiAlamidiAssignment4
                 // Else
                 this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
             }
-
+            /**
+             * 
+             * triggered when the user clicks on the downvote button
+             * -responsible for changing the amount of upvotes on the associated post with this displaylist
+             * -responsible for setting the downvote to be permenantly colored to blue, unless clicked again, in which
+             *      case the downvote will be taken away from the post and the picture of the upvote will turn back to
+             *      grey
+             * -responsible for changing label1 score to reflect the new score of the post
+             */
             public void PostDownvote_Click(object sender, EventArgs e)
             {
                 if (Program.activeUser == null)
@@ -1066,7 +517,26 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.Label label6;
         }
 
-
+        /**
+         * 
+         * Method Name: subredditSelection_SelectedValueChanged
+         * 
+         * the following triggers when the highlighted item in the subreddit
+         * selection changes
+         * the responsibilities of this event include:
+         *  - changing the content of panel1 of form1 to show the DisplayPosts that 
+         *    fall under the subreddit value denoted by the current value of subredditSelection
+         *  - listing the posts of the currently selected subreddit item
+         *    in the post listbox (abbreviated version)
+         *  - resetting the static value of DisplayPost to 0
+         *  - if all subreddits are chosen, every subreddit in represented in panel1 with a displaypost
+         *    instance
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
         private void subredditSelection_SelectedValueChanged(object sender, EventArgs e)
         {
             Subreddit selectedSubreddit = subredditSelection.SelectedItem as Subreddit;
@@ -1090,6 +560,21 @@ namespace KozinskiAlamidiAssignment4
                 }
             }
         }
+        /**
+         * 
+         * Method Name: loginButton_Click
+         * 
+         * The following triggers when the user clicks on the login button in form1
+         * 
+         * This event includes the following responsibilities
+         *  - instantiate an instance of form3 if the activeUser is null. otherwise set the active user to 3
+         *  - refreshes the contents of panel 1
+         * 
+         * Returns: void
+         * 
+         * Notes: NONE
+         * 
+         */
 
         private void loginButton_Click(object sender, EventArgs e)
         {
@@ -1113,6 +598,14 @@ namespace KozinskiAlamidiAssignment4
             RefreshPanel1(sender, e);
         }
 
+        /**
+         * the follwing event triggers when a keystroke is on the keyboard is done
+         * 
+         * the responsibilites of this event include updating the displayposts in panel1 to 
+         * one's whose title contains the textbox1's contents
+         * 
+         * 
+         */
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
         {
             if (textBox1.Text == "") subredditSelection_SelectedValueChanged(sender, e);
@@ -1125,13 +618,25 @@ namespace KozinskiAlamidiAssignment4
                 }
             }
         }
-
+        /**
+         * 
+         * simple function as shorthand for invoking the subredditSelection_selectedValueChanged event
+         * with organization
+         */
         public static void RefreshPanel1(object sender, EventArgs e)
         {
             (Application.OpenForms["Form1"] as Form1).subredditSelection_SelectedValueChanged(sender, e);
 
         }
 
+        /**
+         * 
+         * this event is invoked when the program is terminated
+         * 
+         * this event is responsible for updating all of the posts and comments with 
+         * the new values of upvotes and downvotes in the their corresponding values
+         * 
+         */
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             /*var totalDictionary = new Dictionary<uint, int>();
