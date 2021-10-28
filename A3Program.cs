@@ -78,7 +78,7 @@ namespace KozinskiAlamidiAssignment4
         private int commentScore;
         private string[] moderatingSubs;
         public Dictionary<uint, int> PostVoteStatuses;
-        public Dictionary<uint, int> CommentVoteStatuses;
+        public Dictionary<Comment, int> CommentVoteStatuses;
 
         /*
         public Dictionary<uint, int> PostVoteStatuses
@@ -127,7 +127,7 @@ namespace KozinskiAlamidiAssignment4
             CommentScore = 0;
             ModeratingSubs = new string[0];
             PostVoteStatuses = new Dictionary<uint, int>();
-            CommentVoteStatuses = new Dictionary<uint, int>();
+            CommentVoteStatuses = new Dictionary<Comment, int>();
         }
 
         // Alternate constructor (for reading from a file)
@@ -155,7 +155,7 @@ namespace KozinskiAlamidiAssignment4
                 for (int i = 6; i < userData.Length; i++)
                     ModeratingSubs.Append(userData[i]);
                 PostVoteStatuses = new Dictionary<uint, int>();
-                CommentVoteStatuses = new Dictionary<uint, int>();
+                CommentVoteStatuses = new Dictionary<Comment, int>();
             }
             catch { throw new ArgumentException("Error: File input does not match format expected by [User] constructor"); }
 
@@ -858,7 +858,16 @@ namespace KozinskiAlamidiAssignment4
 
         // public setters and getters for post content and title
         public int Score => (int)upVotes - (int)downVotes;
-
+        public uint UpVotes
+        {
+            get { return upVotes; }
+            set { upVotes = value; }
+        }
+        public uint DownVotes
+        {
+            get { return downVotes; }
+            set { downVotes = value; }
+        }
         public bool Locked
         {
             get { return locked; }

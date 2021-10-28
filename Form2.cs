@@ -132,8 +132,13 @@ namespace KozinskiAlamidiAssignment4
             // 
             // DisplayUpvoteButton
             // 
+            if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(PostID))
+            {
+                this.DisplayPostUpvoteButton.Image = Program.activeUser.PostVoteStatuses[postID] == 1 ? Properties.Resources.upVote_red : Properties.Resources.upVote_grey;
+            }
+            else
+                this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
             this.DisplayPostUpvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
             this.DisplayPostUpvoteButton.Location = new System.Drawing.Point(11, 12);
             this.DisplayPostUpvoteButton.Name = "DisplayUpvoteButton";
             this.DisplayPostUpvoteButton.Size = new System.Drawing.Size(42, 23);
@@ -154,8 +159,12 @@ namespace KozinskiAlamidiAssignment4
             // 
             // DisplayDownvoteButton
             // 
-            this.DisplayPostDownvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+            if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(PostID))
+            {
+                this.DisplayPostDownvoteButton.Image = Program.activeUser.PostVoteStatuses[postID] == -1 ? Properties.Resources.downVote_blue : Properties.Resources.downVote_grey;
+            }
+            this.DisplayPostDownvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.DisplayPostDownvoteButton.Location = new System.Drawing.Point(11, 68);
             this.DisplayPostDownvoteButton.Name = "DisplayDownvoteButton";
             this.DisplayPostDownvoteButton.Size = new System.Drawing.Size(42, 24);
@@ -309,6 +318,7 @@ namespace KozinskiAlamidiAssignment4
 
         }
 
+
         private void SubmitButton_Click(object sender, EventArgs e)
         {
             RichTextBox DisplayCommentBoxControlRichTextBox = null;
@@ -319,7 +329,7 @@ namespace KozinskiAlamidiAssignment4
             }
             if (DisplayCommentBoxControlRichTextBox != null)
             {
-                if (DisplayCommentBoxControlRichTextBox.Text == "")
+                if (DisplayCommentBoxControlRichTextBox.Text.Trim() == "")
                     MessageBox.Show("Your Content is empty.");
                 else
                 {
@@ -387,6 +397,7 @@ namespace KozinskiAlamidiAssignment4
             if (!hasVoted)
             {
                 Program.activeUser.PostVoteStatuses.Add(postID, 1);
+                Program.globalPosts[postID].UpVotes += 1;
                 this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
             }
             else
@@ -394,15 +405,19 @@ namespace KozinskiAlamidiAssignment4
                 if (Program.activeUser.PostVoteStatuses[postID] < 1)
                 {
                     Program.activeUser.PostVoteStatuses[postID] = 1;
+                    Program.globalPosts[postID].DownVotes -= 1;
+                    Program.globalPosts[postID].UpVotes += 1;
                     this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
                     this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 }
                 else
                 {
+                    Program.globalPosts[postID].UpVotes -= 1;
                     Program.activeUser.PostVoteStatuses.Remove(postID);
                     this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                 }
             }
+            DisplayPostScore.Text = $"{Program.globalPosts[postID].Score}";
         }
         
         public void PostDownvote_MouseEnter(object sender, EventArgs e)
@@ -431,6 +446,7 @@ namespace KozinskiAlamidiAssignment4
 
             if (!hasVoted)
             {
+                Program.globalPosts[postID].DownVotes += 1;
                 Program.activeUser.PostVoteStatuses.Add(postID, -1);
                 this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
             }
@@ -438,16 +454,20 @@ namespace KozinskiAlamidiAssignment4
             {
                 if (Program.activeUser.PostVoteStatuses[postID] > -1)
                 {
+                    Program.globalPosts[postID].UpVotes -= 1;
+                    Program.globalPosts[postID].DownVotes += 1;
                     Program.activeUser.PostVoteStatuses[postID] = -1;
                     this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
                     this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                 }
                 else
                 {
+                    Program.globalPosts[postID].DownVotes -= 1;
                     Program.activeUser.PostVoteStatuses.Remove(postID);
                     this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 }
             }
+            DisplayPostScore.Text = $"{Program.globalPosts[postID].Score}";
         }
 
         #endregion
@@ -595,7 +615,8 @@ namespace KozinskiAlamidiAssignment4
                 {
                     DisplayComment newComment = new DisplayComment(postComment);
                     DisplayCommentContainer.Controls.Add(newComment);
-                    
+                    // THIS WAS ADDED TO FURTHER DEBUG WHY 1ST LEVEL COMMENTS CREATED FROM A PREVIOUS RUN TIME ARE INDENTED
+                    newComment.Location = new Point(0, newComment.Location.Y);
                     PrintChildComments(postComment);
                 }
 
@@ -715,8 +736,13 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // DisplayUpvoteButton
                 // 
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
+                    this.DisplayCommentUpvoteButton.Image = Program.activeUser.CommentVoteStatuses[comment] == 1?
+                        global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red:
+                        global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
+                else
+                    this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                 this.DisplayCommentUpvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-                this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                 this.DisplayCommentUpvoteButton.Location = new System.Drawing.Point(11, 12);
                 this.DisplayCommentUpvoteButton.Name = "DisplayCommentUpvoteButton";
                 this.DisplayCommentUpvoteButton.Size = new System.Drawing.Size(42, 23);
@@ -737,8 +763,13 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // DisplayDownvoteButton
                 // 
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
+                    this.DisplayCommentDownvoteButton.Image = Program.activeUser.CommentVoteStatuses[comment] == -1 ?
+                        global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue :
+                        global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
+                else
+                    this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 this.DisplayCommentDownvoteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-                this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                 this.DisplayCommentDownvoteButton.Location = new System.Drawing.Point(11, 68);
                 this.DisplayCommentDownvoteButton.Name = "DisplayCommentDownvoteButton";
                 this.DisplayCommentDownvoteButton.Size = new System.Drawing.Size(42, 24);
@@ -820,8 +851,8 @@ namespace KozinskiAlamidiAssignment4
 
             public void CommentUpvote_MouseLeave(object sender, EventArgs e)
             {
-                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(commentID))
-                    if (Program.activeUser.CommentVoteStatuses[commentID] == 1) return;
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
+                    if (Program.activeUser.CommentVoteStatuses[comment] == 1) return;
 
                 // Else
                 this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
@@ -835,27 +866,32 @@ namespace KozinskiAlamidiAssignment4
                     return;
                 }
 
-                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(commentID);
+                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(comment);
 
                 if (!hasVoted)
                 {
-                    Program.activeUser.CommentVoteStatuses.Add(commentID, 1);
+                    Program.activeUser.CommentVoteStatuses.Add(comment, 1);
+                    comment.UpVotes += 1;
                     this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
                 }
                 else
                 {
-                    if (Program.activeUser.CommentVoteStatuses[commentID] < 1)
+                    if (Program.activeUser.CommentVoteStatuses[comment] < 1)
                     {
-                        Program.activeUser.CommentVoteStatuses[commentID] = 1;
+                        Program.activeUser.CommentVoteStatuses[comment] = 1;
+                        comment.DownVotes -= 1;
+                        comment.UpVotes += 1;
                         this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
                         this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                     }
                     else
                     {
-                        Program.activeUser.CommentVoteStatuses.Remove(commentID);
+                        Program.activeUser.CommentVoteStatuses.Remove(comment);
+                        comment.UpVotes -= 1;
                         this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                     }
                 }
+                DisplayCommentScore.Text = $"{comment.Score}";
             }
 
             public void CommentDownvote_MouseEnter(object sender, EventArgs e)
@@ -865,8 +901,8 @@ namespace KozinskiAlamidiAssignment4
 
             public void CommentDownvote_MouseLeave(object sender, EventArgs e)
             {
-                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(commentID))
-                    if (Program.activeUser.CommentVoteStatuses[commentID] == -1) return;
+                if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
+                    if (Program.activeUser.CommentVoteStatuses[comment] == -1) return;
 
                 // Else
                 this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
@@ -880,24 +916,24 @@ namespace KozinskiAlamidiAssignment4
                     return;
                 }
 
-                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(commentID);
+                bool hasVoted = Program.activeUser.CommentVoteStatuses.ContainsKey(comment);
 
                 if (!hasVoted)
                 {
-                    Program.activeUser.CommentVoteStatuses.Add(commentID, -1);
+                    Program.activeUser.CommentVoteStatuses.Add(comment, -1);
                     this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
                 }
                 else
                 {
-                    if (Program.activeUser.CommentVoteStatuses[commentID] > -1)
+                    if (Program.activeUser.CommentVoteStatuses[comment] > -1)
                     {
-                        Program.activeUser.CommentVoteStatuses[commentID] = -1;
+                        Program.activeUser.CommentVoteStatuses[comment] = -1;
                         this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
                         this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                     }
                     else
                     {
-                        Program.activeUser.CommentVoteStatuses.Remove(commentID);
+                        Program.activeUser.CommentVoteStatuses.Remove(comment);
                         this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                     }
                 }
@@ -1134,7 +1170,7 @@ namespace KozinskiAlamidiAssignment4
                 Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
                 ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
                 if (DisplayReplyContent.Text == "") { MessageBox.Show("Your comment must have content.");  return; }
-                var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, Program.activeUser.Id, this.comment.Indentation + 1);
+                var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, comment.Id, this.comment.Indentation + 1);
                 form2Instance.CommentsToWrite.Add(replyBoxResult);
                 this.comment.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
                 DisplayComment newDisplayComment = new DisplayComment(replyBoxResult);
@@ -1199,31 +1235,14 @@ namespace KozinskiAlamidiAssignment4
             //WRITE BACK COMMENTS TO COMMENTS FILE
             Action<Comment> asyncWrite = async (Comment newTuple) => {
                 
-                using (StreamWriter file = new StreamWriter("comments.txt", append: true)) {
+                using (StreamWriter file = new StreamWriter("..\\..\\comments.txt", append: true)) {
                     await file.WriteLineAsync($"{newTuple.Id}\t{newTuple.AuthorID}\t{newTuple.Content}\t{newTuple.ParentID}\t"
                         + $"{newTuple.UpVotes}\t{newTuple.DownVotes}\t{newTuple.TimeStamp.Year}\t"
                         + $"{newTuple.TimeStamp.Month}\t{newTuple.TimeStamp.Day}\t{newTuple.TimeStamp.Hour}\t"
                         + $"{newTuple.TimeStamp.Minute}\t{newTuple.TimeStamp.Second}\t{newTuple[0]}\t{newTuple[1]}\t{newTuple[2]}");
                 };
             };
-            /*using (StreamReader file = new StreamReader("..\\..\\comments.txt"))
-            {
-                string fileLine;
-                fileLine = file.ReadLine();
-                uint lineNumber = 1;
-                while (fileLine != null)
-                {
 
-                    if (CommentsToUpdate.Keys.Contains(Convert.ToUInt32(fileLine.Split('\t')[0])))
-                    {
-                        PostsToWrite[Convert.ToUInt32(fileLine.Split('\t')[1])] = lineNumber;
-                    }
-                    ++lineNumber;
-                    fileLine = file.ReadLine();
-                }
-            };
-
-            // add new comments: */
             foreach (Comment comment in CommentsToWrite) asyncWrite(comment);
 
         }

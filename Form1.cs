@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace KozinskiAlamidiAssignment4
 {
@@ -112,8 +113,6 @@ namespace KozinskiAlamidiAssignment4
                 // Prints error log to system output
                 foreach (string line in fileReadErrors)
                     systemOutput.AppendText(line + "\n");
-
-                systemOutput.AppendText("Welcome! Select a user and enter a password to log in.\n");
 
                 // Populate subreddit ComboBox
                 foreach (KeyValuePair<uint, Subreddit> subreddit in Program.globalSubreddits.OrderBy(subreddit => subreddit.Value.Name)) { subredditSelection.Items.Add(subreddit.Value); }
@@ -873,6 +872,10 @@ namespace KozinskiAlamidiAssignment4
                 // pictureBox2
                 // 
                 this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
+                if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(PostId))
+                {
+                    this.pictureBox1.Image = Program.activeUser.PostVoteStatuses[postId] == -1 ? Properties.Resources.downvote : Properties.Resources.greyDownvote;
+                }
                 this.pictureBox2.Location = new System.Drawing.Point(12, 87);
                 this.pictureBox2.Name = "pictureBox2";
                 this.pictureBox2.Size = new System.Drawing.Size(50, 53);
@@ -882,7 +885,12 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // pictureBox1
                 // 
-                this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
+                if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(PostId))
+                {
+                    this.pictureBox1.Image = Program.activeUser.PostVoteStatuses[postId] == 1? Properties.Resources.upvote : Properties.Resources.greyUpvote;
+                }
+                else
+                    this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
                 this.pictureBox1.Location = new System.Drawing.Point(12, 12);
                 this.pictureBox1.Name = "pictureBox1";
                 this.pictureBox1.Size = new System.Drawing.Size(50, 53);
@@ -938,7 +946,6 @@ namespace KozinskiAlamidiAssignment4
                 DisplayPost newPost = sender as DisplayPost;
                 Form2 viewPost = new Form2(newPost.PostId);
                 viewPost.ShowDialog();
-            
             }
 
             #region Post upvote/downvote button event handlers
@@ -970,12 +977,15 @@ namespace KozinskiAlamidiAssignment4
                 if (!hasVoted)
                 {
                     Program.activeUser.PostVoteStatuses.Add(postId, 1);
+                    Program.globalPosts[postId].UpVotes += 1;
                     this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
                 }
                 else
                 {
                     if (Program.activeUser.PostVoteStatuses[postId] < 1)
                     {
+                        Program.globalPosts[postId].DownVotes -= 1;
+                        Program.globalPosts[postId].UpVotes += 1;
                         Program.activeUser.PostVoteStatuses[postId] = 1;
                         this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upvote;
                         this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
@@ -983,9 +993,11 @@ namespace KozinskiAlamidiAssignment4
                     else
                     {
                         Program.activeUser.PostVoteStatuses.Remove(postId);
+                        Program.globalPosts[postId].UpVotes -= 1;
                         this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
                     }
                 }
+                label1.Text = $"{Program.globalPosts[postId].Score}";
             }
 
             public void PostDownvote_MouseEnter(object sender, EventArgs e)
@@ -1015,6 +1027,7 @@ namespace KozinskiAlamidiAssignment4
                 if (!hasVoted)
                 {
                     Program.activeUser.PostVoteStatuses.Add(postId, -1);
+                    Program.globalPosts[PostId].DownVotes += 1;
                     this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
                 }
                 else
@@ -1022,15 +1035,19 @@ namespace KozinskiAlamidiAssignment4
                     if (Program.activeUser.PostVoteStatuses[postId] > -1)
                     {
                         Program.activeUser.PostVoteStatuses[postId] = -1;
+                        Program.globalPosts[PostId].UpVotes -= 1;
+                        Program.globalPosts[PostId].DownVotes += 1;
                         this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downvote;
                         this.pictureBox1.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyUpvote;
                     }
                     else
                     {
+                        Program.globalPosts[PostId].DownVotes -= 1;
                         Program.activeUser.PostVoteStatuses.Remove(postId);
                         this.pictureBox2.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.greyDownvote;
                     }
                 }
+                label1.Text = $"{Program.globalPosts[PostId].Score}";
             }
 
             #endregion
@@ -1093,6 +1110,7 @@ namespace KozinskiAlamidiAssignment4
                 }
 
             }
+            RefreshPanel1(sender, e);
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)
@@ -1114,5 +1132,53 @@ namespace KozinskiAlamidiAssignment4
 
         }
 
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            /*var totalDictionary = new Dictionary<uint, int>();
+            var votedPostsDictionaries = from user in Program.globalUsers.Values
+                                         where user.PostVoteStatuses.Any()
+                                         from key in user.PostVoteStatuses.Keys
+                                         group user.PostVoteStatuses[key] by key into postVoteList
+                                         select new { key = postVoteList.Key, voteChange = postVoteList.Sum()};*/
+            // writing back to posts.txt
+            var votedPostsCollection = (from user in Program.globalUsers.Values
+                                          where user.PostVoteStatuses.Any()
+                                          from key in user.PostVoteStatuses.Keys
+                                          select Program.globalPosts[key]).ToDictionary(post => post.Id);
+            
+            string[] AllLines = File.ReadAllLines("..\\..\\posts.txt");
+            for (int i = 0; i < AllLines.Count(); ++i)
+            {
+                string[] lineToken = AllLines[i].Split('\t');
+                if (votedPostsCollection.ContainsKey(Convert.ToUInt32(lineToken[1])))
+                {
+                    lineToken[6] = Program.globalPosts[Convert.ToUInt32(lineToken[1])].UpVotes.ToString();
+                    lineToken[7] = Program.globalPosts[Convert.ToUInt32(lineToken[1])].DownVotes.ToString();
+                    AllLines[i] = string.Join("\t", lineToken);
+                }
+            
+            }
+            File.WriteAllLines("..\\..\\posts.txt", AllLines);
+
+            // writing back to comments.txt
+            var votedCommentsCollection = (from user in Program.globalUsers.Values
+                                           where user.CommentVoteStatuses.Any()
+                                           select user.CommentVoteStatuses.Keys into dictionaryCollection
+                                           from voteStatus in dictionaryCollection
+                                           select voteStatus).ToDictionary(comment=>comment.Id);
+            AllLines = File.ReadAllLines("..\\..\\comments.txt");
+            for (int i = 0; i < AllLines.Count(); ++i)
+            {
+                if (AllLines[i].Trim() == "") continue;
+                string[] lineToken = AllLines[i].Split('\t');
+                if (votedCommentsCollection.ContainsKey(Convert.ToUInt32(lineToken[0])))
+                {
+                    lineToken[4] = votedCommentsCollection[Convert.ToUInt32(lineToken[0])].UpVotes.ToString();
+                    lineToken[5] = votedCommentsCollection[Convert.ToUInt32(lineToken[0])].DownVotes.ToString();
+                    AllLines[i] = string.Join("\t", lineToken);
+                }
+            }
+            File.WriteAllLines("..\\..\\comments.txt", AllLines);
+        }
     }
 }
