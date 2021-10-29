@@ -11,6 +11,63 @@ using System.IO;
 
 namespace KozinskiAlamidiAssignment4
 {
+    /**
+     * Partial Class: form2
+     * this class is an extension to the full declaration of form2 that 
+     * contains aspect specific to this assignment such as keeping a list for comments to write
+     * and many more. Form 2 is the form that displays the full details of the post, including each
+     * comment related to that post.
+     * 
+     * Attributes:
+     * postID                               the id of the post that this form is representing
+     * totalComments                        a collection representing comments newly added to memory and to be
+     *                                      - written back to comments.txt
+     * offsetXComment                       index used for placement of comment replies' visual indentation (also is the xLocation)
+     * offsetYComment                       // // // // // // // y location
+     * offsetYCommentContainer              constant of 0 (unused?)
+     * totalComments                        represents the number of comments of the post that is being represented by this form2 instance
+     *  Properties
+     *  postID                              getter and setter for postID
+     *  TotalComments                       // // // // totalComments
+     *  OffsetYComment                      // // // // fsetYComment
+     *  OffsetXComment                      // // // // offsetXcomment
+     *  OffsetYCommentContainer             // // // // offsetYCommentContainer
+     *  
+     *  Controls: 
+     *  DisplayCommentBox                   panel that is only visible when there's currently an active user
+     *  DisplayPostUpvoteButton             picturebox with the correct upvote button that is interactive to increase/decrease the number
+     *                                      - of upvotes of the post being represented in form
+     * DisplayPostDownvoteButtonn           same as UpvoteButton but increases/decreases the number of downvotes
+     * DisplayPostScore                     label that shows the score of the represented post
+     * DisplayPostContext                   lable that displays the author of the represented post and how long ago the post was 
+     *                                      - created
+     * DisplayPostTitle                     label that displays the represented post's title
+     * DisplayPostContent                   a rich textbox field that displays the represented post's content property
+     * pictureBox3                          a picturebox with the comment icon
+     * DisplaPostCommentCount               a label that posts the represented post's comment count. gets updated when a new comment is made
+     * DisplayCommentContainer              a panel that holds DisplayComment instances to show all of the represented post's comments
+     * 
+     * Methods:
+     * PrintComments                        prints the comments by populating them in the DisplayCommentContainer as DisplayComment instances
+     *  Parameters: uint postId
+     * 
+     * Event Methods:
+     * Form2_Load                           triggers when an instance of this form is shown to the user. invokes the printChildren function
+     * SubmitButton_Click                   tirggers when this the submit button is clicked. assumes all of the responsibilties that come with adding a comment
+     *                                      - see corresponding documentation box for details
+     * RichTextBoxField_TextChanged         triggers when the user is typing on the richTextBoxField (created dynamically). responsible for showing and hiding
+     *                                      the gostLabel that is dynamically created inside of the DisplayCommentReplyBox
+     * postUpvote_mouseEnter                triggers when the mouse hovers over this picturebox. changes the upvote image 
+     * postdownvote_mouseEnter              triggers when the mouse hovers over this picturebox. changes the Downvote image 
+     * postUpVote_Leave                     triggers when the mouse hovers out of this picturebox. condiationally changes the upvote image
+     *                                      - depending on whether the user has already interacted with this kind of vote on this kind of post
+     * postDownVote_Leave                   // // // // / // // // // // // conditionally changes the downvote image //
+     * postUpvote_Click                     adds/decreases to the represented posts upvotes. assumes all of the changes needed to be made to reflect
+     *                                      - the change of the post's score with all relevant parts of the program such as the posts global variable
+     * postDownVote_Click                   // // // // // Downvotes. //                                     
+     * DisplayComment_CommentReplyAdded     adds to the displayCommentReplies label 1. triggered when the submit button click event is triggered
+     * Form2_FormClosed                     triggers when this form2 closes and handles the writing of new comments to comments.txt
+     */
     public partial class Form2 : Form
     {
         private uint postID;
@@ -78,7 +135,10 @@ namespace KozinskiAlamidiAssignment4
             // Builds form
             InitializeComponent(newPostID);
         }
-
+        /**
+         * Event tirggered when this form is created on the user's screen
+         * responsible for populating the DisplayCommentContainer with DisplayComment instances
+         */
         public void Form2_Load(object sender, EventArgs e)
         {
             PrintComments(PostID);
@@ -194,8 +254,8 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostTitle.TabIndex = 5;
             this.DisplayPostTitle.Text = $"{postTitleText}";
             //
-            // DisplayCommentBox
-            //
+            // DisplayCommentBox( the following describes the contents of the displayCommentBox control )
+            // this panel is not added to this instance of form2 if activeUser is null in Program
             if (Program.activeUser != null)
             {
 
@@ -318,7 +378,16 @@ namespace KozinskiAlamidiAssignment4
 
         }
 
-
+        /**
+         * triggered when the SubmitButton is clicked
+         * this event contains the following responsibilites
+         * - retaining the dynamically created richTextBoxField 
+         * - creating a new 1st level comment based on the active user, current time, and the richTextBoxField content
+         * - adding the new comment to the commentsToWrite collection
+         * - creating a DisplayComment instance to insert into the DisplayCommentContainer
+         * - inserting the new DisplayComment instance in the right position
+         * - adding the new comment to the corresponding post
+         */
         private void SubmitButton_Click(object sender, EventArgs e)
         {
             RichTextBox DisplayCommentBoxControlRichTextBox = null;
@@ -357,7 +426,11 @@ namespace KozinskiAlamidiAssignment4
             }
             else MessageBox.Show("Comment Box rich text field was not found.");
         }
-
+        /**
+         * this event is triggered for every key the user presses while typing into the RichTextBoxField
+         * this event is responsible for changing the label text of DisplayCommentBox to simulate a ghost message
+         * when this rich text field is empty
+         */
         private void RichTextBoxField_TextChanged(object sender, EventArgs e)
         {
             var richTextBox = sender as RichTextBox;
@@ -369,12 +442,18 @@ namespace KozinskiAlamidiAssignment4
         #endregion
 
         #region Post upvote/downvote button event handlers
-
+        /**
+         * this event triggers when the mouse hovers over the upvote picturebox
+         * responsible for chaning the picturebox's image to red upvote
+         */
         public void PostUpvote_MouseEnter(object sender, EventArgs e)
         {
             this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
         }
-
+        /**
+         * this event triggers when the mouse hovers out of the upvote picturebox
+         * responsible for changing the picturebox image back to grey if the user did not previously upvote this comment
+         */
         public void PostUpvote_MouseLeave(object sender, EventArgs e)
         {
             if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postID))
@@ -383,7 +462,12 @@ namespace KozinskiAlamidiAssignment4
             // Else
             this.DisplayPostUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
         }
-
+        /**
+         * this event trigger when the user clicks on the upvote picture box
+         * responsible for changing the upvote picturebox's picture 
+         * - if the active user is null or has not previously upvoted this post, the image will be a red upvote
+         * - if the user is not null and has already clicked on this picturebox, the picture will be grey upvote
+         */
         public void PostUpvote_Click(object sender, EventArgs e)
         {
             if (Program.activeUser == null)
@@ -419,12 +503,18 @@ namespace KozinskiAlamidiAssignment4
             }
             DisplayPostScore.Text = $"{Program.globalPosts[postID].Score}";
         }
-        
+        /**
+         * this event triggers when the mouse hovers over the downvote picturebox
+         * responsible for chaning the picturebox's image to blue downvote 
+         */
         public void PostDownvote_MouseEnter(object sender, EventArgs e)
         {
             this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
         }
-
+        /**
+         * this event triggers when the mouse hovers out of the downvote picturebox
+         * responsible for changing the picturebox image back to grey if the user did not previously upvote this comment
+         */
         public void PostDownvote_MouseLeave(object sender, EventArgs e)
         {
             if (Program.activeUser != null && Program.activeUser.PostVoteStatuses.ContainsKey(postID))
@@ -433,7 +523,12 @@ namespace KozinskiAlamidiAssignment4
             // Else
             this.DisplayPostDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
         }
-
+        /**
+          * this event trigger when the user clicks on the downvote picture box
+          * responsible for changing the downvote picturebox's picture 
+          * - if the active user is null or has not previously upvoted this post, the image will be a blue downvote
+          * - if the user is not null and has already clicked on this picturebox, the picture will be grey downvote
+          */
         public void PostDownvote_Click(object sender, EventArgs e)
         {
             if (Program.activeUser == null)
@@ -584,7 +679,9 @@ namespace KozinskiAlamidiAssignment4
         }
         */
         #endregion
-
+        /**
+         * simple function for increasing the DisplayPostCommentCount label text by one
+         */
         public void DisplayComment_CommentReplyAdded()
         {
             var temp = Convert.ToInt32(DisplayPostCommentCount.Text.Split()[0]);
@@ -661,7 +758,11 @@ namespace KozinskiAlamidiAssignment4
             //}
         }
         #endregion
-
+        /**
+         * Class: DisplayComment
+         * 
+         * 
+         */
         class DisplayComment : Panel
         {
             private uint commentID;
@@ -1234,7 +1335,12 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.PictureBox DisplayReplyButton;
             private System.Windows.Forms.PictureBox DisplayCancelButton;
         }
-
+        /**
+         * event triggered when this form2 instance is closed
+         * responsible for traversing the commentsToWrite collection and adding each comment to comment.txt 
+         * by wrting asynchronously the current comment expressed appropriately as a string.
+         * 
+         * */
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
             Form1.RefreshPanel1(sender, e);
