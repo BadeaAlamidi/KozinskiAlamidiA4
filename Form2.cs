@@ -760,7 +760,34 @@ namespace KozinskiAlamidiAssignment4
         #endregion
         /**
          * Class: DisplayComment
+         * this class represents an instance that will be contained in the DisplayCommentContainer
+         * of form2. in contrast to form2, it represents a comment rather than a post but holds the same kind of informations
          * 
+         * Attributes:
+         * commentID                                the id of the represented comment
+         * comment                                  comment instance of the represented comment
+         * form2Instance                            instance of the currently open form2
+         * commentWidth                             a constant number representing the width of this panel
+         * commentHeight                            // // // // // height of this panel
+         * 
+         * Properties:
+         * CommentView                              a getter for the comment attribute
+         * 
+         * Constructors:            
+         * DisplayComment(Comment)                  performs the necessary assignments to the properties; calls initializeComponent
+         *                                          sets own location (based off form2), and size
+         * Methods:
+         * NONE
+         * 
+         * Event methods:
+         * CommentUpvote_MouseEnter                 responsible for changing image of upvote picturebox when mouse hovers over DisplayCommentUpvoteButton
+         * CommentUpvote_MouseLeave                 // // // // // when mouse hovers out of DisplayCommentUpvoteButton picturebox
+         * CommentUpvote_Click                      responsible for performing necessary changes of changing the comments score and upvote picturebox image
+         * CommentDownvote_MouseEnter               responsible for changing image of Downvote picturebox when mouse hovers over DisplayCommentDownvoteButton
+         * CommentDownvote_MouseLeave               // // // // // when mouse hovers out of DisplayCommentDownvoteButton picturebox
+         * CommentDownvote_Click                    responsible for performing necessary changes of changing the comments score and downvote picturebox image
+         * ReplyIcon_Click                          responsible for performing necessary changes of adding a comment the program, to the comment container, and to
+         *                                          - the comments to write collection
          * 
          */
         class DisplayComment : Panel
@@ -944,12 +971,20 @@ namespace KozinskiAlamidiAssignment4
             #endregion
 
             #region Comment upvote/downvote button event handlers
-
+            /**
+             * triggered when the mouse hover over the commentUpvote picture box
+             * responsible for changing the image of upvote picturebox to the red upvote
+             */
             public void CommentUpvote_MouseEnter(object sender, EventArgs e)
             {
                 this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_red;
             }
-
+            /**
+             * triggered when the mouse leaves the commentUpvote picturebox
+             * responsible for changing the upvotepicturebox's image back to grey if the user is either 
+             * not logged, or has not upvoted this comment before
+             * 
+             */
             public void CommentUpvote_MouseLeave(object sender, EventArgs e)
             {
                 if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
@@ -958,7 +993,16 @@ namespace KozinskiAlamidiAssignment4
                 // Else
                 this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
             }
-
+            /**
+             * triggers when the CommentUpvote button is clicked
+             * responsible for adding an upvote to the represented comment
+             * - changing the image of the commentupvote picturebox to red upvote
+             * - decreasing the number of downvotes by 1 and increasing the number of upvotes
+             *    by 1 if the user is logged in but has previously downvoted the represented comment
+             * - decreasing the number of upvotes by one if the user is logged in and has previously upvoted
+             *   the represented comment
+             * - changing the DisplayCommentScore lebel text to reflect the new comment score
+             */
             public void CommentUpvote_Click(object sender, EventArgs e)
             {
                 if (Program.activeUser == null)
@@ -994,12 +1038,20 @@ namespace KozinskiAlamidiAssignment4
                 }
                 DisplayCommentScore.Text = $"{comment.Score}";
             }
-
+            /**
+             * triggered when the mouse hover over the commentDownvote picture box
+             * responsible for changing the image of downvote picturebox to the blue downvote
+             */
             public void CommentDownvote_MouseEnter(object sender, EventArgs e)
             {
                 this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
             }
-
+            /**
+             * triggered when the mouse leaves the commentDownvote picturebox
+             * responsible for changing the downvotepicturebox's image back to grey if the user is either 
+             * not logged, or has not downvoted this comment before
+             * 
+             */
             public void CommentDownvote_MouseLeave(object sender, EventArgs e)
             {
                 if (Program.activeUser != null && Program.activeUser.CommentVoteStatuses.ContainsKey(comment))
@@ -1008,7 +1060,16 @@ namespace KozinskiAlamidiAssignment4
                 // Else
                 this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
             }
-
+            /**
+             * triggers when the CommentDownvote button is clicked
+             * responsible for adding an downvote to the represented comment
+             * - changing the image of the commentdownvote picturebox to blue downvote
+             * - decreasing the number of upvotes by 1 and increasing the number of downvotes
+             *    by 1 if the user is logged in but has previously upvoted the represented comment
+             * - decreasing the number of downvotes by one if the user is logged in and has previously downvoted
+             *   the represented comment
+             * - changing the DisplayCommentScore lebel text to reflect the new comment score
+             */
             public void CommentDownvote_Click(object sender, EventArgs e)
             {
                 if (Program.activeUser == null)
@@ -1041,7 +1102,14 @@ namespace KozinskiAlamidiAssignment4
             }
 
             #endregion
-
+            /**
+             * this event triggers when the user has clicked the reply icon
+             * 
+             * this event is responsible creating a new DisplayReplyBox instance to the form2Instance Comment container
+             * at the right location underneath this instance of DisplayComment. other responsibilities include:
+             * - displacing all subsequent DisplayComment instances in teh container to allocate space for the new 
+             *   DisplayReply instance
+             */
             public void ReplyIcon_Click(object sender, EventArgs e)
             {
                 if (Program.activeUser == null) { MessageBox.Show("You are not logged in."); return; }
@@ -1082,7 +1150,23 @@ namespace KozinskiAlamidiAssignment4
             private System.Windows.Forms.RichTextBox DisplayCommentContent;
             private System.Windows.Forms.PictureBox DisplayReplyIcon;
         }
-
+        /**
+         * Class : DisplayNoComment (unused?)
+         * this class is a panel that is inserted to the DisplayCommentsContainer of form2 as means
+         * of indicating that the represented comment is too nested to be visible
+         * 
+         * Attributes: 
+         * commentWidth             used as parameter for determining the instance's width, which is based on the width of
+         *                          the form2 container
+         * commentHeight            // // // // // height, which is a fixed value of 125
+         * form2Instance            an instance of the currently open form2 
+         * 
+         * Properties: NONE
+         * Controls: 
+         * DisplayCommentContent    contains the text of commentContent (. . .) as means to indicate that the 
+         *                          comment is too nested
+         * 
+         */
         class DisplayNoComment : Panel
         {
             private Form2 form2Instance;
@@ -1153,7 +1237,40 @@ namespace KozinskiAlamidiAssignment4
 
             private System.Windows.Forms.RichTextBox DisplayCommentContent;
         }
-
+        /**
+         * Class: DisplayReplyBox
+         * forms panel that is decorated to give the user interface for adding a new comment to a comment represented by
+         * the DisplayComment instance whose reply icon was clicked
+         * 
+         * Attributes:
+         * active                               static boolean created to disallow the user from replying to two comments
+         * RTFGainedFocus                       boolean created to disallow the user from submitting ghost text as comment content
+         * CommentID                            the id of the parent that is being replied to
+         * comment                              Comment instance that represents the comment of the DisplayComment that is being replied to 
+         * form2Instance                        instance of the currently open form2 window
+         * commentWidth                         used as reference to define the promer width of this instance. based on the width
+         *                                      - of the commentContainer in form2
+         * commentHeight                        fixed integer value used for sizing this instance of the replybox
+         * 
+         * Properties:
+         * Acitve                               getter for active
+         * 
+         * Controls:
+         * DisplayReplyContent                  rich text field for the user to type their reply
+         * DisplayReplyButton                   picturebox with fixed image and has the ability to add the typed comment in its corresponding click event
+         * DisplayCancelButton                  picturebox with fixed image and has the ability to cancel the comment reply in its corresponding click event
+         * 
+         * Constructor:
+         * DisplayReplyBox                      assigns to attributes and determines the location and size of this instance
+         *                                      - calls initialize components for the controls of this class
+         * 
+         * Methods: NONE
+         * Event Methods:
+         * ReplyButton_Click                    triggers when replybutton picturebox is clicked. assumes all responsiblities that come with adding 
+         *                                      a new comment reply in the program, including postioning of displaycomment panels in the comments container
+         * CancelButton_Click                   Triggers when the cancelbutton picturebox is clicked, assumes all responsibilities associated re-positioning
+         *                                      - DisplayComment panels
+         */
         class DisplayReplyBox : Panel
         {
             private static bool active = false;
@@ -1268,7 +1385,15 @@ namespace KozinskiAlamidiAssignment4
                 this.PerformLayout();
 
             }
-
+            /**
+             * triggered when the replybutton picture box is clicked
+             * this event has the following responsibilites:
+             * - checking if the reply is empty, in which case the function will return
+             * - creating a new comment and adding it to its parent and the commentstowrite collection in form2
+             * - creating a new DisplayComment instance with the appropriate index, location, and height to be displayed in the container
+             * - removing this instance from the commentContainer
+             * - setting the new index of the new CommentDisplay to the index of this instance for appropriate displaying
+             */
             public void ReplyButton_Click(object sender, EventArgs e)
             {
                 Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
@@ -1286,7 +1411,13 @@ namespace KozinskiAlamidiAssignment4
                 ctrls.Remove(this);
                 Active = false;
             }
-
+            /**
+             * this event triggers when the user clicks the cancelbutton picturebox
+             * this event has the following responsibilities:
+             * 
+             * - removing this instance from the DisplayCommentCollection
+             * - re-spacing all of the already displaced comments back to their original y location
+             */
             public void CancelButton_Click(object sender,EventArgs e)
             {
                 ControlCollection ctrls = ((Form2)Application.OpenForms["View Post"]).DisplayCommentContainer.Controls;
@@ -1302,7 +1433,11 @@ namespace KozinskiAlamidiAssignment4
 
                 Active = false;
             }
-
+            /**
+             * this event triggers when the rich text field in this instance (Reply_Content) gains focus
+             * this event is responsible for setting RTFGainedFocus to true and removing the ghost text in the
+             * rich textfield
+             */
             public void ReplyContent_GotFocus(object sender, EventArgs e)
             {
                 RichTextBox replyBox = this.DisplayReplyContent;
@@ -1315,7 +1450,11 @@ namespace KozinskiAlamidiAssignment4
                     replyBox.ForeColor = System.Drawing.Color.Black;
                 }
             }
-
+            /**
+             * this event triggers when the rich text field ReplyContent loses focus
+             * this event is responsible for adding back the ghost text of the rich textfield, 
+             * - should it contain no text
+             */
             public void ReplyContent_LostFocus(object sender, EventArgs e)
             {
                 RichTextBox replyBox = this.DisplayReplyContent;
