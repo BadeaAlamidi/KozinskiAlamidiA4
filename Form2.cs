@@ -210,9 +210,9 @@ namespace KozinskiAlamidiAssignment4
             // 
             this.DisplayPostScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DisplayPostScore.ForeColor = System.Drawing.Color.White;
-            this.DisplayPostScore.Location = new System.Drawing.Point(12, 43);
+            this.DisplayPostScore.Location = new System.Drawing.Point(8, 43);
             this.DisplayPostScore.Name = "DisplayPostScore";
-            this.DisplayPostScore.Size = new System.Drawing.Size(41, 17);
+            this.DisplayPostScore.Size = new System.Drawing.Size(49, 17);
             this.DisplayPostScore.TabIndex = 1;
             this.DisplayPostScore.Text = $"{post.Score}";
             this.DisplayPostScore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1087,6 +1087,7 @@ namespace KozinskiAlamidiAssignment4
                 if (!hasVoted)
                 {
                     Program.activeUser.CommentVoteStatuses.Add(comment, -1);
+                    comment.DownVotes += 1;
                     this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
                 }
                 else
@@ -1094,15 +1095,19 @@ namespace KozinskiAlamidiAssignment4
                     if (Program.activeUser.CommentVoteStatuses[comment] > -1)
                     {
                         Program.activeUser.CommentVoteStatuses[comment] = -1;
+                        comment.UpVotes -= 1;
+                        comment.DownVotes += 1;
                         this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_blue;
                         this.DisplayCommentUpvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.upVote_grey;
                     }
                     else
                     {
+                        comment.DownVotes -= 1;
                         Program.activeUser.CommentVoteStatuses.Remove(comment);
                         this.DisplayCommentDownvoteButton.Image = global::KozinskiAlamidiAssignment4.Properties.Resources.downVote_grey;
                     }
                 }
+                DisplayCommentScore.Text = $"{comment.Score}";
             }
 
             #endregion
