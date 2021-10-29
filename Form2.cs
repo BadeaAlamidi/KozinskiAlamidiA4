@@ -331,7 +331,6 @@ namespace KozinskiAlamidiAssignment4
             this.DisplayPostCommentCount.Size = new System.Drawing.Size(205, 17);
             this.DisplayPostCommentCount.TabIndex = 8;
             this.DisplayPostCommentCount.Text = $"{TotalComments} Comments";
-
             // 
             // DisplayCommentContainer
             // 
@@ -407,19 +406,24 @@ namespace KozinskiAlamidiAssignment4
                         Program.activeUser.Id,
                         Program.globalPosts[PostID].Id,
                         0);
+
                     CommentsToWrite.Add(new1stLevelComment);
                     Program.globalPosts[postID].postComments.Add(new1stLevelComment.Id, new1stLevelComment);
+
                     var newDisplayComment = new DisplayComment(new1stLevelComment);
                     newDisplayComment.Height = 125;
                     newDisplayComment.Location = new Point(0,0);
+
                     DisplayCommentContainer.Controls.Add(newDisplayComment);
                     DisplayCommentContainer.Controls.SetChildIndex(newDisplayComment, 0);
+
                     for (int i = 1; i < DisplayCommentContainer.Controls.Count; ++i)
                     {
                         DisplayCommentContainer.Controls[i].Location =
                             new Point(DisplayCommentContainer.Controls[i].Location.X,
                             DisplayCommentContainer.Controls[i].Location.Y + 125);
                     }
+
                     DisplayComment_CommentReplyAdded();
                     DisplayCommentBoxControlRichTextBox.Text = "";
                 }
@@ -1119,11 +1123,9 @@ namespace KozinskiAlamidiAssignment4
                 {
                     DisplayReplyBox.Active = true;
                     DisplayReplyBox newReplyBox = new DisplayReplyBox(comment);
-                    //form2Instance.DisplayCommentContainer.Controls.Add(newReplyBox);
-                    //this.Height += 125;
-                    //this.Controls.Add(newReplyBox);
                     newReplyBox.Location = new Point(Location.X, Location.Y + 125);
                     newReplyBox.Height = 125;
+
                     ctrls.Add(newReplyBox);
                     ctrls.SetChildIndex(newReplyBox, ctrls.IndexOf(this) + 1);
 
@@ -1133,7 +1135,6 @@ namespace KozinskiAlamidiAssignment4
                         if (ctrls[i] is DisplayComment)
                         {
                             ctrls[i].Location = new Point(ctrls[i].Location.X, ctrls[i].Location.Y + 125);
-                            //MessageBox.Show("index is " + i.ToString() + ". y is " + ctrls[i].Location.Y.ToString());
                         }
                     }
                 }
@@ -1298,7 +1299,6 @@ namespace KozinskiAlamidiAssignment4
 
                 form2Instance = (Form2)Application.OpenForms["View Post"];
                 commentWidth = form2Instance.DisplayCommentContainer.Width
-                               //- form2Instance.OffsetXComment
                                - (Margin.Horizontal * 4);
                 commentHeight = 125;
 
@@ -1308,8 +1308,6 @@ namespace KozinskiAlamidiAssignment4
 
                 Width = commentWidth;
                 Height = commentHeight;
-
-                //form2Instance.OffsetYComment += Height;
             }
 
             #region InitializeComponent(Comment newComment): Programmer generated layout code
@@ -1367,10 +1365,7 @@ namespace KozinskiAlamidiAssignment4
                 // 
                 // Reply to Comment Panel
                 // 
-                //this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-                //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
                 this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-                //this.ClientSize = new System.Drawing.Size(800, 450);
                 this.Controls.Add(this.DisplayCancelButton);
                 this.Controls.Add(this.DisplayReplyButton);
                 this.Controls.Add(this.DisplayReplyContent);
@@ -1398,17 +1393,23 @@ namespace KozinskiAlamidiAssignment4
             {
                 Form2 form2Instance = (Form2)Application.OpenForms["View Post"];
                 ControlCollection ctrls = form2Instance.DisplayCommentContainer.Controls;
+
                 if (DisplayReplyContent.Text == "" || RTFGainedFocus == false) { MessageBox.Show("Your comment must have content.");  return; }
+
                 var replyBoxResult = new Comment(DisplayReplyContent.Text, Program.activeUser.Id, comment.Id, this.comment.Indentation + 1);
+
                 form2Instance.CommentsToWrite.Add(replyBoxResult);
                 this.comment.commentReplies.Add(replyBoxResult.Id, replyBoxResult);
+
                 DisplayComment newDisplayComment = new DisplayComment(replyBoxResult);
                 newDisplayComment.Location = new Point(Convert.ToInt32(replyBoxResult.Indentation * 40), Location.Y);
                 newDisplayComment.Height = 125;
+
                 ctrls.Add(newDisplayComment);
                 ctrls.SetChildIndex(newDisplayComment, ctrls.IndexOf(this));
                 form2Instance.DisplayComment_CommentReplyAdded();
                 ctrls.Remove(this);
+
                 Active = false;
             }
             /**
@@ -1484,6 +1485,7 @@ namespace KozinskiAlamidiAssignment4
         {
             Form1.RefreshPanel1(sender, e);
             DisplayReplyBox.Active = false;
+
             //WRITE BACK COMMENTS TO COMMENTS FILE
             Action<Comment> asyncWrite = async (Comment newTuple) => {
                 
